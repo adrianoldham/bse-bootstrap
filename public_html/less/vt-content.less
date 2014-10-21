@@ -1,0 +1,92 @@
+@content-padding-base: @grid-gutter-width;
+@content-margin-base: @content-padding-base;
+
+@content-padding-multiplier: 2;
+@content-margin-multiplier: @content-padding-multiplier;
+
+@content-padding-xs: ceil((@content-padding-sm / @content-padding-multiplier));
+@content-margin-xs: ceil((@content-margin-sm / @content-margin-multiplier));
+
+@content-padding-sm: @content-padding-base;
+@content-margin-sm: @content-padding-sm;
+
+@content-padding-md: ceil((@content-padding-sm * @content-padding-multiplier));
+@content-margin-md: ceil((@content-margin-sm * @content-margin-multiplier));
+
+@content-padding-lg: ceil((@content-padding-md * @content-padding-multiplier));
+@content-margin-lg: ceil((@content-margin-md * @content-margin-multiplier));
+
+@content-padding-xl: ceil((@content-padding-lg * @content-padding-multiplier));
+@content-margin-xl: ceil((@content-margin-lg * @content-margin-multiplier));
+
+// define box parameter lists
+@sizes: base, xs, sm, md, lg, xl;
+@types: padding, margin;
+@edges: top, bottom;
+
+// define variable name
+.define-spacing(@type, @size) {
+    @spacing: ~'content-@{type}-@{size}';
+}
+
+// define class names
+.define-class(base; @type; @edge) when (@size = base) {
+    @class-single: ~'.with-@{type}-@{edge}';
+    @class-double: ~'.with-@{type}';
+}
+
+.define-class(@size; @type; @edge) when (default()) {
+    @class-single: ~'.with-@{type}-@{edge}-@{size}';
+    @class-double: ~'.with-@{type}-@{size}';
+}
+
+// start size iteration mixin
+.make-box-spacing(length(@sizes));
+
+.make-box-spacing(@n, @i: 1) when (@i =< @n) {
+    @size: extract(@sizes, @i);
+
+    // then iterate types
+    .make-types(length(@types));
+
+    .make-types(@nT, @iT: 1) when (@iT =< @nT) {
+        @type: extract(@types, @iT);
+
+        .define-spacing(@type, @size);
+
+        // then iterate single side margin/padding properties
+        .make-edges-single(length(@edges));
+
+        .make-edges-single(@nE, @iE: 1) when (@iE =< @nE) {
+            @edge: extract(@edges, @iE);
+
+            .define-class(@size, @type, @edge);
+
+            // use class name constructor
+            @{class-single} {
+
+                @{type}-@{edge}: @@spacing;
+            }
+
+            .make-edges-single(@nE, (@iE + 1));
+        }
+
+        // use class name constructor
+        @{class-double} {
+            // iterate double sided margin/padding properties
+            .make-edges-double(length(@edges));
+
+            .make-edges-double(@nE, @iE: 1) when (@iE =< @nE) {
+                @edge: extract(@edges, @iE);
+
+                @{type}-@{edge}: @@spacing;
+
+                .make-edges-double(@nE, (@iE + 1));
+            }
+        }
+
+        .make-types(@nT, (@iT + 1));
+    }
+
+    .make-box-spacing(@n, (@i + 1));
+}

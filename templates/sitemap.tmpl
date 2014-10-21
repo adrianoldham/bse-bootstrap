@@ -1,0 +1,56 @@
+<:-.wrap "base.tmpl" :>
+        <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+          <:- include include/header.tmpl optional:>
+          <:-.if article.body:>
+          <:body:>
+          <:-.end if:>
+          <:- include include/footer.tmpl optional:>
+          <:- include include/files.tmpl optional:>
+          <:-.define article :>
+            <:-.set kidsx = [ article.visible_kids ] :>
+            <:-.set kids = [] -:>
+    
+            <:-.for kid in kidsx -:>
+              <:-.if kid.flags !~ /(s|g|P)/ and kid.should_index -:>
+                <:-% kids.push(kid) -:>
+              <:-.end if -:>
+            <:-.end for:>
+            <li class="<:= kids.size ? 'parent' : '' :>">
+              <:-.call "edit_child", "parent":parent, "label":loop.count :>
+              <:-.call "move", "parent":parent :>
+              <:-.if article.is_linked :>
+              <a href="<:= bse.url(article) :>">
+                <:= article.titleAlias or article.title :>
+              </a>
+              <:-.else:>
+              <:= article.titleAlias or article.title :>
+              <:-.end if:>
+            <:-# do not list children for step kids, could lead to infinite recursion :>
+            <:-.if article.parentid == parent.id and level < 10 :>
+              <:-.if kids.size :>
+            <ul>
+              <:-.for kid in kids :>
+              <:-.call "article", "article":kid, "parent":article, "level":level+1 :>
+              <:-.end for:>
+            </ul>
+              <:-.end if:>
+            <:-.end if:>
+            </li>
+          <:-.end define :>
+          <ul class="sitemap">
+            <:-.set kidsx = [ bse.site.visible_kids ] :>
+            <:-.set kids = [] -:>
+
+            <:-.for kid in kidsx -:>
+              <:-.if kid.flags !~ /(s|g|P)/ and kid.should_index -:>
+                <:-% kids.push(kid) -:>
+              <:-.end if -:>
+            <:-.end for:>
+            <:-.for kid in kids :>
+            <:-.call "article", "article":kid, "parent":{ "id":-1 }, "level":1 :>
+            <:-.end for:>
+            <li><a href="<:= cfg.user_url("search"):>">Search</a></li>
+          </ul>
+<:embed end:>
+        </article>

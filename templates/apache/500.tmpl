@@ -1,0 +1,20 @@
+<:-.wrap "apache/errorbase.tmpl", "title": "Oops! Server error" :>
+<p>The request you attempted had a critical problem resulting in a server error, we apologise for the inconvenience.  Assuming anything works right now, you may like to browse elsewhere on the site, here are some useful places to start:</p>
+<ul>
+<:-.for id in cfg.entry("error settings", "articles", "1 6").split(/ /) :>
+<:-.set inline = bse.articles.getByPkey(id) :>
+<li><a href="<:= bse.url(inline):>"><:= (inline.titleAlias or inline.title).lower :></a></li>
+<:-.end for:>
+<li><a href="<:= cfg.user_url("search"):>">search</a></li>
+</ul>
+<div class="well">
+<p>It seems you have arrived at this page due to a server error, you can help us resolve problems by notifying our <a href="mailto:<!--#echo var='SERVER_ADMIN' -->?subject=<:= params.title:> [<!--#echo var='REDIRECT_STATUS' -->] on <!--#echo var='SERVER_NAME' -->&amp;body=Error time: <!--#echo var='DATE_LOCAL' --> and Requested address: <!--#echo var='REQUEST_URI' -->">webmaster</a>, please include the address of the request and what actions you were performing at the time of the error.</p>
+<p>Request: <!--#echo var="REQUEST_URI" --></p>
+<!--#if expr="$HTTP_REFERER != ''" -->
+<p>Referrer: <!--#echo var="HTTP_REFERER" --></p>
+<!--#endif -->
+<:-.if cfg.entry("error settings", "printenv"):>
+<h2>Environment details</h2>
+<p style="overflow: auto; white-space: pre-wrap; height: 100px; border: 1px solid #333; padding: 5px" class="printenv"><!--#printenv --></p>
+<:-.end if:>
+</div>

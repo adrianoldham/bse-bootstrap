@@ -1,0 +1,40 @@
+@back-to-top-color: #fff;
+@back-to-top-bg: rgba(0, 0, 0, 0.15);
+@back-to-top-fallback-bg: #ccc;
+@back-to-top-hover-color: @back-to-top-color;
+@back-to-top-hover-bg: rgba(0, 0, 0, 0.35);
+@back-to-top-fallback-hover-bg: #666;
+
+#back-to-top {
+    background-color: @back-to-top-fallback-bg;
+    background-color: @back-to-top-bg;
+    display: block;
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: -50px;
+    right: 0;
+    text-decoration: none;
+    font-size: 28px;
+    line-height: 50px;
+    text-align: center;
+    z-index: 10000;
+    .transition(all 0.25s ease);
+    
+    i {
+        color: @back-to-top-color;
+    }
+    
+    &:hover {
+        i {
+            color: @back-to-top-hover-color;
+        }
+
+        background-color: @back-to-top-fallback-hover-bg;
+        background-color: @back-to-top-hover-bg;
+    }
+
+    &.show {
+        bottom: 0;    
+    }
+}

@@ -1,0 +1,56 @@
+<:-.wrap "base.tmpl", "class":"page-index" :>
+
+        <:-.set childrenx = [ article.all_visible_kids ] -:>
+        <:-.set children = [] -:>
+        
+        <:-.for child in childrenx -:>
+          <:-.if child.flags !~ /s/ -:>
+            <:-% children.push(child) -:>
+          <:-.end if -:>
+        <:-.end for -:>
+
+        <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+          <:admin:>
+          <:-.if article.body:>
+          <:body:>
+          <:-.end if:>
+          <:- include include/footer.tmpl optional:>
+          <:- include include/files.tmpl optional:>
+<:embed end:>
+
+          <:-.set underthreshold = article.threshold > children.size -:>
+          <:-.if cfg.entry("basic", "hide_child_list") or article.flags =~ /l/ -:>
+          <:-.elsif children.size:>
+          <:- include include/sortallkids.tmpl:>
+          <:-.if underthreshold:>
+          <:-.for child in children :>
+          <section id="<:= 'section_' _ child.id:>" class="article">
+            <:-.call "move", "parent":article :>
+            <:-= generator.vembed(child) |raw:>
+          </section>
+          <:-.end for:>
+          <:-.else:>
+          <ul class="article-children">
+            <:-.for child in children :>
+            <li>
+              <:-.call "edit_child", "parent":article, "label":loop.count :>
+              <:-.call "move", "parent":article :>
+              <a href="<:= bse.url(child):>">
+                <:-.if child.customStr1:>
+                <i class="icon <:= child.customStr1:>"></i>
+                <:-.end if:>
+                <:= child.titleAlias or child.title:>
+              </a>
+              <:-.if cfg.entry("basic", "hide_child_summary") -:>
+              <:-.elsif child.summary:>
+              <div><:= child.summary:></div>
+              <:-.elsif child.summaryLength:>
+              <div><:= generator.summary(child) |raw:></div>
+              <:-.end if:>
+            </li>
+            <:-.end for:>
+          </ul>
+          <:-.end if:>
+          <:-.end if:>
+        </article>

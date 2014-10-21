@@ -1,0 +1,156 @@
+<:-.wrap "base.tmpl", "class": "page-project" :>
+      <:-.set parent = article.parent -:>
+
+      <:-.set siblingsx = [ bse.articles.listedChildren(article.parentid) ] -:>
+      <:-.set siblings = [] -:>
+
+      <:-.if siblingsx.size > 1 :>
+        <:-.for sibling in siblingsx -:>
+          <:-.if sibling.is_linked -:>
+            <:-% siblings.push(sibling) -:>
+          <:-.end if -:>
+        <:-.end for -:>
+
+        <:-.for sibling in siblings -:>
+          <:-.if article.id == sibling.id and sibling.is_linked -:>
+            <:-.set next = loop.next ? loop.next : loop.first -:>
+            <:-.set prev = loop.prev ? loop.prev : loop.last -:>
+          <:-.end if -:>
+        <:-.end for -:>
+      <:-.else -:>
+        <:-.set next = 0 -:>
+        <:-.set prev = 0 -:>
+      <:-.end if:>
+
+      <:-.set childrenx = [ article.all_visible_kids ] -:>
+      <:-.set children = [] -:>
+      
+      <:-.for child in childrenx -:>
+        <:-.if child.flags !~ /s/ -:>
+          <:-% children.push(child) -:>
+        <:-.end if -:>
+      <:-.end for -:>
+      <:-.set underthreshold = article.threshold > children.size -:>
+
+      <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+        <:- include include/header.tmpl optional:>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="sticky">
+              <:-.if article.body:>
+              <:body:>
+              <:-.end if:>
+
+              <:-.set tags = [ article.tag_objects ].sort("name") -:>          
+              <:-.if tags.size:>
+              <aside>
+                <h3 class="nav-header"><i class="fa fa-tags"></i> Tags</h3>
+                <ul class="tags nav nav-pills">
+                  <:-.for tag in tags :>
+                  <li><a href="<:= bse.url(article.parent):>#<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :>"><:= tag.name :></a></li>
+                  <:-.end for:>
+                </ul>
+              </aside>
+              <:-.end if:>
+
+              <:-.if !(cfg.entry("basic", "hide_file_list") or article.flags =~ /h/ ) and article.files:>
+              <aside>
+                <h3 class="nav-header"><i class="fa fa-download"></i> Downloads</h3>
+                <ul class="files nav nav-pills nav-stacked">
+                  <:-.set files = [ article.files ] :>
+                  <:-.for file in files :>
+                  <li class="<:= file.requireUser ? 'locked' : '':>">
+                    <:-.call "edit_file", "article":article :>
+                    <:-.call "move_file", "article":article :>
+                    <:-.if file.forSale:>
+                    <:= file.description or file.displayName:>
+                    <:-.else:>
+                    <a href="<:= cfg.user_url("user", "download_file", "file", file.id, "r", bse.url(article)):>" title="Size: <:= (file.sizeInBytes / 1024).format("%.1f"):>KB">
+                      <:= file.description or file.displayName:>
+                      <:-.if file.requireUser :>
+                      <i class="fa fa-lock"></i>
+                      <:-.end if:>
+                    </a>
+                    <:-.end if:>
+                  </li>
+                  <:-.end for:>
+                </ul>
+              </aside>
+              <:-.end if:>
+
+              <:-.if children.size:>
+              <nav role="navigation">
+                <h3 class="nav-header">Related Places</h3>
+                <ul class="children nav nav-pills nav-stacked">
+                  <:-.for child in children :>
+                  <li>
+                    <:-.call "edit_child", "parent":article :>
+                    <:-.call "move", "parent":article :>
+                    <a href="<:= underthreshold ? '#section_' _ child.id : bse.url(child):>">
+                      <:-.if child.customStr1:>
+                      <i class="icon <:= child.customStr1:>"></i>
+                      <:-.end if:>
+                      <:= child.titleAlias or child.title:>
+                    </a>
+                  </li>
+                  <:-.end for:>
+                </ul>
+              </nav>
+              <:-.end if:>
+              <:-.if prev and next :>
+              <ul class="pagination">
+                <li><a href="<:= bse.url(prev):>"><i class="fa fa-angle-left"></i></a></li>
+                <li><a href="<:= bse.url(next):>"><i class="fa fa-angle-right"></i></a></li>
+              </ul>
+              <:-.end if:>
+            </div>
+          </div>
+
+          <:-.set imagesx = [ article.images ] -:>
+          <:-.set images = [] -:>
+
+          <:-.for image in imagesx -:>
+            <:-.if image.name !~ /^thumbnail/ -:>
+              <:-% images.push(image) -:>
+            <:-.end if -:>
+          <:-.end for -:>
+
+          <:-.if images.size:>
+          <div class="col-md-8">
+            <:-.for img in images:>
+            <:-.set has_caption = img.alt and img.alt !~ /^#/ and cfg.entry("thumb captions", article.id, 1 ) :>
+              <:-.call "edit_image", "article":article :>
+              <:-.call "move_image", "article":article :>
+            <div class="box">
+              <:-.if img.url =~ /(https?:)?\/\/player\.vimeo\.com/ :>
+              <p class="video-container">
+                <iframe src="<:= img.url:>?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;color=ff6600" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+              </p>
+              <:-.elsif img.url :>
+              <a href="<:= img.url =~ /^\d+$/ ? bse.url(bse.articles.getByPkey(img.url)) : img.url =~ /^[\w-]+$/ ? bse.url(bse.articles.getBy("linkAlias", img.url)) : img.url :>">
+                <p><:= img.thumb("geo","col_8", "static", 1, "nolink", 1) |raw:></p>  
+              </a>
+              <:-.else:>
+              <p><:= img.thumb("geo", "col_8", "static", 1, "nolink", 1) |raw:></p>
+              <:-.end if:>
+              <:-.if has_caption:>
+              <p class="box-caption"><:= img.alt.escape("html").replace(/(?:(.*) *?:)/, " <b>$1</b>") |raw:></p>
+              <:-.end if:>
+            </div>
+            <:-.end for:>
+          </div>
+          <:-.end if:>
+        </div>
+<:embed end:>
+
+        <:-.if children.size and underthreshold:>
+        <:- include include/sortallkids.tmpl:>
+        <:-.for child in children :>
+        <section id="<:= 'section_' _ child.id:>" class="article">
+          <:-.call "move", "parent":article :>
+          <:-= generator.vembed(child) |raw:>
+        </section>
+        <:-.end for:>
+        <:-.end if:>
+      </article>

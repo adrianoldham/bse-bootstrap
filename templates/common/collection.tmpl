@@ -1,0 +1,112 @@
+<:-.wrap "base.tmpl", "class": "page-collection" :>
+      <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+
+        <:-.set children = [ article.all_visible_kids ] -:>
+
+        <:- include include/header.tmpl optional:>
+        <:-.if article.body:>
+        <:body:>
+        <:-.end if:>
+        <:- include include/footer.tmpl optional:>
+        <:- include include/files.tmpl optional:>
+
+        <:-.if children.size:>
+
+        <:-.set allkid_taginfo = bse.articles.all_visible_kid_tags(article.id) -:>
+        <:-.set tags = allkid_taginfo.tags.sort("name") -:>
+
+        <:-.if tags.size == -1:>
+        <!-- tags -->
+        <:-.set tagcats = bse.categorize_tags(tags) -:>
+        <ul id="filters" class="nav nav-filters nav-pills">
+          <li><a href="#" data-filter="" class="selected">All</a></li>
+          <:-.for tagcat in tagcats:>
+          <:-.for tag in tagcat.tags:>
+          <li>
+            <a href="#" data-filter=".tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :>"><:= tag.val :></a>
+          </li>
+          <:-.end for:>
+          <:-.end for:>
+        </ul>
+        <:-.end if:>
+
+        <:-.if tags.size == -1 :>
+        <!-- tags -->
+        <:-.set tagcats = bse.categorize_tags(tags) -:>
+        <ul id="filters" class="nav nav-filters nav-pills">
+          <li><a href="#" data-filter="" class="selected">All</a></li>
+          <:-.for tagcat in tagcats:>
+          <li>
+            <span><:= tagcat.name:></span>
+            <ul class="nav nav-filters nav-pills">
+              <:-.for tag in tagcat.tags:>
+              <li>
+                <a href="#" data-filter=".tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :>"><:= tag.val :></a>
+              </li>
+              <:-.end for:>
+            </ul>
+          </li>
+          <:-.end for:>
+        </ul>
+        <:-.end if:>
+
+        <:-.if tags.size:>
+        <!-- tags -->
+        <ul id="filters" class="nav nav-filters nav-pills">
+          <li><a href="#" data-filter="" class="selected">All</a></li>
+          <:-.for tag in tags:>
+          <li><a href="#" data-filter=".tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :>"><:= tag.val :></a></li>
+          <:-.end for:>
+        </ul>
+        <:-.end if:>
+        <!-- children -->
+        <:-.set underthreshold = article.threshold > children.size -:>
+        <:-.if cfg.entry("basic", "hide_child_list") or article.flags =~ /l/ -:>
+        <:-.elsif children.size:>
+        <:- include include/sortallkids.tmpl:>
+        <:-.if underthreshold:>
+        <:-.for child in children :>
+        <section id="<:= 'section_' _ child.id:>" class="article">
+          <:-.call "move", "parent":article :>
+          <:-= generator.vembed(child) |raw:>
+        </section>
+        <:-.end for:>
+        <:-.else:>
+
+        <:-.set isotope_id = "isotope" :>
+        <:-.set geo = "col_4" :>
+        <:-.set grid = "col-xs-12 col-sm-4 col-md-3" :>
+        <div id="<:= isotope_id :>" class="row isotope">
+          <:-.for child in children :>
+          <:-.set tags = [ child.tag_objects ] :>
+          <:-.set img = child.image_by_name("thumbnail") or [ child.images ][0] or bse.site.image_by_name("placeholder") :>
+          <:-.set has_caption = cfg.entry("thumb captions", article.id, 1 ) :>
+          <div class="<:= grid:> <:-.for tag in tags:> tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :><:.end for:>">
+            <:-.call "edit_child", "parent":article, "label":loop.count :>
+            <:-.call "move", "parent":article :>
+            <div class="box <:= has_caption ? cfg.entry("box caption class", article.id, cfg.entry("box caption class", "default")) : '' :>">
+            <a href="<:= bse.url(child):>" title="<:= child.title:>">
+              <p class="box-image"><:= img.thumb("geo", geo, "static", 1, "nolink", 1) |raw:></p>
+              <:-.if has_caption :>
+              <p class="box-caption"><b><:= ( child.titleAlias or child.title ).escape("html").replace(/(?:  (.*))/, " <em>$1</em>") |raw:></b>
+              <:-.if cfg.entry("basic", "hide_child_summary") -:>
+              <:-.elsif child.summary:>
+              <span><:= child.summary.escape("html").replace(/\n/, "<br />", 1) |raw:></span>
+              <:-.elsif child.summaryLength:>
+              <span><:= generator.summary(child) |raw:></span>
+              <:-.end if:></p>
+              <:-.end if:>
+            </a>
+            <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= img.alt.replace(/^#/, '') or child.title:>" class="gallery" rel="<:= "gallery" _ article.id :>">
+              +
+              <span class="sr-only">View larger</span>
+            </a>
+            </div>
+          </div>
+          <:-.end for:>
+        </div>
+        <:-.end if:>
+        <:-.end if:>
+<:embed end:>
+      </article>

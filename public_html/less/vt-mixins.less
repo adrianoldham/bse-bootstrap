@@ -1,0 +1,66 @@
+.grayscale(@grayscale: 100%) {
+    -webkit-filter: grayscale(@grayscale);
+    -moz-filter: grayscale(@grayscale);
+    filter: grayscale(@grayscale);
+    filter: gray;
+}
+
+.border-radius(@radius) {
+    -webkit-border-radius: @radius;
+       -moz-border-radius: @radius;
+            border-radius: @radius;
+}
+
+.transform(@transform) {
+    -webkit-transform: @transform;
+       -moz-transform: @transform;
+         -o-transform: @transform;
+            transform: @transform;
+}
+
+.transition(@transition) {
+    -webkit-transition: @transition;
+       -moz-transition: @transition;
+         -o-transition: @transition;
+            transition: @transition;
+}
+
+.fade-transition(
+    @property: opacity;
+    @duration: 0.15s;
+    @easing: ease-in;
+    ) {
+    .transition(@arguments);
+}
+
+.color-transition(
+    @property: color;
+    @duration: 0.15s;
+    @easing: ease-in;
+    ) {
+    .transition(@arguments);
+}
+
+.background-transition(
+    @property: background;
+    @duration: 0.15s;
+    @easing: ease-in;
+    ) {
+    .transition(@arguments);
+}
+
+.border-transition(
+    @property: border;
+    @duration: 0.15s;
+    @easing: ease-in;
+    ) {
+    .transition(@arguments);
+}
+
+.height-transition(
+    @property: height;
+    @duration: 0.15s;
+    @easing: ease-in;
+    ) {
+    .transition(@arguments);
+}

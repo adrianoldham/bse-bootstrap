@@ -1,0 +1,16 @@
+        <:-.if cfg.entry("articles", "footer"):>
+        <footer>
+          <:-.if article.author:>
+          <p class="article-author">
+            <span>Author</span>
+            <:= article.author:>
+          </p>
+          <:-.end if:>
+          <p class="article-pubdate">
+            <span>Published</span>
+            <time datetime="<:= bse.date("%Y-%m-%d", article.release):>">
+              <:= bse.date("%d %B %Y", article.release).replace(/^0/, ""):>
+            </time>
+          </p>
+        </footer>
+        <:-.end if:>

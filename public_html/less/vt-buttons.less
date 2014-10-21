@@ -1,0 +1,51 @@
+.btn-widget(
+    @color: #fff;
+    @background-color: rgba(0, 0, 0, 0.6);
+    @width: 50px;
+    @height: @width;
+    @font-size: 28px;
+    @line-height: @height;
+    @font-weight: 500;
+    @border-width: 0;
+    @border-style: solid;
+    @border-color: @color;
+    @display: block;
+    @position: absolute;
+    ) {
+    text-align: center;
+    color: @color;
+    background-color: @background-color;
+    width: @width;
+    height: @height;
+    font-size: @font-size;
+    line-height: @line-height - (@border-width * 2);
+    font-weight: @font-weight;
+    border-width: @border-width;
+    border-style: @border-style;
+    border-color: @border-color;
+    display: @display;
+    position: @position;
+}
+
+.link-icon {
+    font-family: FontAwesome;
+    content: "\f105";
+}
+
+.popup-icon {
+    content: "+";
+}
+
+.info-icon {
+    content: "i";
+}
+
+.buttons,
+.with-btn,
+.with-buttons {
+    .clearfix();
+
+    a {
+        text-decoration: none !important;
+    }
+}

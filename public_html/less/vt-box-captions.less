@@ -1,0 +1,245 @@
+@box-caption-color: #fff;
+@box-caption-bg: rgba(0, 0, 0, 0.8);
+@box-caption-fallback-bg: @gray-dark;
+@box-caption-padding: (@line-height-computed / 2);
+
+@box-overlay-caption-color: @box-caption-color;
+@box-overlay-caption-bg: @box-caption-bg;
+@box-overlay-caption-fallback-bg: @box-caption-fallback-bg;
+@box-overlay-caption-padding: @box-caption-padding;
+
+@box-drawer-caption-color: @box-caption-color;
+@box-drawer-caption-bg: @box-caption-bg;
+@box-drawer-caption-fallback-bg: @box-caption-fallback-bg;
+@box-drawer-caption-padding: @box-caption-padding;
+
+@box-panel-caption-color: @box-caption-color;
+@box-panel-caption-bg: @box-caption-bg;
+@box-panel-caption-fallback-bg: @box-caption-fallback-bg;
+@box-panel-caption-padding: @box-caption-padding;
+
+@box-gradient-caption-color: @box-caption-color;
+@box-gradient-caption-start-bg: transparent;
+@box-gradient-caption-end-bg: @box-caption-bg;
+@box-gradient-caption-padding: @box-caption-padding;
+
+@box-caption-font-family: @font-family-sans-serif;
+@box-caption-font-size-xs: @font-size-h5;
+@box-caption-font-size-sm: @font-size-h4;
+@box-caption-font-size-md: @font-size-h3;
+@box-caption-font-size-lg: @font-size-h2;
+@box-caption-font-size-xl: @font-size-h1;
+
+.box {
+    position: relative;
+
+    .box-caption {
+        font-family: @box-caption-font-family;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        b {
+            display: block;
+        }
+    }
+
+    .box-image {
+        position: relative;
+        margin-bottom: 0;
+        z-index: 1;
+        
+        & + .box-caption {
+            padding-top: @box-caption-padding;
+        }
+    }
+    
+    &.with-overlay {
+        text-align: center;
+
+        & > a {
+            display: block;
+        }
+
+        &:after {
+            // overlay
+            content: " ";
+            display: block;
+            position: absolute;
+            z-index: 2;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: @box-overlay-caption-fallback-bg;
+            background-color: @box-overlay-caption-bg;
+        }
+
+        &:hover {
+            a:before {
+                content: " ";
+                display: block;
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                z-index: 4;
+            }
+        }
+        
+        .box-caption {
+            .absolute-center();
+            overflow: auto;
+            color: @box-overlay-caption-color;
+            padding: @box-overlay-caption-padding;
+            text-align: center;
+            z-index: 3;
+            
+            &:before {
+                .btn-widget(@background-color: none; @border-width: 3px; @position: relative;);
+                .center-block();
+                .round();
+                margin-bottom: @line-height-computed;
+                z-index: 4;
+            }
+            
+            &.with-link-icon:before {
+                &:extend(.link-icon);
+            }
+
+            &.with-popup-icon:before {
+                &:extend(.popup-icon);
+            }
+
+            &.with-info-icon:before {
+                &:extend(.info-icon);
+            }
+        }
+
+        &:after,
+        .box-caption {
+            .opacity(0);
+            .fade-transition();
+        }
+
+        &:hover {
+            &:after,
+            .box-caption {
+                .opacity(1);
+            }
+        }
+    }
+    
+    &.with-drawer {
+        .box-caption {
+            color: @box-drawer-caption-color;
+            position: absolute;
+            top: auto; left: 0; right: 0; bottom: 0;
+            background-color: @box-drawer-caption-fallback-bg;
+            background-color: @box-drawer-caption-bg;
+            z-index: 2;
+            margin: 0;
+            padding: @box-drawer-caption-padding;
+            
+            span {
+                display: block;
+                overflow: hidden;
+                //position: relative;
+                //height: 0;
+                max-height: 0;
+                .transition(max-height 0.25s ease-in-out);
+            }
+        }
+        
+        &:hover {
+            .box-caption {                
+                span {
+                    //height: auto;
+                    max-height: 60px;
+                }
+            }
+        }
+    }
+    
+    &.with-panel {
+        .box-image {
+            margin-bottom: 0 !important;        
+        }
+
+        .box-caption {
+            color: @box-panel-caption-color;
+            background-color: @box-panel-caption-fallback-bg;
+            background-color: @box-panel-caption-bg;
+            padding: @box-panel-caption-padding;
+        }
+    }
+
+    &.with-gradient {
+        .fade-caption();
+
+        .box-caption {
+            font-weight: 500;
+            color: @box-gradient-caption-color;
+            text-shadow: 1px 1px 0 @box-gradient-caption-end-bg;
+            position: absolute;
+            top: auto; left: 0; right: 0; bottom: 0;
+            #gradient.vertical(@start-color: @box-gradient-caption-start-bg; @end-color: @box-gradient-caption-end-bg;);
+            z-index: 2;
+            margin: 0;
+            padding: @box-gradient-caption-padding;
+        }
+    }
+    
+    &.fade-caption {
+        .box-caption {
+            opacity: 0;
+            .fade-transition();
+        }
+        
+        &:hover {
+            .box-caption {
+                opacity: 1;
+            }
+        }
+    }
+
+    &.with-caption-size-xs {
+        .box-caption {
+            .caption-size-xs();
+        }
+    }
+
+    &.with-caption-size-sm {
+        .box-caption {
+            .caption-size-sm();
+        }
+    }
+
+    &.with-caption-size-md {
+        .box-caption {
+            .caption-size-md();
+        }
+    }
+
+    &.with-caption-size-lg {
+        .box-caption {
+            .caption-size-lg();
+        }
+    }
+}
+
+.caption-size-xs {
+    font-size: @box-caption-font-size-xs;
+}
+
+.caption-size-sm {
+    font-size: @box-caption-font-size-sm;
+}
+
+.caption-size-md {
+    font-size: @box-caption-font-size-md;
+}
+
+.caption-size-lg {
+    font-size: @box-caption-font-size-lg;
+}
+
+.caption-size-xl {
+    font-size: @box-caption-font-size-xl;
+}

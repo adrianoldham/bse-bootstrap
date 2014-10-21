@@ -1,0 +1,145 @@
+.box {
+    &:hover {
+        color: @box-text-hover-color;
+
+        .icon {
+            &:extend(.icon:hover all);
+        }
+    }
+
+    &.with-icon-size-xl {
+        .icon {
+            &:extend(.icon-size-xl);
+        }
+    }
+
+    &.with-icon-size-lg {
+        .icon {
+            &:extend(.icon-size-lg);
+        }
+    }
+
+    &.with-icon-size-md {
+        .icon {
+            &:extend(.icon-size-md);
+        }
+    }
+
+    &.with-icon-size-sm {
+        .icon {
+            &:extend(.icon-size-sm);
+        }
+    }
+
+    &.with-icon-size-em {
+        .icon {
+            &:extend(.icon-size-em);
+        }
+    }
+
+    &.with-icon-style-fill {
+        .icon {
+            &:extend(.icon-style-fill all);
+        }
+        
+        &:hover {
+            .icon {
+                &:extend(.icon-style-fill-hover all);
+            }
+        }
+    }
+
+    &.with-icon-style-open {
+        .icon {
+            &:extend(.icon-style-open all);
+        }
+        
+        &:hover {
+            .icon {
+                &:extend(.icon-style-open-hover all);
+            }
+        }
+    }
+    
+    &.with-icon-shape-circle {
+        .icon {
+            &:extend(.icon-shape-circle all);
+        }
+    }
+
+    &.with-icon-shape-square {
+        .icon {
+            &:extend(.icon-shape-square all);
+        }
+    }
+
+    &.with-icon-shape-diamond {
+        .icon {
+            &:extend(.icon-shape-diamond all);
+        }
+        
+        &.and-fit-bounding-box,
+        &.and-fit-bounds {
+            .icon {
+                &:extend(.icon-shape-diamond.fit-bounds all);
+            }
+        }
+    }
+
+    &.listed-center,
+    &.with-icon-center {
+        text-align: center;
+        
+        .icon {
+            margin-bottom: @line-height-computed;
+            
+            &.size-em {
+                margin-bottom: 0.5em;
+            }
+
+            &.shape-diamond {
+                & + * {
+                    margin-top: @line-height-computed;
+                }
+            }
+        }
+    }
+ 
+    &.listed-left,
+    &.with-icon-left {
+        text-align: left;
+        
+        .box-text {
+            padding-left: 90px;
+        }
+        
+        .icon {
+            float: left;
+            //margin-right: 30px;
+        }
+    }
+
+    &.listed-right,
+    &.with-icon-right {
+        text-align: right;
+        
+        .box-text {
+            padding-right: 90px;
+        }
+        
+        .icon {
+            float: right;
+            //margin-left: 30px;
+        }
+    }
+
+    // FIXME: Make left and right display fit varying icon sizes, until then
+    // force icons-xs size when displayed left or right
+    &[class*="-left"],
+    &[class*="-right"] {
+        .icon {
+            //&:extend(.icon-size-xs); // can’t use extend because of specificity problems
+            .icon-size-xs();
+        }
+    }
+}

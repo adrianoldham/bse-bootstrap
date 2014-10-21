@@ -1,0 +1,97 @@
+@fancybox-close-color: #fff;
+@fancybox-close-bg: @brand-primary;
+
+@fancybox-nav-color: @fancybox-close-color;
+@fancybox-nav-bg: @fancybox-close-bg;
+
+@fancybox-title-font-size: @font-size-base;
+@fancybox-title-line-height: @line-height-base;
+@fancybox-title-font-family: @font-family-sans-serif;
+@fancybox-title-color: #333;
+@fancybox-title-bg: #fff;
+
+.fancybox-wrap {
+    .fancybox-skin {
+        .border-radius(0);
+    }
+
+    .fancybox-close {
+        top: -36px;
+        right: 0;
+        background: @fancybox-close-bg;
+        text-align: center;
+        text-decoration: none;
+        
+        &:before {
+            color: @fancybox-close-color;
+            font-size: 28px;
+            line-height: 36px;
+            min-width: 1em;
+            content: "\2715";
+            //content: "\e601"; // vt-icon
+        }
+    }
+
+    .fancybox-nav {
+        span {
+            text-align: center;
+        	width: 36px;
+        	height: 36px;
+        	margin-top: -18px;
+        	color: @fancybox-nav-color;
+        	background: @fancybox-nav-bg;
+    
+            &:before {
+                font-family: vt-icons, FontAwesome;
+                font-size: 28px;
+                line-height: 36px;
+            }
+        }
+    }
+
+    .fancybox-prev {
+        span {
+            left: -36px;
+    
+        	&:before {
+        	    content: "\f104";
+        	    //content: "\e602"; // vt-icon
+        	}
+        }
+    }
+
+    .fancybox-next {
+        span {
+            right: -36px;
+    
+        	&:before {
+        	    content: "\f105";
+        	    //content: "\e603"; // vt-icon
+        	}
+        }
+    }
+
+    .fancybox-title {
+        font: @fancybox-title-font-size/@fancybox-title-line-height @font-family-sans-serif;
+    }
+
+    .fancybox-title-float-wrap {
+        position: relative;
+        right: auto;
+	    margin-bottom: auto;
+	    width: 100% !important; // ie 9
+        
+        .child {
+            display: block;
+            margin-right: auto;
+            padding: 12px 20px;
+            background: @fancybox-title-bg;
+            .border-radius(0);
+            text-shadow: none;
+            color: @fancybox-title-color;
+            font-weight: normal;
+	        line-height: 24px;
+	        white-space: normal;
+        }
+    }
+}

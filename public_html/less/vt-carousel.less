@@ -1,0 +1,97 @@
+@carousel-control-height: @carousel-control-width;
+@carousel-control-bg: rgba(0, 0, 0, @carousel-control-opacity);
+@carousel-control-fallback-bg: @gray-dark;
+@carousel-caption-bg: rgba(0, 0, 0, 0.6);
+@carousel-caption-fallback-bg: @carousel-control-fallback-bg;
+@carousel-caption-padding: 10px ~" !important"; // !important for ie8
+@carousel-caption-text-shadow: none;
+@carousel-caption-border-radius: none;
+
+.carousel-caption {
+    background-color: @carousel-caption-fallback-bg;
+    background-color: @carousel-caption-bg; // fallback for ie8
+    margin-bottom: 40px;
+    padding: @carousel-caption-padding;
+    .border-radius(@carousel-caption-border-radius);
+    
+    * {
+        color: @carousel-caption-color;
+        text-shadow: @carousel-caption-text-shadow;
+        margin-bottom: 0;
+    }
+}
+
+.carousel-control {
+    width: @carousel-control-width;
+    height: @carousel-control-height;
+    top: 50%;
+    margin-top: round(-@carousel-control-height / 2);
+    background-image: none !important; // remove gradient
+    
+    &.left {
+        left: 0;
+    }
+
+    &.right {
+        right: 0;
+    }
+    
+    &.left,
+    &.right {
+        .reset-filter(); // remove IE gradient
+    }
+
+    span {
+        display: block;
+        background-color: @carousel-control-fallback-bg;
+        background-color: @carousel-control-bg;
+        font-size: @carousel-control-font-size;
+        line-height: @carousel-control-height;
+        color: @carousel-control-color;
+        text-align: center;
+    }
+}
+
+.carousel-inner {
+    text-align: center;
+    
+    .with-background-image,
+    img {
+        // used when images are set as backgrounds
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    img {
+        margin: 0 auto;
+    }
+}
+
+.carousel-indicators {
+    margin-bottom: 0;
+}
+
+/* dissolve transition for carousel items */
+.carousel.dissolve {
+    .item {
+        left: 0 !important;
+        .transition(opacity 0.5s);
+    }
+
+    .next.left,
+    .prev.right {
+        opacity: 1;
+        z-index: 1;
+    }
+
+    .active.left,
+    .active.right {
+        opacity: 0;
+        z-index: 2;
+    }
+
+    .carousel-control {
+        z-index: 3;
+    }
+}

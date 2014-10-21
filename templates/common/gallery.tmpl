@@ -1,0 +1,67 @@
+<:-.wrap "base.tmpl", "class": "page-gallery" :>
+
+      <:-.set childrenx = [ article.all_visible_kids ] -:>
+      <:-.set children = [] -:>
+      
+      <:-.for child in childrenx -:>
+        <:-.if child.flags !~ /s/ -:>
+          <:-% children.push(child) -:>
+        <:-.end if -:>
+      <:-.end for -:>
+      <:-.set underthreshold = article.threshold > children.size -:>
+
+      <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+        <:- include include/header.tmpl optional:>
+        <:-.if article.body:>
+        <:body:>
+        <:-.end if:>
+
+        <:-.set images = [ article.images ] -:>
+        <:-.if images.size:>
+        <:-.set tags = article.image_tags.tags -:>
+
+        <:-.if tags.size :>
+        <!-- tags -->
+        <ul id="filters" class="nav nav-filters nav-pills">
+          <li><a href="#" data-filter="" class="selected">All</a></li>
+          <:-.for tag in tags:>
+          <li><a href="#" data-filter=".tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :>"><:= tag.name :></a></li>
+          <:-.end for:>
+        </ul>
+        <:-.end if:>
+        <!-- thumbnails -->
+        <div id="isotope" class="row box-group isotope">
+          <:-.set geo = "col_4" :>
+          <:-.set grid = "col-xs-12 col-sm-4 col-md-3" :>
+
+          <:-.for img in images:>
+          <:-.set tags = [ img.tag_objects ] :>
+          <:-.set has_caption = img.alt and img.alt !~ /^#/ and cfg.entry("thumb captions", article.id, 1 ) :>
+          <div class="<:= grid :> <:-.for tag in tags:> tag-<:= tag.name.replace(/[^A-Za-z0-9_]+/, "-", 1).lower :><:.end for:>">
+            <:-.call "edit_image", "article":article, "label":img.name _ ' ' _ loop.count :>
+            <:-.call "move_image", "article":article :>
+            <div class="box <:= has_caption ? cfg.entry("box caption class", article.id, cfg.entry("box caption class", "default")) : '' :>">
+              <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= has_caption ? img.alt : '':>" class="gallery-thumb" rel="<:= "gallery" _ article.id :>">
+                <p class="box-image"><:= img.thumb("geo", geo, "static", 1, "nolink", 1) |raw:></p>  
+                <:-.if has_caption:>
+                <p class="box-caption"><:= img.alt.escape("html").replace(/(?:(.*)( *)?:)/, " <b>$1</b>") |raw:></p>
+                <:-.end if:>
+              </a>
+            </div>
+          </div>
+          <:-.end for:>
+        </div>
+        <:-.end if:>
+ <:embed end:>
+
+        <:-.if children.size and underthreshold:>
+        <:- include include/sortallkids.tmpl:>
+        <:-.for child in children :>
+        <section id="<:= 'section_' _ child.id:>" class="article">
+          <:-.call "move", "parent":article :>
+          <:-= generator.vembed(child) |raw:>
+        </section>
+        <:-.end for:>
+        <:-.end if:>
+      </article>

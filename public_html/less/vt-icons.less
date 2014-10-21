@@ -1,0 +1,322 @@
+@icon-font-size-base: 14px;
+@icon-border-width-base: unit((1 / @icon-font-size-base), em);
+@icon-shape-width: unit((64px / (@icon-font-size-base * 2)), em); // icon-size-xs shape width =~ 64px
+@icon-shape-rounded-radius: unit((1 / (@icon-font-size-base / 2)), em);
+@icon-color: @brand-primary;
+@icon-hover-color: tint(@icon-color, 25%);
+
+@icon-style-fill-color: #fff;
+@icon-style-fill-bg: @icon-style-open-border;
+@icon-style-fill-hover-color: @icon-style-fill-color;
+@icon-style-fill-hover-bg: @icon-color;
+
+@icon-style-open-color: @icon-color;
+@icon-style-open-bg: transparent;
+@icon-style-open-hover-color: @icon-style-fill-hover-color;
+@icon-style-open-hover-bg: @icon-style-fill-hover-bg;
+
+@icon-style-open-border: tint(@icon-color, 25%);
+@icon-style-open-hover-border: @icon-color;
+@icon-style-open-border-style: solid;
+@icon-style-open-border-width: @icon-border-width-base;
+
+.icon {
+    .icon-size-xs(); // base * 2 // can’t use extend due to specificity problems with overrides
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    //.center-block(); // can’t use with rotated “diamond” icons
+    &:extend(.icon-shape-circle); // default shape is circle
+    .background-transition();
+
+    i&.visual-middle {
+        top: -0.04878048780488em; // visual middle compensation for inline icons
+    }
+
+    & > i,
+    & > img,
+    &:before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -0.5em;
+        margin-left: -0.5em;
+        color: @icon-color;
+        width: 1em;
+        max-height: 1em;
+        .color-transition();
+    }
+    
+    &.size-xl {
+        &:extend(.icon-size-xl);
+    }
+
+    &.size-lg {
+        &:extend(.icon-size-lg);
+    }
+
+    &.size-md {
+        &:extend(.icon-size-md);
+    }
+
+    &.size-sm {
+        &:extend(.icon-size-sm);
+    }
+
+    &.size-xs {
+        &:extend(.icon-size-xs);
+    }
+
+    &.size-em {
+        &:extend(.icon-size-em);
+    }
+
+    &.style-open {
+        &:extend(.icon-style-open all);
+    }
+    
+    &.style-fill {
+        &:extend(.icon-style-fill all);
+    }
+
+    &.shape-circle {
+        &:extend(.icon-shape-circle all);
+    }
+
+    &.shape-square {
+        &:extend(.icon-shape-square all);
+    }
+
+    &.shape-rounded {
+        &:extend(.icon-shape-rounded all);
+    }
+
+    &.shape-diamond {
+        &:extend(.icon-shape-diamond all);
+    }
+}
+
+// sizes in descending order to help specificity overrides
+.icon-size-xl {
+    //font-size: 10em;
+    font-size: (@icon-font-size-base * 10);
+}
+
+.icon-size-lg {
+    //font-size: 8em;
+    font-size: (@icon-font-size-base * 8);
+}
+
+.icon-size-md {
+    //font-size: 6em;
+    font-size: (@icon-font-size-base * 6);
+}
+
+.icon-size-sm {
+    //font-size: 4em;
+    font-size: (@icon-font-size-base * 4);
+}
+
+.icon-size-xs {
+    //font-size: 2em;
+    font-size: (@icon-font-size-base * 2); // used as default icon size
+}
+
+.icon-size-em {
+    font-size: 1em;
+}
+
+.icon-shape-circle {
+    .round();
+}
+
+.icon-shape-square {
+    .border-radius(0); // radius zero required to override circle default
+}
+
+.icon-shape-rounded {
+    .border-radius(@icon-shape-rounded-radius);
+}
+
+.icon-shape-diamond {
+    margin: (@icon-shape-width * 0.207) !important;
+    &:extend(.icon-shape-square);
+    .rotate(45deg);
+
+    i,
+    & > img,
+    &:before {
+        .rotate(-45deg);
+    }
+    
+    &.fit-bounding-box,
+    &.fit-bounds {
+        margin: 0 !important;
+        //.scale(0.707); // not additive to the rotate transform
+        .transform(rotate(45deg) scale(0.707));
+        
+        &-only {
+            & > i,
+            & > img,
+            &:before {
+                .transform(rotate(-45deg) scale(1.414)); // retain original icon scale
+            }
+        }
+    }
+}
+
+.icon-style-open {
+    .square(@icon-shape-width);
+    .make-open-icon-theme(
+        @color: @icon-color;
+        @border-width: @icon-style-open-border-width;
+        @border-style: @icon-style-open-border-style;
+    );
+}
+
+.make-open-icon-theme(
+    @color;
+    @border-width;
+    @border-style;
+    ) {
+    border-width: @border-width;
+    border-style: @border-style;
+    .border-transition();
+
+    .make-icon-theme(
+        @color: @color;
+        @background-color: transparent;
+        @border-color: tint(@color, 50%);
+        @color-hover: #fff;
+        @background-color-hover: @color;
+        @border-color-hover: @color;
+    );
+}
+
+.icon-style-fill {
+    .square(@icon-shape-width);
+    .make-fill-icon-theme(@color: @icon-color;);
+}
+
+.make-fill-icon-theme(@color) {
+    .make-icon-theme(
+        @color: #fff;
+        @background-color: tint(@color, 25%);
+        @border-color: transparent;
+        @color-hover: #fff;
+        @background-color-hover: @color;
+        @border-color-hover: transparent;
+    );
+}
+
+.make-icon-theme(
+    @color: @icon-color;
+    @background-color: transparent;
+    @border-color: transparent;
+    @color-hover: @icon-hover-color;
+    @background-color-hover: transparent;
+    @border-color-hover: transparent;
+    ) {
+    background-color: @background-color;
+    border-color: @border-color;
+
+    &,
+    & > i,
+    &:before {
+        color: @color;
+    }
+    
+    &:hover,
+    &.active {
+        background-color: @background-color-hover;
+        border-color: @border-color-hover;
+
+        &,
+        & > i,
+        &:before {
+            color: @color-hover;
+        }
+    }
+}
+
+.link-icon {
+    font-family:FontAwesome;
+    content:"\f105";
+}
+
+.popup-icon {
+    content:"+";
+}
+
+.info-icon {
+    content:"i";
+}
+
+@media (max-width: @screen-md-max) {
+    .icon-size-xl {
+        //.icon-size-lg();
+        font-size: (@icon-font-size-base * 8);
+    }
+
+    .icon-size-lg {
+        //.icon-size-md();
+        font-size: (@icon-font-size-base * 6);
+    }
+
+    .icon-size-md {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+
+    .icon-size-sm {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .icon-size-xl {
+        //.icon-size-md();
+        font-size: (@icon-font-size-base * 6);
+    }
+
+    .icon-size-lg {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+    
+    .icon-size-md {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+
+    .icon-size-sm {
+        //.icon-size-xs();
+        font-size: (@icon-font-size-base * 2);
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .icon-size-xl {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+
+    .icon-size-lg {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 4);
+    }
+    
+    .icon-size-md {
+        //.icon-size-sm();
+        font-size: (@icon-font-size-base * 2);
+    }
+    
+    .icon-size-sm {
+        //.icon-size-xs();
+        font-size: (@icon-font-size-base * 2);
+    }
+}

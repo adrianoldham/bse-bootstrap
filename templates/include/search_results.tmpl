@@ -1,0 +1,85 @@
+<:- if Search:>
+<:- if Results:>
+<p><:count:> document<:cond [multiple] "s" "":> matched your search terms:</p>
+<dl>
+  <:- iterator begin results:>
+  <dt>
+    <span><:resultSeq:>.</span>
+    <:- ifUserCanSee result:>
+    <a href="<:articleurl |h:>"><:highlight_result title:></a>
+    <:- or:>
+    <span><:highlight_result title:></span>
+    <:- eif:>
+  </dt>
+  <dd>
+    <p><:excerpt:></p>
+    <ul class="meta data">
+      <li><span>Score:</span> <:result score:>%</li>
+      <li><span>Last modified:</span> <:date result lastModified:></li>
+      <:- ifKeywords:>
+      <li><span>Keywords:</span> <:keywords:></li>
+      <:- eif:>
+      <:- ifAuthor:>
+      <li><span>Author:</span> <:author:></li>
+      <:- eif:>
+      <:- ifPageTitle:>
+      <li><span>Page title:</span> <:pageTitle:></li>
+      <:- eif:>
+      <:- ifProduct_code:>
+      <li><span>Product code:</span> <:product_code:></li>
+      <:- eif:>
+    </ul>
+    <:- if Matchfiles:>
+    <ul class="meta files">
+      <:- iterator begin matchfiles:>
+      <li<:ifMatchfile notes_matched:> class="has-info"<:eif:>>
+        <span>File <:add [matchfile_index] 1:>:</span>
+        <:- switch:>
+        <:- case Matchfile forSale:>
+          <:- ifMatchfile description:>
+        <:matchfile description:>
+          <:- or:>
+        <:matchfile displayName:>
+          <:- eif -:>
+        <:- case default:>
+        <a href="<:target user download_file file [matchfile id] r [articleurl] |h:>" title="Size: <:arithmetic d1:( [matchfile sizeInBytes] / 1024):>KB">
+          <:- ifMatchfile description -:>
+            <:matchfile description:>
+          <:- or -:>
+            <:matchfile displayName:>
+          <:- eif -:>
+        </a>
+        <:- endswitch:>
+        <:- ifMatchfile notes_matched:>
+        <div><p><:matchfile notes_excerpt:></p></div>
+        <:- eif:>
+      </li>
+      <:- iterator end matchfiles:>
+    </ul>
+    <:- eif Matchfiles:>
+  </dd>
+  <:- iterator end results:>
+</dl>
+<ul class="pagination">
+  <:- iterator begin pages -:>
+  <li class="<:cond [ifCurrentSearchPage] "active" "":>">
+    <a href="<:pageurl:>" title="Result page <:page:>"><:page:></a>
+  </li>
+  <:- iterator end pages -:>
+</ul>
+<:- or Results:>
+<p>No documents were found that matched your search terms.</p>
+<:- eif Results:>
+<:- eif Search:>
+<:- if !Results:>
+<div class="body">
+  <p>By default results are returned if any one of your keywords is found in the document.</p>
+  <p>All lower case keywords will search case insensitively. If an upper case character is included in a word then that word will be searched case sensitively.</p>
+  <p>Use quotation marks around phrases, put + (plus) in front of any word or phrase that is required, and &minus; (minus) in front of a word or phrase to exclude it.</p>
+  <p><strong>Examples:</strong></p>
+  <ul>
+    <li>sydney &quot;opera house&quot;</li>
+    <li>&quot;opera house&quot; &minus;sydney +vienna</li>
+  </ul>
+</div>
+<:- eif Results:>

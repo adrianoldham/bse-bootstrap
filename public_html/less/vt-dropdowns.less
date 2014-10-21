@@ -1,0 +1,16 @@
+// Dropdown toggle with hover
+.dropdown-hover {
+    &:hover {
+        @media only screen and (min-width: @screen-sm-min) {
+            & > .dropdown-menu {
+                display: block;
+            }
+        }
+    }
+}
+
+.with-dropdown-hover {
+    .dropdown {
+        .dropdown-hover();
+    }
+}

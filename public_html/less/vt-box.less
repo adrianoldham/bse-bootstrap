@@ -1,0 +1,56 @@
+@box-text-color: @text-color;
+@box-text-hover-color: inherit;
+
+@box-margin-top: 0;
+@box-margin-right: 0;
+@box-margin-bottom: @grid-gutter-width; // defaults to gutter width
+@box-margin-left: 0;
+@box-margin: @box-margin-top @box-margin-right @box-margin-bottom @box-margin-left;
+
+@box-padding-top: 0;
+@box-padding-right: 0;
+@box-padding-bottom: 0;
+@box-padding-left: 0;
+@box-padding: @box-padding-top @box-padding-right @box-padding-bottom @box-padding-left;
+
+.box-group {
+    position: relative;
+    overflow: hidden; // required so negative margin takes affect
+    margin-top: -@box-margin-top;
+    margin-bottom: -@box-margin-bottom;
+}
+
+.box {
+    color: @box-text-color;
+    margin-top: @box-margin-top;
+    margin-bottom: @box-margin-bottom;
+    //margin: @box-margin;
+    //padding: @box-padding;
+    .clearfix();
+
+    .box-text {
+        &,
+        & > :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    & > a {
+        color: @box-text-color;
+        text-decoration: none !important;
+    }
+    
+    & > :last-child {
+        margin-bottom: 0;
+    }
+    
+    .box-buttons {
+        &:extend(.with-buttons);
+    }
+}
+
+@media (max-width: @screen-sm-max) {
+    .box-image {
+        margin-bottom: (@box-margin-bottom / 2) !important;
+    }
+}

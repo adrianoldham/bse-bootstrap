@@ -1,0 +1,19 @@
+<:-.wrap "apache/errorbase.tmpl", "title": "Sorry! Not acceptable" :>
+<p>The request you attempted failed to pass the server security policy, we apologise for the inconvenience.  You may like to browse elsewhere on the site, here are some useful places to start:</p>
+<ul>
+<:-.for id in cfg.entry("error settings", "articles", "1 6").split(/ /) :>
+<:-.set inline = bse.articles.getByPkey(id) :>
+<li><a href="<:= bse.url(inline):>"><:= (inline.titleAlias or inline.title).lower :></a></li>
+<:-.end for:>
+<li><a href="<:= cfg.user_url("search"):>">search</a></li>
+</ul>
+<div class="well">
+<!--#if expr="$HTTP_REFERER != ''" -->
+<p>It seems you have arrived at this page by following a <a href="<!--#echo var='HTTP_REFERER' -->">link from another page</a>, you can help us assess and improve our security policies by notifying our <a href="mailto:<!--#echo var='SERVER_ADMIN' -->?subject=<:= params.title:> [<!--#echo var='REDIRECT_STATUS' -->] on <!--#echo var='SERVER_NAME' -->&amp;body=Requested address: <!--#echo var='REQUEST_URI' --> and Referring address: <!--#echo var='HTTP_REFERER' -->">webmaster</a>, please include the address and the address of the referring page.</p>
+<p>Request: <!--#echo var="REQUEST_URI" --></p>
+<p>Referrer: <!--#echo var="HTTP_REFERER" --></p>
+<!--#else -->
+<p>You can help us assess and improve our security policies by notifying our <a href="mailto:<!--#echo var='SERVER_ADMIN' -->?subject=<:= params.title:> [<!--#echo var='REDIRECT_STATUS' -->] on <!--#echo var='SERVER_NAME' -->&amp;body=Requested address: <!--#echo var='REQUEST_URI' -->">webmaster</a>, please include the address of the request and what actions you were performing at the time of the error.</p>
+<p>Request: <!--#echo var="REQUEST_URI" --></p>
+<!--#endif -->
+</div>

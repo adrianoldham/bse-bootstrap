@@ -1,0 +1,38 @@
+                  <:-.define dtitle -:>
+                  <:-.if icon :>
+                  <i class="<:= icon:>"></i>
+                  <:-.end if :>
+                  <:= title.escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:>
+                  <:-.end define -:>
+
+              <:-.if embedded:>
+              <:admin article_mini:>
+              <h2>
+                <:-.call "dtitle", "title":article.title, "icon":article.customStr1 :>
+              </h2>
+              <:-.else:>
+              <:admin:>
+              <:-.if article.flags !~ /t/ -:>
+              <header class="page-header">
+                <h1>
+                  <:-.if params.title eq "FORMTITLE" -:>
+                  <:- ifFormcfg icon:>
+                  <i class="<:formcfg icon:>"></i>
+                  <:- eif:>
+                  <:replace [formcfg title] "(?:  (.*))" " <small>$1</small>":>
+                  <:-.elsif params.title -:>
+                  <:-.call "dtitle", "title":params.title, "icon":params.icon :>
+                  <:-.if params.error and not(dynamic):>
+                  <!--#echo var='REDIRECT_STATUS' -->
+                  <:-.end if:>
+                  <:-.else:>
+                  <:-.call "dtitle", "title":article.title, "icon":article.customStr1 :>
+                  <:-.end if:>
+                </h1>
+                <:-.if params.subtitle:>
+                <h2><:= params.subtitle:></h2>
+                <:-.end if:>
+                <:- include include/crumbs.tmpl optional:>
+              </header>
+              <:-.end if:>
+              <:-.end if:>

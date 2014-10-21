@@ -1,0 +1,89 @@
+.row {
+    display: block;
+}
+
+.round {
+    .border-radius(50%);
+}
+
+.group {
+    position: relative;
+}
+
+.hidden {
+    position: absolute;
+    left: -9999em;
+}
+
+.absolute-center {
+    overflow: auto;
+    width: 100%;
+    padding: 15px;
+    position: absolute;
+    top: 50%; left: 50%;
+    .translate(-50%; -50%);
+}
+
+.img-responsive {
+    width: inherit; /* IE8 messes up img height: auto; without this */
+}
+
+.text-center > .img-responsive {
+    display: inline-block;
+}
+
+.sticky {
+    .clearfix();
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+// for use on the row element
+.no-gutters {
+    margin-left: 0;
+    margin-right: 0;
+    
+    & > [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.no-spacing {
+   .no-margin();
+    
+    & > [class*="col-"] {
+        .no-padding();
+    }
+}
+
+.edge-to-edge,
+.override-gutters {
+    margin-left: -(@grid-gutter-width / 2) !important;
+    margin-right: -(@grid-gutter-width / 2) !important;
+}
+
+.clear,
+.clear-both {
+    clear: both;
+}
+
+.clear-left {
+    clear: left;
+}
+
+.clear-right {
+    clear: right;
+}
+
+/*
+*:not(.row) > [class*="col-"] {
+    padding: 0;
+}
+*/

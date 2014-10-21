@@ -1,0 +1,15 @@
+<:-.define dmessages -:>
+  <:-.if dynamic -:>
+  <:-.set messages = request.messages -:>
+  <:-.if messages.size :>
+    <div id="message">
+      <:-.for message in messages :>
+      <div class="alert <:-= message.class eq 'error' ? ' alert-danger' : message.class eq 'warning' ? ' alert-warning' : ' alert-success' :> alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <:-= message.html -:>
+      </div>
+      <:-.end for :> 
+    </div>
+  <:-.end if :>
+  <:-.end if :>
+<:-.end define :>

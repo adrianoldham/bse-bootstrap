@@ -1,0 +1,55 @@
+<:-.wrap "base.tmpl", "class": "page-columns" :>
+
+<:-.set childrenx = [ article.all_visible_kids ] -:>
+<:-.set children = [] -:>
+
+<:-.for child in childrenx -:>
+  <:-.if child.flags !~ /s/ -:>
+    <:-% children.push(child) -:>
+  <:-.end if -:>
+<:-.end for -:>
+<:-.set underthreshold = article.threshold > children.size -:>
+
+<article id="<:= 'article_' _ article.id:>" role="main">
+  <:- include include/header.tmpl optional:>
+  <div class="row">
+    <div class="col-md-4">
+      <:-.if children.size:>
+      <nav id="sidebar-nav" role="navigation">
+        <ul class="nav nav-pills nav-stacked">
+          <:-.for child in children :>
+          <li>
+            <:-.call "edit_child", "parent":article :>
+            <:-.call "move", "parent":article :>
+            <a href="<:= underthreshold ? '#section_' _ child.id : bse.url(child):>">
+              <:-.if child.customStr1:>
+              <i class="icon <:= child.customStr1:>"></i>
+              <:-.end if:>
+              <:= child.titleAlias or child.title:>
+            </a>
+          </li>
+          <:-.end for:>
+        </ul>
+      </nav>
+      <:-.end if:>
+    </div>
+    <div class="col-md-8">
+<:embed start:>
+        <:-.if article.body:>
+        <:body:>
+        <:-.end if:>
+        <:- include include/footer.tmpl optional:>
+        <:- include include/files.tmpl optional:>
+<:embed end:>
+        <:-.if children.size and underthreshold:>
+        <:- include include/sortallkids.tmpl:>
+        <:-.for child in children :>
+        <section id="<:= 'section_' _ child.id:>" class="article">
+          <:-.call "move", "parent":article :>
+          <:-= generator.vembed(child) |raw:>
+        </section>
+        <:-.end for:>
+        <:-.end if:>
+    </div>
+  </div>
+</article>

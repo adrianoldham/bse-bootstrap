@@ -1,0 +1,17 @@
+.container-fluid(
+    @max-width: 1170px;
+    @gutter: @grid-gutter-width;
+    ) {
+    width: auto;
+    max-width: @max-width;
+    .container-fixed(@gutter);
+}
+
+.container-reset {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+    max-width: 100%;
+}

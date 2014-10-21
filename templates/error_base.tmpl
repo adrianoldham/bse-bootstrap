@@ -1,0 +1,18 @@
+<:-.wrap "base.tmpl", "title": "Oops! Something went wrong", "icon": cfg.entry("error settings", "icon_class") :>
+<article role="main">
+<:-include include/header.tmpl:>
+<p>The request you attempted had some problems, we apologise for the inconvenience.  You may like to browse elsewhere on the site, here are some useful places to start:</p>
+<ul>
+<:-.for id in cfg.entry("error settings", "articles", "1 6").split(/ /) :>
+<:-.set inline = bse.articles.getByPkey(id) :>
+<li><a href="<:= bse.url(inline):>"><:= (inline.titleAlias or inline.title).lower :></a></li>
+<:-.end for:>
+<li><a href="<:= cfg.user_url("search"):>">search</a></li>
+</ul>
+<:-.set referer = request.referer -:>
+<:-.if referer:>
+<div class="well">
+<p>Referrer: <:= referer:></p>
+</div>
+<:-.end if:>
+</article>

@@ -1,0 +1,51 @@
+<:-.wrap "base.tmpl", "class": "page-media" :>
+
+      <article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+
+        <:-.set children = [ article.all_visible_kids ] -:>
+
+        <:- include include/header.tmpl optional:>
+        <:-.if article.body:>
+        <:body:>
+        <:-.end if:>
+        <:- include include/footer.tmpl optional:>
+        <:- include include/files.tmpl optional:>
+
+        <:-.if children.size:>
+        <!-- children -->
+        <:-.set underthreshold = article.threshold > children.size -:>
+        <:-.if cfg.entry("basic", "hide_child_list") or article.flags =~ /l/ -:>
+        <:-.elsif children.size:>
+        <:- include include/sortallkids.tmpl:>
+        <:-.if underthreshold:>
+        <:-.for child in children :>
+        <section id="<:= 'section_' _ child.id:>" class="article">
+          <:-.call "move", "parent":article :>
+          <:-= generator.vembed(child) |raw:>
+        </section>
+        <:-.end for:>
+        <:-.else:>
+        <:-.for child in children :>
+        <div class="box">
+          <:-.call "edit_child", "parent":article :>
+          <:-.call "move", "parent":article :>
+          <a href="<:= bse.url(child):>" title="<:= child.title:>">
+            <div class="row">
+              <:-.set img = child.image_by_name("thumbnail") or [ child.images ][0] or bse.site.image_by_name("placeholder"):>
+              <div class="col-sm-3">
+                <p><:= img.thumb("geo", "col_3", "static", 1, "nolink", 1) |raw:></p>
+              </div>
+              <div class="col-sm-9">
+                <h2><:= child.title:> <br /><small><:= bse.date("%d %B %Y", child.release).replace(/^0/, ''):></small></h2>
+                <p><:= child.summary.escape("html").replace(/\A\s+|\s+\z/, "", 1).replace(/\s*\n\s*/, "</p>
+                <p>", 1) or generator.summary(child).escape("html") |raw:></p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <:-.end for:>
+        <:-.end if:>
+        <:-.end if:>
+<:embed end:>
+      </article>

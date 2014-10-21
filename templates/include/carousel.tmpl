@@ -1,0 +1,59 @@
+          <:-#.set imagesx = [ article.images ] -:>
+          <:-#.set carousel = [] -:>
+
+          <:-#.for image in imagesx -:>
+            <:-#.if image.name.lower =~ /^banner/ -:>
+              <:-#% carousel.push(image) -:>
+            <:-#.end if -:>
+          <:-#.end for -:>
+
+                <:-.define caption :>
+                  <:-.if img.alt and img.alt !~ /^#/ :>
+                  <div class="carousel-caption">
+                    <:-= img.alt.escape("html").replace(/(?:(.*)(?: *)?:(.*))/, "
+                    <h1>$1</h1>
+                    <p>$2</p>") |raw:>
+                  </div>
+                  <:-.end if:>
+                <:-.end define :>
+
+          <:-.set carousel = article.images_tagged([ "banner" ]) -:>
+
+          <:-.if carousel.size and cfg.entry("slider", "carousel", 1):>
+          <!-- Carousel container -->
+          <div id="carousel_<:= article.id:>" class="carousel slide dissolve">
+            <:-.if carousel.size > 1 :>
+            <!-- Carousel indicators -->
+            <ol class="carousel-indicators">
+              <:-.for image in carousel:>
+              <li data-target="#carousel_<:= article.id:>" data-slide-to="<:= loop.index:>" class="<:= loop.is_first ? 'active' : '':>"></li>
+              <:-.end for:>
+            </ol>
+            <:-.end if:>
+            <!-- Carousel items -->
+            <div class="carousel-inner">
+              <:-.for img in carousel:>
+              <div class="item <:-= loop.is_first ? ' active' : '':>">
+                <:-.if img.url:>
+                <a href="<:= img.url =~ /^\d+$/ ? bse.url(bse.articles.getByPkey(img.url)) : img.url =~ /^[\w-]+$/ ? bse.url(bse.articles.getBy("linkAlias", img.url)) : img.url :>" class="<:= img.url =~ /vimeo/ ? 'fancybox-media' : '':>" title="<:= img.alt.replace(/(?:(.*)(?: *)?:(.*))/, "$1") |raw:>" rel="<:= img.url !~ /vimeo/ ? "carousel" : '':>">
+                  <:= img.thumb("geo","banner", "static", 1, "nolink", 1) |raw:>
+                  <:-.call "caption", "img":img :>
+                </a>
+                <:-.else:>
+                <:= img.thumb("geo","banner", "static", 1, "nolink", 1) |raw:>
+                <:-.call "caption", "img":img :>
+                <:-.end if:>
+              </div>  
+              <:-.end for:>
+            </div>
+            <:-.if carousel.size > 1 :>
+            <!-- Carousel nav -->
+            <a class="carousel-control left" href="#carousel_<:= article.id:>" data-slide="prev">
+              <span class="fa fa-angle-left"></span>
+            </a>
+            <a class="carousel-control right" href="#carousel_<:= article.id:>" data-slide="next">
+              <span class="fa fa-angle-right"></span>
+            </a>
+            <:-.end if:>
+          </div>
+          <:-.end if:>

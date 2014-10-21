@@ -1,0 +1,27 @@
+<:-.if article.id != 1 -:>
+<:-.set homearticle = homearticle or bse.articles.getByPkey(1) -:>
+<:-.set crumbs = [ article.menu_ancestors ].expand -:>
+<:-.if not(article.is_descendant_of(homearticle)) -:>
+<:-% crumbs.push(homearticle) -:>
+<:-.end if:>
+<ul class="breadcrumb">
+  <:-.for crumb in crumbs.reverse:>
+  <li>
+    <:-.if crumb.is_linked -:>
+    <a href="<:= bse.url(crumb):>" title="<:= crumb.title:>"><:= crumb.titleAlias or crumb.title:></a>
+    <:-.else -:>
+    <:= crumb.titleAlias or crumb.title:>
+    <:-.end if -:>
+  </li>
+  <:-.end for:>
+  <li class="active">
+    <:-.if params.title eq "FORMTITLE" -:>
+    <:formcfg title:>
+    <:-.elsif params.title -:>
+    <:= params.titleAlias or params.title:>
+    <:-.else -:>
+    <:= article.titleAlias or article.title:>
+    <:-.end if -:>
+  </li>
+</ul>
+<:-.end if:>

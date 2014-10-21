@@ -1,0 +1,29 @@
+// FIX Bootstrap Stupidity
+
+.navbar-form {
+    .form-control {
+        //width: 100% !important; // BS 3.1.0 seems to set input-group inputs as width auto
+        // Redacted: Apparently this change was reverted in BS 3.1.1?
+    }
+
+    @media (min-width: @screen-sm-min) {
+        .input-group {
+            .input-group-btn,
+            .input-group-addon {
+                width: 1%; // BS 3.2.0 sets this to auto at min-width: 768px which causes issues with full with display of the navbar search field in the collapsed menu
+            }
+        }
+    }
+}
+
+label {
+    &.radio,
+    &.checkbox {
+        padding-left: 20px; // BS 3.2.0 moved the left paading from the classed container to the contained label element, which in my case is the same element which means no more left padding
+    }
+    
+    &.radio-inline,
+    &.checkbox-inline {
+        margin-top: 0 !important; // Compensate for older BSE markup using .radio.radio-inline classes
+    }
+}
