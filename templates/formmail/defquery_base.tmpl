@@ -2,7 +2,7 @@
 <:- ifFormcfg body:>
 <:bodytext formcfg body:>
 <:- eif:>
-<form action="<:script:>" method="post"<:ifFormHasFileFields:> enctype="multipart/form-data"<:eif:> class="form-<:id:> <:formcfg class:>" role="form">
+<form name="<:id:>" action="<:ifFormcfg action:><:formcfg action:><:or:><:script:><:eif:>" method="post"<:ifFormHasFileFields:> enctype="multipart/form-data"<:eif:> class="form-<:id:> <:formcfg class:>" role="form">
   <input type="hidden" name="form" value="<:id:>" />
   <:- ifCgi r:>
   <input type="hidden" name="r" value="<:cgi r:>" />
