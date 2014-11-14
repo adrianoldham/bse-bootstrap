@@ -117,7 +117,7 @@
                 <:-.set menus2 = not(m.is_linked) ? [ m.all_menu_kids ] : [] :>
                 <:-.if menus2.size:>
                   <:-.set dropdown = ' class="dropdown-toggle" data-toggle="dropdown"' :>
-                  <:-.set caret = cfg.entry("basic", "menu_caret") ? ' <b class="caret"></b>' : '' :>
+                  <:-.set caret = cfg.entry("basic", "menu_caret") ? cfg.entry("basic", "menu_caret", "<span class="caret"></span>") : '' :>
                 <:-.else:>
                   <:-.set dropdown = '' :>
                   <:-.set caret = '' :>
