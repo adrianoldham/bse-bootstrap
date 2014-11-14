@@ -174,7 +174,7 @@
             <ul class="nav navbar-footer">
               <:-.for m in footmenu:>
               <li class="<:= article.id == m.id ? 'active' : '':>">
-                <a href="<:= m.is_linked ? bse.url(m) : '#' :>" class="<:= article.id == m.id ? 'active' : '':>">
+                <a href="<:= m.is_linked or bse.admin ? bse.url(m) : '#' :>" class="<:= article.id == m.id ? 'active' : '':>">
                   <:-.if m.customStr1:>
                   <i class="fa <:= m.customStr1:>"></i>
                   <:-.end if:>
