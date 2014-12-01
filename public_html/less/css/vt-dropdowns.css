@@ -1,8 +1,0 @@
-@media only screen and (min-width: 768px) {
-  .with-hover:hover {
-    /* Make Navigation Toggle on Desktop Hover */
-  }
-  .with-hover:hover .dropdown-menu {
-    display: block;
-  }
-}
