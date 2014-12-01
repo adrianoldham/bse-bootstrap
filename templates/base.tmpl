@@ -135,7 +135,7 @@
                     <:-% mainmenu2.push(m2) -:>
                   <:-.end for:>
                   <:-.if mainmenu2.size:>
-                  <ul class="dropdown-menu">
+                  <ul class="dropdown-menu" role="menu">
                     <:-.for m2 in mainmenu2:>
                     <li class="<:= article.id == m2.id or article.is_descendant_of(m2) ? 'active' : '':><:= not(m2.is_linked) ? ' disabled' : '':>">
                       <a href="<:= m2.is_linked or bse.admin  ? bse.url(m2) : '#' :>">
