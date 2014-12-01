@@ -12,7 +12,7 @@
             <:-.set kids = [] -:>
     
             <:-.for kid in kidsx -:>
-              <:-.if kid.flags !~ /(s|g|P)/ and kid.should_index -:>
+              <:-.if [ kid.all_menu_kids ].size or kid.flags !~ /(s|g|P)/ and kid.should_index -:>
                 <:-% kids.push(kid) -:>
               <:-.end if -:>
             <:-.end for:>
@@ -43,7 +43,7 @@
             <:-.set kids = [] -:>
 
             <:-.for kid in kidsx -:>
-              <:-.if kid.flags !~ /(s|g|P)/ and kid.should_index -:>
+              <:-.if [ kid.all_menu_kids ].size or kid.flags !~ /(s|g|P)/ and kid.should_index -:>
                 <:-% kids.push(kid) -:>
               <:-.end if -:>
             <:-.end for:>
