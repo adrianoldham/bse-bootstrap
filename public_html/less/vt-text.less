@@ -1,3 +1,8 @@
+@text-indent: @grid-gutter-width;
+
+.text-indent(@text-indent) {
+    text-indent: @text-indent;
+}
 
 .text-bold {
     font-weight: bold;
@@ -13,6 +18,10 @@
 
 .text-nowrap {
     white-space: nowrap;
+}
+
+.text-indent {
+    .text-indent(@text-indent);
 }
 
 .text-dark {
