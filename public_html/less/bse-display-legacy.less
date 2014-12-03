@@ -1,3 +1,11 @@
+.left {
+    &:extend(.pull-left);
+}
+
+.right {
+    &:extend(.pull-right);
+}
+
 .input {
     &:extend(.form-group);
 
@@ -63,12 +71,8 @@
         .make-xs-column(12);
     }
 
-    .left {
-        .pull-left();
     }
     
-    .right {
-        .pull-right();
     }
 }
 
