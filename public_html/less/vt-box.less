@@ -47,10 +47,10 @@
     .box-buttons {
         &:extend(.with-buttons);
     }
-}
 
-@media (max-width: @screen-sm-max) {
-    .box-image {
-        margin-bottom: (@box-margin-bottom / 2) !important;
+    @media (max-width: @screen-sm-max) {
+        & > :not(.box-image:last-child) {
+            margin-bottom: (@box-margin-bottom / 2) !important;
+        }
     }
 }
