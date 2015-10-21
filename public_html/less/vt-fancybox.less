@@ -1,14 +1,32 @@
-@fancybox-close-color: #fff;
-@fancybox-close-bg: @brand-primary;
+@fancybox-control-color: #fff;
+@fancybox-control-bg: @brand-primary;
+@fancybox-control-font-family: FontAwesome;
+@fancybox-control-font-size: (@icon-font-size-base * 2);
+@fancybox-control-size: round(@icon-font-size-base * 2.5);
+@fancybox-control-offset: @fancybox-control-size;
 
-@fancybox-nav-color: @fancybox-close-color;
-@fancybox-nav-bg: @fancybox-close-bg;
+@fancybox-close-color: @fancybox-control-color;
+@fancybox-close-bg: @fancybox-control-bg;
+@fancybox-close-font-family: @fancybox-control-font-family;
+@fancybox-close-font-size: @fancybox-control-font-size;
+@fancybox-close-symbol: "\2715"; // "\e601"; // vt-icon
+@fancybox-close-size: @fancybox-control-size;
+@fancybox-close-offset: @fancybox-control-offset;
 
-@fancybox-title-font-size: @font-size-base;
-@fancybox-title-line-height: @line-height-base;
-@fancybox-title-font-family: @font-family-sans-serif;
+@fancybox-nav-color: @fancybox-control-color;
+@fancybox-nav-bg: @fancybox-control-bg;
+@fancybox-nav-font-family: @fancybox-control-font-family;
+@fancybox-nav-font-size: @fancybox-control-font-size;
+@fancybox-nav-prev-symbol: "\f104"; // "\e602"; // vt-icon
+@fancybox-nav-next-symbol: "\f105"; // "\e603"; // vt-icon
+@fancybox-nav-size: @fancybox-control-size;
+@fancybox-nav-offset: @fancybox-control-offset;
+
 @fancybox-title-color: #333;
 @fancybox-title-bg: #fff;
+@fancybox-title-font-family: @font-family-sans-serif;
+@fancybox-title-font-size: @font-size-base;
+@fancybox-title-line-height: @line-height-base;
 
 .fancybox-wrap {
     .fancybox-skin {
@@ -16,63 +34,60 @@
     }
 
     .fancybox-close {
-        top: -36px;
+        top: -@fancybox-close-offset;
         right: 0;
         background: @fancybox-close-bg;
         text-align: center;
         text-decoration: none;
+        .square(@fancybox-close-size);
         
         &:before {
             color: @fancybox-close-color;
-            font-size: 28px;
-            line-height: 36px;
+            font-size: @fancybox-close-font-size;
+            line-height: @fancybox-close-size;
             min-width: 1em;
-            content: "\2715";
-            //content: "\e601"; // vt-icon
+            content: @fancybox-close-symbol;
         }
     }
 
     .fancybox-nav {
         span {
             text-align: center;
-        	width: 36px;
-        	height: 36px;
-        	margin-top: -18px;
+        	margin-top: -ceil(@fancybox-nav-size / 2);
         	color: @fancybox-nav-color;
         	background: @fancybox-nav-bg;
+        	.square(@fancybox-nav-size);
     
             &:before {
-                font-family: vt-icons, FontAwesome;
-                font-size: 28px;
-                line-height: 36px;
+                font-family: @fancybox-nav-font-family;
+                font-size: @fancybox-nav-font-size;
+                line-height: @fancybox-nav-size;
             }
         }
     }
 
     .fancybox-prev {
         span {
-            left: -36px;
+            left: -@fancybox-nav-offset;
     
         	&:before {
-        	    content: "\f104";
-        	    //content: "\e602"; // vt-icon
+        	    content: @fancybox-nav-prev-symbol;
         	}
         }
     }
 
     .fancybox-next {
         span {
-            right: -36px;
+            right: -@fancybox-nav-offset;
     
         	&:before {
-        	    content: "\f105";
-        	    //content: "\e603"; // vt-icon
+        	    content: @fancybox-nav-next-symbol;
         	}
         }
     }
 
     .fancybox-title {
-        font: @fancybox-title-font-size/@fancybox-title-line-height @font-family-sans-serif;
+        font: @fancybox-title-font-size/@fancybox-title-line-height @fancybox-title-font-family;
     }
 
     .fancybox-title-float-wrap {
@@ -86,12 +101,12 @@
             margin-right: auto;
             padding: 12px 20px;
             background: @fancybox-title-bg;
-            .border-radius(0);
             text-shadow: none;
             color: @fancybox-title-color;
             font-weight: normal;
 	        line-height: 24px;
 	        white-space: normal;
+            .border-radius(0);
         }
     }
 }
