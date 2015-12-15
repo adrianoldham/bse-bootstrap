@@ -124,8 +124,8 @@
                 <:-.end if:>
                 <li class="dropdown<:= article.id == m.id or article.is_descendant_of(m) ? ' active' : '':>">
                   <a href="<:= m.is_linked or bse.admin ? bse.url(m) : '#' :>" <:-= dropdown |raw:>>
-                    <:-.if m.customStr1:>
-                    <i class="fa <:= m.customStr1:>"></i>
+                    <:-.if icon_class(m):>
+                    <i class="icon <:= icon_class(m):>"></i>
                     <:-.end if:>
                     <:= ( m.titleAlias or m.title ).escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:>
                     <:-= caret | raw:>
@@ -139,8 +139,8 @@
                     <:-.for m2 in mainmenu2:>
                     <li class="<:= article.id == m2.id or article.is_descendant_of(m2) ? 'active' : '':><:= not(m2.is_linked) ? ' disabled' : '':>">
                       <a href="<:= m2.is_linked or bse.admin  ? bse.url(m2) : '#' :>">
-                        <:-.if m2.customStr1:>
-                        <i class="fa <:= m2.customStr1:>"></i>
+                        <:-.if m2m:>
+                        <i class="icon <:= m2):>"></i>
                         <:-.end if:>
                         <:= ( m2.titleAlias or m2.title ).escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:>
                       </a>
@@ -175,8 +175,8 @@
               <:-.for m in footmenu:>
               <li class="<:= article.id == m.id ? 'active' : '':>">
                 <a href="<:= m.is_linked or bse.admin ? bse.url(m) : '#' :>" class="<:= article.id == m.id ? 'active' : '':>">
-                  <:-.if m.customStr1:>
-                  <i class="fa <:= m.customStr1:>"></i>
+                  <:-.if icon_class(m):>
+                  <i class="icon <:= icon_class(m):>"></i>
                   <:-.end if:>
                   <:= m.titleAlias or m.title:>
                 </a>

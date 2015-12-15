@@ -37,8 +37,8 @@
               <:-.call "edit_child", "parent":article, "label":loop.count :>
               <:-.call "move", "parent":article :>
               <a href="<:= bse.url(child):>">
-                <:-.if child.customStr1:>
-                <i class="icon <:= child.customStr1:>"></i>
+                <:-.if icon_class(child):>
+                <i class="icon <:= icon_class(child):>"></i>
                 <:-.end if:>
                 <:= child.titleAlias or child.title:>
               </a>
