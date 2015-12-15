@@ -52,7 +52,7 @@
     <:-.if cfg.entry("rss", "enabled"):>
     <link rel="alternate" href="<:= cfg.entry("rss", "index_uri", "/index.xml"):>" type="application/rss+xml" title="RSS" />
     <:-.end if:>
-    <:-.if cfg.entry("facebook", "app_id") or cfg.entry("facebook", "admins") :>
+    <:-.if cfg.entry("facebook", "app_id") or cfg.entry("facebook", "admins") or cfg.entry("facebook", "opengraph") :>
     <!-- Facebook OpenGraph -->
     <:-.if cfg.entry("facebook", "app_id"):>
     <meta property="fb:app_id" content="<:= cfg.entry("facebook", "app_id"):>" />
@@ -61,8 +61,8 @@
     <meta property="fb:admins" content="<:= cfg.entry("facebook", "admins"):>" />
     <:-.end if:>
     <meta property="og:url" content="<:= bse.url(article, 1):>" />
-    <meta property="og:type" content="<:= article.generator.replace('Generate::','').lower():>" />
-    <meta property="og:title" content="<:= article.titleAlias or article.title :>" />
+    <meta property="og:type" content="<:= article.generator.replace('(BSE::)?Generate::','').lower():>" />
+    <meta property="og:title" content="<:= article.pageTitle or article.title :>" />
     <:-.set ogimage = article.image_by_name("thumbnail") or [ article.images ][0] :>
     <:-.if ogimage:>
     <:-.set ogimage_fields = ogimage.thumb("geo","opengraph", "abs_urls", 1, "field", "object") :>
