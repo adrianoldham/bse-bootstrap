@@ -9,7 +9,7 @@
               <:admin article_mini:>
               <:-.if article.flags !~ /t/ -:>
               <h2>
-                <:-.call "dtitle", "title":article.title, "icon":article.customStr1 :>
+                <:-.call "dtitle", "title":article.title, "icon":icon_class(article) :>
               </h2>
               <:-.end if:>
               <:-.else:>
