@@ -30,6 +30,9 @@
                   <:-.else:>
                   <:-.call "dtitle", "title":article.title, "icon":icon_class(article) :>
                   <:-.end if:>
+                  <:-.if params.subtext:>
+                  <small><:= params.subtext:></small>
+                  <:-.end if -:>
                 </h1>
                 <:-.if params.subtitle:>
                 <h2><:= params.subtitle:></h2>
