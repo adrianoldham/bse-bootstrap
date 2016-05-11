@@ -3,7 +3,10 @@
 <:bodytext formcfg body:>
 <:- eif:>
 <form name="<:id:>" action="<:ifFormcfg action:><:formcfg action:><:or:><:script:><:eif:>" method="post"<:ifFormHasFileFields:> enctype="multipart/form-data"<:eif:> class="form-<:id:> <:formcfg class:>" role="form">
+  <:if!Formcfg action:>
+  <:-# hide form id field when using a remote action :>
   <input type="hidden" name="form" value="<:id:>" />
+  <:- eif:>
   <:- ifCgi r:>
   <input type="hidden" name="r" value="<:cgi r:>" />
   <:- eif:>
@@ -65,6 +68,46 @@
       <:- eif Field:>
     </label>
     <:- endswitch:>
+
+    <:- switch:>
+    <:- case Match [field htmltype] "^(radio|checkbox)$" |x:>
+
+      <:- switch:>
+      <:- case And [ifMatch [field htmltype] "^(radio|checkbox)$" |x] [arithmetic [ifValues] > 1] :>
+      <fieldset id="<:field name:>">
+        <:- if !Field hidelabel:>
+        <legend>
+          <:field description:>
+          <:- ifField required:>
+          <span class="required">*</span>
+          <:- eif:>
+        </legend>
+        <:- eif Field:>
+        <:- iterator begin values:>
+        <div class="<:field htmltype:><:cond [field inline] "-inline" "":> <:field class:>">
+          <label>
+            <input type="<:field htmltype:>" name="<:field name:>" value="<:value id:>"<:ifValueSet:> checked="checked"<:eif:> />
+            <:value name:>
+          </label>
+        </div>
+        <:- iterator end values:>
+      </fieldset>
+    
+      <:- case default:>
+      <:- iterator begin values:>
+      <div class="<:field htmltype:><:cond [field inline] "-inline" "":> <:field class:>">
+        <label>
+          <input type="<:field htmltype:>" name="<:field name:>" value="<:value id:>"<:ifValueSet:> checked="checked"<:eif:> />
+          <:value name:>
+        </label>
+        <:- if Field help:>
+        <p class="help-block"><:field help:></p>
+        <:- eif Field:>
+      </div>
+      <:- iterator end values:>
+      <:- endswitch:>
+
+    <:- case default:>
     <div class="control-container">
       <:- if Field intro:>
       <:bodytext field intro:>
@@ -89,32 +132,6 @@
       </select>
       <:- eif Field:>
     
-      <:- case And [ifMatch [field htmltype] "^(radio|checkbox)$" |x] [arithmetic [ifValues] > 1] :>
-      <fieldset id="<:field name:>">
-        <:- if !Field hidelabel:>
-        <legend>
-          <:field description:>
-            <:- ifField required:>
-            <span class="required">*</span>
-            <:- eif:>
-        </legend>
-        <:- eif Field:>
-        <:- iterator begin values:>
-        <label class="<:field htmltype:><:cond [field inline] "-inline" "":> <:field class:>">
-          <input type="<:field htmltype:>" name="<:field name:>" value="<:value id:>"<:ifValueSet:> checked="checked"<:eif:> />
-          <:value name:>
-        </label>
-        <:- iterator end values:>
-      </fieldset>
-    
-      <:- case Match [field htmltype] "^(radio|checkbox)$" |x:>
-      <:- iterator begin values:>
-      <label class="<:field htmltype:><:cond [field inline] "-inline" "":> <:field class:>">
-        <input type="<:field htmltype:>" name="<:field name:>" value="<:value id:>"<:ifValueSet:> checked="checked"<:eif:> />
-        <:value name:>
-      </label>
-      <:- iterator end values:>
-    
       <:- case default:>
       <input type="<:ifField htmltype:><:field htmltype:><:or:>text<:eif:>" name="<:field name:>" id="<:field name:>" value="<:old [field name] field default:>" size="<:ifField width:><:field width:><:or:><:formcfg default_width 40:><:eif:>" <:ifField maxlength:>maxlength="<:field maxlength:>" <:eif:><:ifField readonly:>readonly="readonly" <:eif:> <:ifField placeholder:>placeholder="<:field placeholder:>" <:eif:><:ifField required:>required="required" <:eif:>class="form-control" title="<:ifField help:><:field help:><:or:><:field description:><:eif:>" />
     
@@ -128,6 +145,8 @@
       <small><:field notes:></small>
       <:- eif Field:>
     </div>
+
+    <:- endswitch:>
   </div>
 
   <:- endswitch:>
@@ -144,7 +163,7 @@
   <:- eif Recaptcha:>
 </fieldset>
 <p><span class="required">* Required.</span> <:formcfg required_text "Please provide information for all marked fields.":></p>
-<p class="buttons"><input type="submit" name="a_send" value="<:formcfg submit "Submit Form":>" class="<:formcfg button_class:>" /></p>
+<p class="buttons"><input type="submit" name="<:formcfg submit_name a_send:>" value="<:formcfg submit "Submit Form":>" class="<:formcfg button_class:>" /></p>
 </form>
 
 <:- ifFormcfg summary:>
