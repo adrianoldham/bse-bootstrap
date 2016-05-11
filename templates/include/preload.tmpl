@@ -1,5 +1,7 @@
 <:-.set icon_class = @{ a: a.meta_by_name("icon") ? a.meta_by_name("icon").value_text : '' } :>
 
+<:-.set filesize = @{ size: ( size < 1024 ? size : size < 1024000 ? bse.number("kilobytes", size ) _ "k" : size < 1024000000 ? bse.number("megabytes", size ) _ "M" : bse.number("gigabytes", size ) _ "G") _ "B" } :>
+
 <:-.define dmessages -:>
   <:-.if dynamic -:>
   <:-.set messages = request.messages -:>
