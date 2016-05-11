@@ -6,7 +6,7 @@
 <div class="<:formcfg body_class:>">
 <:- if !Formcfg body:>
 <:-.if article.body:>
-<:-= generator.vembed(article, "include/body.tmpl") |raw:>
+<:-= article.format("gen", generator) |raw:>
 <:-.end if:>
 <:- eif Formcfg:>
 <:wrap here:>
