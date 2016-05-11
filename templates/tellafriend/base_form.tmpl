@@ -1,46 +1,26 @@
-<:-.set tarticle = bse.articles.getByPkey(request.cgi.param("page")):>
+<:-.set tarticle = bse.articles.getByPkey(cgi.param("page")):>
+<:-.set user = request.siteuser :>
 <:-.wrap "user/pubbase.tmpl", "title": "Tell a Friend" :>
 <p class="lead">Share a link to “<:= tarticle.title:>” with…</p>
-<form action="<:= cfg.user_url("tellafriend"):>" method="post" role="form">
-<input type="hidden" name="page" value="<:= tarticle.id:>" />
-<input type="hidden" name="key" value="<:secret:>" />
-<input type="hidden" name="key2" value="" />
-<input type="hidden" name="r" value="<:= request.cgi.param("r"):>" />
-  <div class="row">
-    <fieldset class="col-sm-6 tellafriend left">
-      <legend>Your Friend</legend>
-      <div class="form-group to_name<:ifError_img to_name:> has-error<:eif:>">
-        <label for="to_name" class="control-label"><:#error_img to_name:> <:= cfg.entry("site users", "display_fullname", "Full Name"):>: <span class="required">*</span></label>
-        <input type="text" name="to_name" id="to_name" maxlength="60" value="<:old to_name:>" title="<:= cfg.entry("site users", "display_fullname", "Full Name"):>" required="required" class="form-control" />
-      </div>
-      <div class="form-group to_email<:ifError_img to_email:> has-error<:eif:>">
-        <label for="to_email" class="control-label"><:#error_img to_email:> <:= cfg.entry("site users", "display_email", "Email Address"):>: <span class="required">*</span></label>
-        <input type="text" name="to_email" id="to_email" maxlength="130" value="<:old to_email:>" title="<:= cfg.entry("site users", "display_email", "Email Address"):>" required="required" class="form-control" />
-      </div>
-    </fieldset>
-    <fieldset class="col-sm-6 tellafriend right">
-      <legend>From You</legend>
-      <div class="form-group from_name<:ifError_img from_name:> has-error<:eif:>">
-        <label for="from_name" class="control-label"><:#error_img from_name:> <:= cfg.entry("site users", "display_fullname", "Full Name"):>: <span class="required">*</span></label>
-        <input type="text" name="from_name" id="from_name" maxlength="60" value="<:old from_name:>" title="<:= cfg.entry("site users", "display_fullname", "Full Name"):>" required="required" class="form-control" />
-      </div>
-      <div class="form-group from_email<:ifError_img from_email:> has-error<:eif:>">
-        <label for="from_email" class="control-label"><:#error_img from_email:> <:= cfg.entry("site users", "display_email", "Email Address"):>: <span class="required">*</span></label>
-        <input type="text" name="from_email" id="from_email" maxlength="130" value="<:old from_email:>" title="<:= cfg.entry("site users", "display_email", "Email Address"):>" required="required" class="form-control" />
-      </div>
-      <div class="form-group _note <:ifError_img note:> has-error<:eif:>">
-        <label for="note" class="control-label"><:#error_img note:> <:= cfg.entry("site users", "display_note", "Message"):>:</label>
-        <input type="text" name="note" id="note" maxlength="60" value="<:old note:>" title="<:= cfg.entry("site users", "display_note", "Message"):>" class="form-control" />
-      </div>
-    </fieldset>
-  </div>
+<form action="<:= cfg.user_url("tellafriend"):>" method="post" role="form" class="siteuser">
+  <input type="hidden" name="page" value="<:= tarticle.id:>" />
+  <input type="hidden" name="key" value="<:secret:>" />
+  <input type="hidden" name="key2" value="" />
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <fieldset class="share share-to">
+    <legend>Your Friend</legend>
+    [:-.call "ufield", "name":"to_name", "description":"name", "required":1 :]
+    [:-.call "ufield", "name":"to_email", "description":"email", "required":1 :]
+  </fieldset>
+  <fieldset class="share share-from">
+    <legend>From You</legend>
+    [:-.call "ufield", "name":"from_name", "description":"name", "required":1 :]
+    [:-.call "ufield", "name":"from_email", "description":"email", "required":1 :]
+    [:-.call "ufield", "name":"note", "description":"Message" :]
+  </fieldset>
   <p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
-  <div class="row">
-    <p class="col-xs-12 col-sm-3 col-md-2 form-group">
-      <input type="submit" name="a_send" value="Share now" accesskey="s" title="AccessKey = s" class="btn btn-primary btn-block" />
-    </p>
-    <p class="col-xs-12 col-sm-3 col-md-2 form-group">
-      <a href="<:= tarticle.link:>" class="btn btn-default btn-block">Continue browsing</a>
-    </p>
+  <p class="buttons">
+    <input type="submit" name="a_send" value="Share now" accesskey="s" title="AccessKey = s" />
+    <a href="<:= tarticle.link:>">Continue browsing</a>
   </p>
 </form>
