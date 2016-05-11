@@ -7,9 +7,11 @@
 
               <:-.if embedded:>
               <:admin article_mini:>
+              <:-.if article.flags !~ /t/ -:>
               <h2>
                 <:-.call "dtitle", "title":article.title, "icon":article.customStr1 :>
               </h2>
+              <:-.end if:>
               <:-.else:>
               <:admin:>
               <:-.if article.flags !~ /t/ -:>
