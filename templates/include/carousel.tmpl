@@ -33,7 +33,7 @@
             <!-- Carousel items -->
             <div class="carousel-inner">
               <:-.for img in carousel:>
-              <div class="item <:-= loop.is_first ? ' active' : '':>">
+              <div class="item <:-= img.name ? ' caption-position-' _ img.name : '':><:-= loop.is_first ? ' active' : '':>">
                 <:-.if img.url:>
                 <a href="<:= img.url =~ /^\d+$/ ? bse.url(bse.articles.getByPkey(img.url)) : img.url =~ /^[\w-]+$/ ? bse.url(bse.articles.getBy("linkAlias", img.url)) : img.url :>" class="<:= img.url =~ /vimeo/ ? 'fancybox-media' : '':>" title="<:= img.alt.replace(/(?:(.*)(?: *)?:(.*))/, "$1") |raw:>" rel="<:= img.url !~ /vimeo/ ? "carousel" : '':>">
                   <:= img.thumb("geo","banner", "static", 1, "nolink", 1) |raw:>
