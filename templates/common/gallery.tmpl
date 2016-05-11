@@ -1,14 +1,6 @@
 <:-.wrap "base.tmpl", "class": "page-gallery" :>
-
-      <:-.set childrenx = [ article.all_visible_kids ] -:>
-      <:-.set children = [] -:>
-      
-      <:-.for child in childrenx -:>
-        <:-.if child.flags !~ /s/ -:>
-          <:-% children.push(child) -:>
-        <:-.end if -:>
-      <:-.end for -:>
-      <:-.set underthreshold = article.threshold > children.size -:>
+      <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) :>
+      <:-.set underthreshold = article.threshold > children.size :>
 
       <article id="<:= 'article_' _ article.id:>" role="main">
 <:embed start:>
@@ -48,12 +40,21 @@
                 <p class="box-caption"><:= img.alt.escape("html").replace(/(?:(.*)( *)?:)/, " <b>$1</b>") |raw:></p>
                 <:-.end if:>
               </a>
+              <:-.if cfg.entry("gallery", "show_download", 1):>
+              <p class="box-buttons" style="margin-top: 5px;">
+                <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= has_caption ? img.alt : '':>" class="btn btn-default btn-xs gallery-zoom" rel="<:= "gallery" _ article.id _ "btn" :>"><i class="<:= cfg.entry("gallery", "zoom_icon", "fa fa-search-plus"):>"></i> Zoom</a>
+                <a href="<:= img.src:>" title="Download full size image" class="btn btn-default btn-xs _gallery-download"><i class="<:= cfg.entry("gallery", "download_icon", "fa fa-download"):>"></i> <:= cfg.entry("gallery", "download_text", img.width _ "x" _ img.height ):></a>
+                <a href="//www.pinterest.com/pin/create/button/?url=<:= bse.url(article, 1) |uri:>&amp;media=<:= cfg.entry("site", "url") _ img.src:>&amp;=description=<:= img.alt |uri:>" data-pin-do="buttonPin" data-pin-config="none" data-pin-color="red" target="_pinit" class="btn btn-primary btn-xs pull-right text-italic"><i class="<:= cfg.entry("gallery", "pinterest_icon", "fa fa-pinterest"):>"></i> Pin it<!--<img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_20.png" />--></a>
+              </p>
+              <:-.end if:>
             </div>
           </div>
           <:-.end for:>
         </div>
         <:-.end if:>
- <:embed end:>
+        <!-- Pinterest -->
+        <!--<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>-->
+<:embed end:>
 
         <:-.if children.size and underthreshold:>
         <:- include include/sortallkids.tmpl:>

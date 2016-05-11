@@ -1,14 +1,5 @@
 <:-.wrap "base.tmpl", "class": "page-default" :>
-
-        <:-.set childrenx = [ article.all_visible_kids ] -:>
-        <:-.set children = [] -:>
-        
-        <:-.for child in childrenx -:>
-          <:-.if child.flags !~ /s/ -:>
-            <:-% children.push(child) -:>
-          <:-.end if -:>
-        <:-.end for -:>
-
+        <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) :>
         <article id="<:= 'article_' _ article.id:>" role="main">
 <:embed start:>
           <:- include include/header.tmpl optional:>

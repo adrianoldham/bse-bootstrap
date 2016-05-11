@@ -2,7 +2,7 @@
       <article id="<:= 'article_' _ article.id:>" role="main">
 <:embed start:>
 
-        <:-.set children = [ article.all_visible_kids ] -:>
+        <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) :>
 
         <:- include include/header.tmpl optional:>
         <:-.if article.body:>

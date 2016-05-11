@@ -1,16 +1,9 @@
 <:-.wrap "base.tmpl", "class": "page-project" :>
       <:-.set parent = article.parent -:>
 
-      <:-.set siblingsx = [ bse.articles.listedChildren(article.parentid) ] -:>
-      <:-.set siblings = [] -:>
-
-      <:-.if siblingsx.size > 1 :>
-        <:-.for sibling in siblingsx -:>
-          <:-.if sibling.is_linked -:>
-            <:-% siblings.push(sibling) -:>
-          <:-.end if -:>
-        <:-.end for -:>
-
+      <:-.set siblings = parent ? [ parent.children ].grep(@{s: s.is_linked and s.listed or bse.admin }) : [] -:>
+ 
+      <:-.if siblings.size > 1 :>
         <:-.for sibling in siblings -:>
           <:-.if article.id == sibling.id and sibling.is_linked -:>
             <:-.set next = loop.next ? loop.next : loop.first -:>
@@ -22,14 +15,7 @@
         <:-.set prev = 0 -:>
       <:-.end if:>
 
-      <:-.set childrenx = [ article.all_visible_kids ] -:>
-      <:-.set children = [] -:>
-      
-      <:-.for child in childrenx -:>
-        <:-.if child.flags !~ /s/ -:>
-          <:-% children.push(child) -:>
-        <:-.end if -:>
-      <:-.end for -:>
+      <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) :>
       <:-.set underthreshold = article.threshold > children.size -:>
 
       <article id="<:= 'article_' _ article.id:>" role="main">

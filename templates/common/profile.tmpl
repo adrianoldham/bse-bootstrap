@@ -22,14 +22,7 @@
         <:-.set prev = 0 -:>
       <:-.end if:>
 
-      <:-.set childrenx = [ article.all_visible_kids ] -:>
-      <:-.set children = [] -:>
-      
-      <:-.for child in childrenx -:>
-        <:-.if child.flags !~ /s/ -:>
-          <:-% children.push(child) -:>
-        <:-.end if -:>
-      <:-.end for -:>
+      <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) :>
       <:-.set underthreshold = article.threshold > children.size -:>
 
       <article id="<:= 'article_' _ article.id:>" role="main">
