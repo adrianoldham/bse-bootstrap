@@ -1,10 +1,4 @@
-<:-.set files = []:>
-<:-.set filesx = [ article.files ]:>
-<:-.for f in filesx :>
-  <:-.if not(f.hide_from_list) -:>
-    <:-% files.push(f) -:>
-  <:-.end if:>
-<:-.end for:>
+<:-.set files = [ article.files ].grep(@{f: !f.hide_from_list }):>
 <:-.if files.size and !(cfg.entry("basic", "hide_file_list") or article.flags =~ /h/ ):>
 <!-- START FILES ID: <:= article.id:> -->
 <ul class="meta files">
