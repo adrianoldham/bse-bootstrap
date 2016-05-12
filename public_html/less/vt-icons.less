@@ -44,9 +44,13 @@
         left: 50%;
         margin-top: -0.5em;
         margin-left: -0.5em;
-        color: @icon-color;
         width: 1em;
-        max-height: 1em;
+        height: 1em;
+        /*margin-top: -25%;
+        margin-left: -25%;
+        width: 50%;
+        height: 50%;*/
+        color: @icon-color;
         .color-transition();
     }
     
@@ -96,6 +100,18 @@
 
     &.shape-diamond {
         &:extend(.icon-shape-diamond all);
+    }
+    
+    &.align-left {
+        &:extend(.icon-align-left all);
+    }
+
+    &.align-right {
+        &:extend(.icon-align-right all);
+    }
+
+    &.align-center {
+        &:extend(.icon-align-center all);
     }
 }
 
@@ -169,12 +185,31 @@
 }
 
 .icon-style-open {
-    .square(@icon-shape-width);
-    .make-open-icon-theme(
+    .make-icon-style-open(
+        @shape-width: @icon-shape-width;
         @color: @icon-color;
+    );
+}
+
+.make-icon-style-open(
+    @shape-width;
+    @color;
+    ) {
+    .square(@shape-width);
+    .make-open-icon-theme(
+        @color: @color;
         @border-width: @icon-style-open-border-width;
         @border-style: @icon-style-open-border-style;
     );
+
+    & > i,
+    & > img,
+    &:before {
+        margin-top: -25%;
+        margin-left: -25%;
+        width: 50%;
+        height: 50%;
+    }
 }
 
 .make-open-icon-theme(
@@ -197,8 +232,27 @@
 }
 
 .icon-style-fill {
-    .square(@icon-shape-width);
-    .make-fill-icon-theme(@color: @icon-color;);
+    .make-icon-style-fill(
+        @shape-width: @icon-shape-width;
+        @color: @icon-color;
+    );
+}
+
+.make-icon-style-fill(
+    @shape-width;
+    @color;
+    ) {
+    .square(@shape-width);
+    .make-fill-icon-theme(@color);
+
+    & > i,
+    & > img,
+    &:before {
+        margin-top: -25%;
+        margin-left: -25%;
+        width: 50%;
+        height: 50%;
+    }
 }
 
 .make-fill-icon-theme(@color) {
@@ -240,6 +294,22 @@
             color: @color-hover;
         }
     }
+}
+
+.icon-align-left {
+    display: block;
+    float: left;
+}
+
+.icon-align-right {
+    display: block;
+    float: right;
+}
+
+.icon-align-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .link-icon {

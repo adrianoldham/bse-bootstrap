@@ -27,6 +27,7 @@
     width: inherit\9; /* IE8 messes up img height: auto; without this */
 }
 
+.text-center .img-responsive,
 .text-center > .img-responsive {
     display: inline-block;
 }
@@ -66,6 +67,14 @@
 .override-gutters {
     margin-left: -(@grid-gutter-width / 2) !important;
     margin-right: -(@grid-gutter-width / 2) !important;
+}
+
+.with-gutter-left {
+    margin-left: @grid-gutter-width;
+}
+
+.with-gutter-right {
+    margin-left: @grid-gutter-width;
 }
 
 .clear,

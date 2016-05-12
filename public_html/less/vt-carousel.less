@@ -5,9 +5,11 @@
 @carousel-caption-fallback-bg: @carousel-control-fallback-bg;
 @carousel-caption-padding: 10px ~" !important"; // !important for ie8
 @carousel-caption-text-shadow: none;
+@carousel-caption-text-align: center;
 @carousel-caption-border-radius: none;
 
 .carousel-caption {
+    text-align: @carousel-caption-text-align;
     background-color: @carousel-caption-fallback-bg;
     background-color: @carousel-caption-bg; // fallback for ie8
     margin-bottom: 40px;
@@ -53,7 +55,7 @@
 }
 
 .carousel-inner {
-    text-align: center;
+    //text-align: center;
     
     .with-background-image,
     img {

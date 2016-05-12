@@ -20,15 +20,34 @@ label,
     }
 }
 
-fieldset fieldset {
-    legend {
-        &:extend(label);
-        color: inherit;
-        font-size: inherit;
+fieldset {
+    .with-margin-bottom();
+
+    fieldset {
+        legend {
+            &:extend(label);
+            color: inherit;
+            font-size: inherit;
+        }
+        
+        label,
+        .control-label {
+            font-weight: 300 !important;
+        }
     }
     
-    label,
-    .control-label {
-        font-weight: 300 !important;
+    & > :last-child {
+        .with-margin-bottom-none();
+    }
+}
+
+.form-horizontal {
+    .form-group {
+        .radio,
+        .checkbox {
+            &:first-child {
+                .with-padding-top-none();
+            }
+        }
     }
 }

@@ -1,3 +1,11 @@
+table {
+    caption {
+        //&:extend(.h4 all);
+        //.text-gray();
+        font-size: @font-size-h4;
+    }
+}
+
 .left {
     &:extend(.pull-left);
 }
@@ -6,24 +14,64 @@
     &:extend(.pull-right);
 }
 
+.alert {
+    .clear();    
+}
+
+.group {
+    .clearfix();
+    
+    & + * {
+        .clear();
+    }
+}
+
+.form-inline {
+    .input {
+        &:extend(.form-inline .form-group);
+    }
+}
+
 .input {
-    &:extend(.form-group);
+    &:extend(.form-group all);
 
     &.error {
         &:extend(.has-error);
+        
+        &:extend(.has-feedback);
+        
+        & > label {
+            &:extend(.has-error .control-label);
+            
+            img {
+                display: none;
+            }
+        }
         
         input,
         select,
         textarea {
             &:extend(.has-error .form-control);
+            &:extend(.has-feedback .form-control);
+
+            &:focus {
+                &:extend(.has-error .form-control:focus);
+            }
         }
         
-        label {
-            &:extend(.has-error .control-label);
+        &:after {
+            &:extend(.has-feedback label~.form-control-feedback);
+            &:extend(.glyphicon);
+            &:extend(.has-error .form-control-feedback);
+            &:extend(.form-control-feedback);
+            //content:"\e014";
+            //font-family: 'Glyphicons Halflings';
+            content: "\f00d";
+            font-family: FontAwesome;
         }
     }
     
-    label {
+    & > label {
         &:extend(.control-label);
     }
     
@@ -31,73 +79,307 @@
     select,
     textarea {
         &:extend(.form-control);
+        
+        &:focus {
+            &:extend(.form-control:focus);
+        }
+    }
+    
+}
+    
+.form-group {
+    textarea {
+        height: auto;
     }
     
     small {
         &:extend(.help-block);
     }
+    
+    &.coupon {
+        .make-sm-column(3);
+        .with-margin-bottom();
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    &.quantity {
+        input {
+            width: auto;
+        }
+    }
 }
 
 .buttons {
-    &:extend(.form-group);
+    .clear();
 
+    a,
     input,
     button {
-        //&:not([class*=btn]) {
-            &:extend(.btn);
+        &:extend(.btn);
+        &:extend(.btn-default);
+
+        min-width: 15.333333%;
+        margin-left: 0;
+        margin-right: 1.333333%;
+        margin-bottom: 5px;
+        float: left;
+        
+        &:first-child {
             &:extend(.btn-primary);
-            
-            //&:not([class*=col-]) {
-                .make-xs-column(12);
-                .make-sm-column(4);
-                //.make-md-column(3);
-            //}
-        //}
+        }
+
+        @media (max-width: @screen-xs-max) {
+            .make-xs-column(12);
+            .with-margin-bottom-xs();
+        }
+        
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }
 
 .siteuser {
     .make-row();
     
-    fieldset {
-        .make-sm-column(6);
-        
-        &.name {
-            clear: left;
-        }  
-    }
-
+    & > h2,
     & > p {
         .make-xs-column(12);
     }
 
-    }
-    
+    & > fieldset {
+        .make-sm-column(6);
+        
+        &.name,
+        &.address,
+        &.message {
+            .clear-left();
+        }  
     }
 }
 
-.tabs {
-    &:extend(.nav);
-    &:extend(.nav-tabs);
+#article_-5,
+.userpage {
+    h2 {
+        &:extend(.clear-both);
+    }
 
-    li {
-        &:extend(.nav > li);
-        &:extend(.nav-tabs > li);
+    .subscribe {
+        .clear-left();
+    
+        .subinfo {
+             &:extend(.well);
+             &:extend(.well-sm);
+             .with-margin-top-xs();
+        }
+    }
+}
 
-        a {
-            &:extend(.nav > li > a);
-            &:extend(.nav-tabs > li > a);
+.items {
+    &:extend(.table all);
+
+    tr {
+        & > td {
+            vertical-align: middle !important;    
+        }
+    
+        & > :not(.item),
+        & > :not(:first-child) {
+            .text-nowrap();
+            .text-right();
+            width: 10%;
+        }
+    
+        & > .item,
+        & > :first-child {
+            white-space: normal;
+            .text-left();
         }
 
-        &.focus {
-            a {
-                &:extend(.nav-tabs > li.active > a);
+        .thumbnail {
+            width: 1%;
+        }
+
+        .item {
+            width: 100%;
+        }
+
+        .quantity {
+            input {
+                &:extend(.form-control all);
+                &:extend(.input-sm);
+                .text-right();
+                display: inline-block;
+                width: auto;
             }
         }
+        
+        .options {
+            .input-group {
+                //&:extend(.input-group-sm all);
+                display: inline-table;
+                vertical-align: bottom; // combat bottom margin on inline-table/block elements
+                width: 1%; // force width since width: auto doesn't fix the problem
 
-        &.disabled {
-            a {
-                &:extend(.nav > li.disabled > a);
+                .control-label {
+                    //&:extend(.input-group-addon:first-child);
+                }
+
+                .form-control {
+                    //&:extend(.input-group .form-control:last-child);
+                    width: auto;
+                }
+            }
+        }
+        
+        & > .total,
+        & > .extended {
+            .text-bold();
+        }
+        
+        & > .action {
+            width: 1%;
+            .text-center();
+            
+            .widget {
+                &:extend(.btn);
+                &:extend(.btn-link);
+                padding: 0;
+            }
+        }
+   
+        & > th.action {
+            .text-hidden();
+        }
+        
+        & > .no-items,
+        & > .warning {
+            .text-center();
+            .bg-warning();
+        }
+    }
+}
+
+.totals {
+    border-top: 1px solid @table-border-color;
+    border-bottom: 2px solid @table-border-color;
+    .text-right();
+    .with-margin-bottom();
+    .with-padding-xs();
+
+    p {
+        .with-margin-none();
+    }
+
+    .total {
+        font-size: @font-size-h3;
+        .text-bold();
+        .text-primary();
+        
+        abbr,
+        label {
+            .text-normal();
+            .text-gray-light();
+        }
+            
+        label {
+            .text-gray();
+            .with-margin-none();
+        }
+    }
+    
+    .freight {
+        span {
+            .text-gray-light();
+        }
+    }
+}
+
+.vertical {
+    th,
+    td {
+        border-top: none;
+        padding: @table-condensed-cell-padding (@table-cell-padding * 2);
+    }
+
+    th {
+        width: 30%;
+        .text-right();
+        .text-nowrap();
+    }
+
+    .table-bordered-vertical();
+    .make-sm-column(6);
+}
+
+table {
+    .paid,
+    .unpaid,
+    .pre-order,
+    .back-order,
+    .partial,
+    .available {
+        &:extend(.label);
+    }
+    
+    .paid {
+        .label-variant(@label-success-bg);
+    }
+    
+    .unpaid {
+        .label-variant(@label-danger-bg);
+    }
+    
+    .pre-order {
+        .label-variant(@label-info-bg);
+    }
+    
+    .back-order {
+        .label-variant(@label-danger-bg);
+    }
+    
+    .partial {
+        .label-variant(@label-warning-bg);
+    }
+
+    .available {
+        .label-variant(@label-success-bg);
+    }
+}
+
+form[name="checkoutpay"] {
+     table {
+        &:extend(.vertical all);
+        
+        th,
+        td {
+            vertical-align: middle;
+        }
+        
+        input,
+        select {
+            &:extend(.form-control all);
+            &:extend(.form-inline .form-control all);
+        }
+        
+        & + p {
+            clear: left;
+        }
+    }
+}
+
+
+.tabs {
+    &:extend(.nav all);
+    &:extend(.nav-tabs all);
+    .with-margin-bottom();
+
+    li {
+        &.focus {
+            & > a {
+                &:extend(.nav-tabs > li.active > a);
             }
         }
     }
@@ -108,8 +390,7 @@
 .list {
     .list-unstyled();
     .list-borders(@padding: 12px);
-    .with-margin();
-    margin-top: 0;
+    .with-margin-bottom();
 
     li,
     .list-item {
@@ -138,6 +419,10 @@
         span {
             font-weight: 400;
         }
+    }
+    
+    &.data {
+        .with-margin-bottom();
     }
     
     &.files {
