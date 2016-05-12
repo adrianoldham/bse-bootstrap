@@ -1,0 +1,350 @@
+<:-.wrap "shopbase.tmpl", "title":"Shop Checkout", "class":"shop-checkout-pay" :>
+<:-.set cart = request.cart :>
+<:-.set items = [ ordercart.items ] :>
+<:-.set user = request.siteuser :>
+<table class="items">
+  <caption>Order items</caption>
+  <thead>
+    <tr>
+      <th class="item">Item</th>
+      <th class="quantity">Qty</th>
+      <th class="price">Price</th>
+      <th class="extended">Extended</th>
+    </tr>
+  </thead>
+  <tbody>
+	<:-.for item in items :>
+	<:-.set options = [ item.option_list ] :>
+    <tr>
+      <td class="item">
+        <a href="<:= item.link :>" class="title"><:= item.title :></a>
+        <:-.if options.size :>
+        <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= option.desc :>: <:= option.display :><:.end for :>)</span>
+        <:-.end if :>
+        <:-.if item.description and cfg.entry("shop", "product_description", 1 ) :>
+        <div class="description"><:= item.description :></div>
+        <:-.end if :>
+      </td>
+      <td class="quantity">
+        <:= item.units :> &times;
+      </td>
+      <td class="price">
+        <:-.if item.price -:>
+        <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.price ) :>
+        <:-.end if -:>
+      </td>
+      <td class="extended"><:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.extended("price") ):></td>
+    </tr>
+    <:-.end for :>
+  </tbody>
+</table>
+<div class="totals">
+  <:-.if ordercart.coupon_active :>
+  <p class="discount"><span>(<:= ordercart.coupon_code :> / <:= ordercart.coupon_code_discount_pc:>% Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", ordercart.product_cost_discount ) :></p>
+  <:-.end if :>
+  <:-.if order.shipping_cost:>
+  <p class="freight"><span>(<:= order.shipping_method:><:.if order.delivery_in.defined:>, delivery in <:= order.delivery_in:> days<:.end if:>)</span> <label>Freight:</label> <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>
+  <:-.elsif order.shipping_name eq "contact" :>
+  <p class="freight"><span>(<:= order.shipping_method:>)</span> <label>Freight:</label> TBA</p>
+  <:-.end if:>
+  <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr> <label>Total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.total):></p>
+</div>
+<:-.if !cfg.entry("site users", "nopassword"):>
+<:-.if user:>
+<p class="alert alert-info">
+  This purchase will be added to your order history. You can track the status of your purchases and maintain your account details in your <a href="<:= cfg.user_url("user", "userpage"):>">account manager</a>.
+</p>
+<:-.else:>
+<p class="alert alert-info">To track the status of your purchase you must <:.if cfg.entry("site users", "user_register"):>either <a href="<:= cfg.user_url("user", "show_register", "r", cfg.user_url("shop", "order")):>">Signup</a> or <:.end if:><a href="<:= cfg.user_url("user", "show_logon", "r", cfg.user_url("shop", "order")):>">Logon</a> before you continue with this purchase.
+</p>
+<:-.end if:>
+<:-.end if:>
+<form action="<:= cfg.user_url("shop"):>" method="post" name="checkoutpay">
+<:-.if order.id:>
+<input type="hidden" name="order_id" value="<:= order.id:>" />
+<:-.end if:>
+  <h2>Payment Details</h2>
+  <fieldset class="panel-group" id="paymentTypes">
+    <:- if Payments CC:>
+    <dl class="panel panel-default paymentType0">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType0" value="0" <:checkedPayment CC:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="0" />
+          <:- eif MultPaymentTypes:>
+          Credit Card
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+        [:-#.call "sfield", "name":"ccName", "required":1 :]
+        [:-#.call "sfield", "name":"cardNumber", "required":1 :]
+        [:-#.call "sfield", "name":"cardVerify", "required":1 :]
+        [:-#.call "sfield", "name":"cardExpiry", "required":1 :]
+        [:-#.call "sfield", "name":"ccType", "required":1, "list":creditcard_list, "htmltype":"select" :]
+          <table>
+            <caption>Card Details</caption>
+            <tr class="<:.if errors.ccName:>has-error<:.end if:>">
+              <th><label for="ccName" class="control-label"><:= cfg.entry("shop", "display_ccName", "Name on Card"):>:</label></th>
+              <td><input type="text" name="ccName" id="ccName" size="40" value="<:old ccName:>" class="form-control" /></div></td>
+            </tr>
+            <tr>
+              <th class="<:.if errors.cardNumber:>has-error<:.end if:>"><label for="cardNumber" class="control-label"><:= cfg.entry("shop", "display_cardNumber", "Card Number"):>:</label></th>
+              <td>
+                <span class="<:.if errors.cardNumber:>has-error<:.end if:>">
+                  <input type="text" name="cardNumber" id="cardNumber" size="16" maxlength="16" value="<:old cardNumber:>" class="form-control" />
+                </span>
+                &nbsp;
+                <span class="<:.if errors.cardVerify:>has-error<:.end if:>">
+                  <label for="cardVerify" class="control-label"><:= cfg.entry("shop", "display_cardVerify", "CVV"):>:</label>
+                  <input type="text" name="cardVerify" id="cardVerify" size="4" maxlength="4" value="<:old cardVerify:>" class="form-control" />
+                  <:help cvv2 CVV:>
+                </span>
+              </td>
+            </tr>
+            <tr class="<:.if errors.cardExpiry:>has-error<:.end if:>">
+              <th><label for="cardExpiry" class="control-label"><:= cfg.entry("shop", "display_cardExpiry", "Expiry Date"):>:</label></th>
+              <td><input type="text" name="cardExpiry" id="cardExpiry" size="5" maxlength="5" value="<:old cardExpiry:>" placeholder="MM/YY" class="form-control" /> <span class="small">(MM/YY)</span></td>
+            </tr>
+            <tr class="<:.if errors.ccType:>has-error<:.end if:>">
+              <th><label for="ccType" class="control-label"><:= cfg.entry("shop", "display_ccType", "Card Type"):>:</label></th>
+              <td>
+                <select name="ccType" id="ccType" class="form-control">
+                  <option value="" selected="selected">Select card type</option>
+                  <:-.set ccType = cgi.param("ccType"):>
+                  <:-.set ccTypes = assert_dynamic and [ cfg.orderCS("payment ccType") ] :>
+                  <:-.if ccTypes.size:>
+                  <:-.for type in ccTypes :>
+                  <option value="<:= type:>"<:.if ccType eq type :> selected="selected"<:.end if:>><:= cfg.entry("payment ccType", type ):></option>
+                  <:-.end for:>
+                  <:-.else:>
+                  <option value="Visa"<:.if ccType eq "Visa":> selected="selected"<:.end if:>>Visa</option>
+                  <option value="Mastercard"<:.if ccType eq "Mastercard":> selected="selected"<:.end if:>>Mastercard</option>
+                  <:-.end if:>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments PayPal:>
+    <dl class="panel panel-default paymentType4">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType4" value="4" <:checkedPayment PayPal:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="4" />
+          <:- eif MultPaymentTypes:>
+          PayPal
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>You will be redirected to the PayPal checkout page, there you can pay using your PayPal account balance, credit card or your linked bank account.</p>
+          <p class="small">Your order will be processed when payment receipt is confirmed.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments DirectDeposit:>
+    <dl class="panel panel-default paymentType10">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType10" value="10" <:checkedPayment DirectDeposit:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="10" />
+          <:- eif MultPaymentTypes:>
+          EFT
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>Please transfer the funds to:</p>
+          <table>
+            <caption>Account Details</caption>
+            <tr>
+              <th>Name:</th>
+              <td><:= cfg.entry("shop", "accountname"):></td>
+            </tr>
+            <tr>
+              <th>BSB:</th>
+              <td><:= cfg.entry("shop", "bsb"):></td>
+            </tr>
+            <:-.if cfg.entry("shop", "swiftcode"):>
+            <tr>
+              <th>SWIFT Code:</th>
+              <td><:= cfg.entry("shop", "swiftcode"):></td>
+            </tr>
+            <:-.end if:>
+            <tr>
+              <th>Account:</th>
+              <td><:= cfg.entry("shop", "accountno"):></td>
+            </tr>
+            <tr>
+              <th>Reference:</th>
+              <td>&lt;Your order number&gt;</td>
+            </tr>
+          </table>
+          <p class="small">Your order will be processed when payment transfer is confirmed.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments Cheque:>
+    <dl class="panel panel-default paymentType1">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType1" value="1" <:checkedPayment Cheque:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="1" />
+          <:- eif MultPaymentTypes:>
+          Cheque
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>Please send a cheque to:</p>
+          <address>
+            <b><:= cfg.entry("shop", "address1"):></b><br />
+            <:= cfg.entry("shop", "address2"):><br />
+            <:= cfg.entry("shop", "address3"):><br />
+            <:= cfg.entry("shop", "address4"):>
+          </address>
+          <p class="small">Your order will be processed when cheque has cleared.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments CallMe:>
+    <dl class="panel panel-default paymentType2">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType2" value="<:paymentTypeId CallMe:>" <:checkedPayment CallMe:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="<:paymentTypeId CallMe:>" />
+          <:- eif MultPaymentTypes:>
+          Contact
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>We will contact you to make arrangements for payment.</p>
+          <p class="small">Your order will be processed when payment is received.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments Invoice:>
+    <dl class="panel panel-default paymentType11">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type=radio name="paymentType" id="paymentType11" value="11" <:checkedPayment Invoice:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="11" />
+          <:- eif MultPaymentTypes:>
+          Invoice
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>We will send you an invoice for payment.</p>
+          <p class="small">Your order will be processed when payment is received.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- if Payments Account:>
+    <dl class="panel panel-default paymentType12">
+      <dt class="panel-heading">
+        <label class="panel-title">
+          <:- if MultPaymentTypes:>
+          <input type="radio" name="paymentType" id="paymentType12" value="12" <:checkedPayment Account:> />
+          <:- or MultPaymentTypes:>
+          <input type="hidden" name="paymentType" value="12" />
+          <:- eif MultPaymentTypes:>
+          Account
+        </label>
+      </dt>
+      <dd class="panel-collapse">
+        <div class="panel-body">
+          <p>We will add this order to your account.</p>
+        </div>
+      </dd>
+    </dl>
+    <:- eif Payments:>
+    <:- include include/custom/payment_type_checkout.tmpl optional:>
+    <:- include include/payment_type_checkout.tmpl optional:>
+  </fieldset>
+  <:- if MultPaymentTypes:>
+  <p>Please select your preferred payment method</p>
+  <:- eif MultPaymentTypes:>
+  <p class="buttons">
+    <input type="submit" value="Purchase now" name="payment" accesskey="p" title="AccessKey = p" />
+    <input type="submit" value="Go back" name="checkout" accesskey="b" title="AccessKey = b" />
+  </p>
+</form>
+<:- if MultPaymentTypes:>
+<script type="text/javascript">
+(function() {
+/*
+    function hasClass(ele,cls) {
+      return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
+    }
+    
+    function addClass(ele,cls) {
+      if (!hasClass(ele,cls)) ele.className += " "+cls;
+    }
+    
+    function removeClass(ele,cls) {
+      if (hasClass(ele,cls)) {
+        var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+        ele.className=ele.className.replace(reg,' ');
+      }
+    }
+*/
+    if (document.addEventListener) {
+        var radios = document.querySelectorAll("dl input[type=radio]");
+
+        function hideallbut(radio) {
+            for (var i = 0; i < radios.length; ++i) {
+                var aradio = radios[i];
+                // find the dl
+                // this would be: dl = aradio.up("DL") in prototype
+                var dl = aradio;
+                while (dl.tagName != "DL") {
+                    dl = dl.parentNode;
+                }
+                var dd = dl.querySelector("dd");
+                //addClass(dd, "collapse");
+
+                if (aradio === radio) {
+                   dd.style.display = "";
+                   //addClass(dd, "in");
+                } else {
+                    dd.style.display = "none";
+                    //removeClass(dd, "in");
+                }
+            }
+        }
+        for (var i = 0; i < radios.length; ++i) {
+            var radio = radios[i];
+            if (radio.checked) {
+                hideallbut(radio);
+            }
+            radio.addEventListener("click", function(ev) {
+                hideallbut(this);
+            });
+        }
+    }
+})();
+</script>
+<:- eif MultPaymentTypes:>

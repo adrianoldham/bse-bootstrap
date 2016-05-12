@@ -1,9 +1,17 @@
 <:-.set icon_class = @{ a: a.meta_by_name("icon") ? a.meta_by_name("icon").value_text : '' } :>
 
+<:-.set get_price = @{ p: p.is_dynamic ? p.price("user", request.siteuser) : p.retailPrice } :>
+<:-.set get_discountpc = @{ p: (( p.retailPrice - get_price(p) ) / p.retailPrice * 100 ).format("%.0f") } :>
+
+<:-.set gst_divisor = ( cfg.entry("shop", "gst", 10 ) + 100 ) / 100 :>
+
 <:-.set filesize = @{ size: ( size < 1024 ? size : size < 1024000 ? bse.number("kilobytes", size ) _ "k" : size < 1024000000 ? bse.number("megabytes", size ) _ "M" : bse.number("gigabytes", size ) _ "G") _ "B" } :>
 
 <:-.set country_list = [ cfg.orderCS("country selector") ].map(@{k: { id: k, desc: cfg.entry("country selector", k ) }}) :>
 <:-% country_list.unshift({id:"", desc:"Please select a country"}) :>
+
+<:-.set creditcard_list = [ cfg.orderCS("payment ccType") ].map(@{k: { id: k, desc: cfg.entry("payment ccType", k ) }}) :>
+<:-% creditcard_list.unshift({id:"", desc:"Select card type"}) :>
 
 <:-.define dmessages -:>
   <:-.if dynamic and not(params.nomessage) -:>
@@ -54,12 +62,23 @@
   <:-.end if:>
 <:-.end define:>
 
+<:-.define cfield; "htmltype":"text", "default":old(name), "description":0, "save_name":0, "help":0, "required":0, "options":{} :>
+  <:-.set description = description ? cfg.entry("shop", "display_" _ description, description ) : cfg.entry("shop", "display_" _ name, name ) :>
+  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "required":required, "options":options :>
+<:-.end define:>
+
 <:-.define ufield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "required":0, "options":{} :>
   <:-.set user = request.siteuser :>
   <:-.set description = description ? cfg.entry("site users", "display_" _ description, description ) : cfg.entry("site users", "display_" _ name, name ) :>
   <:-.set default = user and user.can(name) and name.lower !~ "password" ? user.$name : default :>
   <:-.set htmltype = name.lower =~ "password" ? "password" : htmltype :>
   <:-.set required = cfg.entry("site users", "require_" _ name, required ) :>
+  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "required":required, "options":options :>
+<:-.end define:>
+
+<:-.define sfield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "required":0, "options":{} :>
+  <:-.set description = description ? cfg.entry("site users", "display_" _ description, description ) : cfg.entry("site users", "display_" _ name, name ) :>
+  <:-.set htmltype = name.lower =~ "password" ? "password" : htmltype :>
   <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "required":required, "options":options :>
 <:-.end define:>
 

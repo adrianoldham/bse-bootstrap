@@ -1,0 +1,112 @@
+<:-.wrap "shopbase.tmpl", "title":"Shopping " _ cfg.entry("shop", "cart_name", "cart"), "class":"shop-checkout-cart" :>
+<:-.set cart = request.cart :>
+<:-.set items = cart.items :>
+<:-.set user = request.siteuser :>
+<form action="<:= cfg.user_url("shop") :>" method="post">
+<table class="items">
+  <caption>Order items</caption>
+  <:-.if cart.total :>
+  <thead>
+    <tr>
+      <th class="item">Item</th>
+      <:-.set cart_coupon_invalid = cart.coupon_valid and !cart.coupon_active :>
+      <:-.if cart_coupon_invalid :>
+      <th class="coupon">Coupon</th>
+      <:-.end if :>
+      <th class="quantity">Qty</th>
+      <th class="price">Price</th>
+      <th class="extended">Extended</th>
+      <th class="action">Action</th>
+    </tr>
+  </thead>
+  <:-.end if :>
+  <tbody>
+    <:-.if items.size :>
+	<:-.for item in items :>
+	<:-.set options = item.option_list :>
+	<:-.set item_coupon_invalid = cart_coupon_invalid and !item.coupon_applies :>
+    <tr <:-= item_coupon_invalid ? ' class="warning"' : '' | raw -:> >
+      <td class="item">
+        <a href="<:= item.link :>" class="title"><:= item.title :></a>
+        <:-.if options.size :>
+        <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= option.desc :>: <:= option.display :><:.end for :>)</span>
+        <:-.end if :>
+        <:-.if item.description and cfg.entry("shop", "product_description", 1 ) :>
+        <div class="description"><:= item.description :></div>
+        <:-.end if :>
+      </td>
+      <:-.if cart_coupon_invalid :>
+      <td class="coupon">
+        <:-= item_coupon_invalid ? 'Invalid' : '' -:>
+      </td>
+      <:-.end if :>
+      <td class="quantity">
+        <:-.if item.session_id :>
+        <input type="hidden" name="quantity_<:= loop.index :>" value="<:= item.units :>" />
+        <:= item.units :>
+        <:-.else :>
+        <input type="text" name="quantity_<:= loop.index :>" size="2" value="<:= item.units :>" />
+        <:-.end if :> &times;
+      </td>
+      <td class="price">
+        <:-.if item.price -:>
+        <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.price ) :>
+        <:-.end if -:>
+      </td>
+      <td class="extended"><:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.extended("price") ):></td>
+      <td class="action"><a href="<:= cfg.user_url("shop", "", "delete_" _ loop.index, 1 ) :>" class="widget widget-remove"><i class="fa fa-times-circle"></i><span class="sr-only">Remove</span></a></td>
+    </tr>
+    <:-.end for :>
+    <:-.else :>
+    <tr>
+      <td class="warning">Your shopping <:= cfg.entry("shop", "cart_name", "cart").lower :> is empty</td>
+    </tr>
+    <:-.end if :>
+  </tbody>
+</table>
+<:-.if items.size :>
+<:-.if cart.total :>
+<div class="totals">
+  <:-.if cart.coupon_active :>
+  <p class="discount"><span>(<:= cart.coupon_code :> / <:= cart.coupon_code_discount_pc :>% Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.product_cost_discount ) :></p>
+  <:-.end if :>
+  <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD") :></abbr> <label>Sub total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.total ) :></p>
+</div>
+<:-.end if :>
+
+<:-.set coupon_help = cart.coupon_active ? "Coupon active" : cart.coupon_valid ? ( user ? "This coupon code cannot be used with some items in your cart"
+: "You may need to logon, or this coupon code cannot be used with some items in your cart" ) : cart.coupon_code ? "Unknown coupon code" : '' :>
+<:-.set coupon_error = !cart.coupon_valid and cart.coupon_code :>
+[:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "errors": { "coupon":coupon_error } -:]
+
+<p class="buttons">
+  <:-.if cart.total :>
+  <input type="submit" name="checkout" value="Checkout now" accesskey="c" title="AccessKey = c" />
+  <input type="submit" name="recalc" value="Update" accesskey="u" title="AccessKey = u" />
+  <:-.if cfg.entry("shop", "emptycart") :>
+  <input type="submit" name="a_emptycart" value="Empty cart" accesskey="e" title="AccessKey = e" />
+  <:-.end if :>
+  <:-.else :>
+  <input type="submit" name="a_order" value="Checkout now" accesskey="c" title="AccessKey = c" />
+  <:-.end if :>
+  <:-.set referer = request.referer:>
+  <:-.if referer and referer =~ cfg.entry("site", "url") and referer !~ cfg.user_url("shop") :>
+  <a href="<:= request.referer:>">Go back</a> 
+  <:-.end if:>
+</p>
+<:-.if !cart.total :>
+<input type="hidden" name="delivFirstName" id="delivFirstName" value="<:= user.name1 :>" />
+<input type="hidden" name="delivLastName" id="delivLastName" value="<:= user.name2 :>" />
+<input type="hidden" name="delivStreet" id="delivStreet" value="<:= user.street :>" />
+<input type="hidden" name="delivStreet2" id="delivStreet2" value="<:= user.street2 :>" />
+<input type="hidden" name="delivSuburb" id="delivSuburb" value="<:= user.suburb :>" />
+<input type="hidden" name="delivPostCode" id="delivPostCode" value="<:= user.postcode :>" />
+<input type="hidden" name="delivState" id="delivState" value="<:= user.state :>" />
+<input type="hidden" name="delivCountry" id="delivCountry" value="<:= user.country :>" />
+<input type="hidden" name="telephone" id="telephone" value="<:= user.telephone :>" />
+<input type="hidden" name="facsimile" id="facsimile" value="<:= user.facsimile :>" />
+<input type="hidden" name="delivMobile" id="mobile" value="<:= user.mobile :>" />
+<input type="hidden" name="emailAddress" id="emailAddress" value="<:= user.email :>" />
+<:-.end if :>
+<:-.end if :>
+</form>
