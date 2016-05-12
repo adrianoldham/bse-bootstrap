@@ -1,3 +1,5 @@
+<:-.set athumb = @{ a,b: "<img src=\"" _ cfg.entryVar("uri", "images") _ '/' _ a.thumbImage _ '" width="' _ a.thumbWidth _ '" height="' _ a.thumbHeight _ '" class="' _ (b ? b : "bse_inline_thumb") _ '" />' }:>
+
 <:-.set icon_class = @{ a: a.meta_by_name("icon") ? a.meta_by_name("icon").value_text : '' } :>
 
 <:-.set get_price = @{ p: p.is_dynamic ? p.price("user", request.siteuser) : p.retailPrice } :>
@@ -81,4 +83,39 @@
   <:-.set htmltype = name.lower =~ "password" ? "password" : htmltype :>
   <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "required":required, "options":options :>
 <:-.end define:>
+
+<:# paramaters:
+  base - base url for links
+  pages - the result of the bse.paged() call
+:>
+<:-.define pagination -:>
+<:-.set sep = base =~ /\?/ ? "&" : "?" :>
+<:-.set base = base _ sep :>
+  <:-.if pages and pages.pages.size > 1:>
+  <nav>
+    <p class="pagination">Page <:= pages.page :> of <:= pages.pagecount :></p>
+    <ul class="pagination">
+      <:-.if pages.previous_page :>
+      <li><a href="<:= base :><:= pages.pname |uri:>=<:= pages.previous_page |uri:>&amp;<:= pages.ppname |uri:>=<:= pages.pp |uri:>" aria-label="Previous"><i class="fa fa-angle-left"></i></a></li>
+      <:-.else :>
+      <li class="disabled"><span><i class="fa fa-angle-left"></i></span></li>
+      <:-.end if :>
+      <:-.for p in pages.pages :>
+      <:-.if p.link :>
+      <li><a href="<:= base :><:= pages.pname |uri:>=<:= p.page |uri:>&amp;<:= pages.ppname |uri:>=<:= pages.pp |uri:>"><:= p.page :></a></li>
+      <:-.elsif !p.link and !p.gap :>
+      <li class="active"><span aria-label="Current"><:= p.page :></span></li>
+      <:-.else :>
+      <li class="disabled"><span><:= p.page :></span></li>
+      <:-.end if :>
+      <:-.end for :>
+      <:-.if pages.next_page :>
+      <li><a href="<:= base :><:= pages.pname |uri:>=<:= pages.next_page |uri:>&amp;<:= pages.ppname |uri:>=<:= pages.pp |uri:>" aria-label="Next"><i class="fa fa-angle-right"></i></a></li>
+      <:-.else :>
+      <li class="disabled"><span><i class="fa fa-angle-right"></i></span></li>
+      <:-.end if :>
+    </ul>
+  </nav>
+  <:-.end if:>
+<:-.end define :>
 

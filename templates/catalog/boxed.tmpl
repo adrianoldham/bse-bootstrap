@@ -1,0 +1,81 @@
+<:-.wrap "base.tmpl", "class": "page-products" :>
+<:embed start:>
+      <article id="<:= 'article_' _ article.id:>" role="main">
+        <:- include include/header.tmpl optional:>
+        <:-.if article.body:>
+        <div class="article-body">
+          <:body:>
+        </div>
+        <:-.end if:>
+
+        <:-# initialise page params as static or dynamic :>
+        <:-.if dynamic:>
+        [:-.set article = dynarticle :]
+        [:-.set products = [ article.all_visible_products ].grep(@{c: c.flags !~ /s/ }) :]
+        [:-.set catalogs = [ article.all_visible_catalogs ].grep(@{c: c.flags !~ /s/ }) :]
+        [:-.set geo = "col_4s" :]
+        [:-.set is_dynamic = 1 :]
+        <:-.else:>
+        <:-.set products = [ article.all_visible_products ].grep(@{c: c.flags !~ /s/ }) :>
+        <:-.set catalogs = [ article.all_visible_catalogs ].grep(@{c: c.flags !~ /s/ }) :>
+        <:-.set geo = "col_4s" :>
+        <:-.set request = '' :>
+        <:-.set is_dynamic = 0 :>
+        <:-.end if:>
+
+        <:- include include/sortallkids.tmpl:>
+        <!-- allprods -->
+        <div id="isotope" class="row">
+    
+          <:-.for product in products :>
+          <:-.set img = product.image_by_name("thumbnail") or [ product.images ][0] or bse.site.image_by_name("placeholder") :>
+          <div class="col-sm-3">
+            <:-.call "edit_child", "parent":article, "label":loop.count, "referer_id":article.id, "r":article.admin, "req":request :>
+            <:-.call "move", "parent":article, "referer_id":article.id, "r":article.admin, "req":request :>
+            <div class="box with-panel">
+              <a href="<:= bse.url(product):>" title="<:= product.title:>">
+                <:-.if img:>
+                <p class="box-image"><:= img.thumb("geo", geo, "static", 1, "nolink", 1) |raw:></p>
+                <:-.elsif product.thumbImage:>
+                <p class="box-image"><:= athumb(product, cfg.entry("thumb classes", geo)) |raw:></p>
+                <:-.end if:>
+                <p class="box-caption"><b><:= product.titleAlias or product.title:></b>
+                <:-.if product.retailPrice > 0 :>
+                <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", is_dynamic ? 0+ product.price("user", request.siteuser) : product.retailPrice ):>
+                <:= cfg.entry("shop", "currency_code", "AUD"):>
+                <:-.else:>
+                <:= cfg.entry("shop", "item_unavailable_text", "Register interest"):>
+                <:-.end if:>
+                </p>
+              </a>
+            </div>
+          </div>
+          <:-.end for:>
+        </div>
+        
+        <:-.if catalogs.size :>
+        <:-.if products.size :>
+        <h2>Also in this section</h2>
+        <:-.end if:>
+        <div id="isotope" class="row">        
+          <:-.for catalog in catalogs :>
+          <:-.set img = catalog.image_by_name("thumbnail") or [ catalog.images ][0] or bse.site.image_by_name("placeholder") :>
+          <div class="col-sm-3">
+            <:-.call "edit_child", "parent":article, "label":loop.count, "referer_id":article.id, "r":article.admin, "req":request :>
+            <:-.call "move", "parent":article, "referer_id":article.id, "r":article.admin, "req":request :>
+            <div class="box with-panel">
+              <a href="<:= bse.url(catalog):>" title="<:= catalog.title:>">
+                <:-.if img:>
+                <p class="box-image"><:= img.thumb("geo", geo, "static", 1, "nolink", 1) |raw:></p>
+                <:-.elsif catalog.thumbImage:>
+                <p class="box-image"><:= athumb(catalog, cfg.entry("thumb classes", geo)) |raw:></p>
+                <:-.end if:>
+                <p class="box-caption"><b><:= catalog.titleAlias or catalog.title:></b></p>
+              </a>
+            </div>
+          </div>
+          <:-.end for:>
+          <:-.end if:>
+        </div>
+      </article>
+<:embed end:>

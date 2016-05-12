@@ -1,0 +1,32 @@
+          <:-.set carousel = [ article.images ] -:>
+
+          <:-.if carousel.size:>
+          <!-- Carousel container -->
+          <div class="box">
+            <div id="carousel_<:= article.id:>" class="carousel slide dissolve">
+              <!-- Carousel items -->
+              <div class="carousel-inner">
+                <:-.for img in carousel:>
+                <div class="item <:-= loop.is_first ? ' active' : '':>">
+                  <:-.call "edit_image", "image_id":img.id :>
+                  <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= img.alt.replace(/^#/, '') :>" class="gallery">
+                    <p class="box-image"><:= img.thumb("geo", "col_6s", "static", 1, "nolink", 1) |raw:></p>
+                    <:-.if img.alt and img.alt !~ /^#/ and cfg.entry("thumb captions", article.id, 1 ):>
+                    <p class="box-caption small"><:= img.alt.escape("html").replace(/(?:(.*) *?:)/, " <b>$1</b>") |raw:></p>
+                    <:-.end if:>
+                  </a>
+                </div>  
+                <:-.end for:>
+              </div>
+            </div>
+            <:-.if carousel.size > 1 :>
+            <div class="carousel-thumbnails">
+              <:-.for img in carousel:>
+              <div data-target="#carousel_<:= article.id:>" data-slide-to="<:= loop.index:>" class="carousel-thumb <:= loop.is_first ? 'active' : '':>">
+                <:= img.thumb("geo", "col_1s", "static", 1, "nolink", 1) |raw:>
+              </div>
+              <:-.end for:>
+            </div>
+            <:-.end if:>
+          </div>
+          <:-.end if:>

@@ -1,0 +1,229 @@
+<:-.wrap "base.tmpl", "class": "page-product" :>
+<!-- START ID: <:= article.id:> - TEMP: <:= article.template:> -->
+<:-.set parent = article.parent :>
+<:-.set siblings = parent ? [ parent.children ].grep(@{s: s.is_linked and s.listed or bse.admin }) : [] -:>
+
+<:-.if siblings.size > 1 :>
+  <:-.for sibling in siblings -:>
+    <:-.if article.id == sibling.id -:>
+      <:-.set next = loop.next ? loop.next : loop.first -:>
+      <:-.set prev = loop.prev ? loop.prev : loop.last -:>
+    <:-.end if -:>
+  <:-.end for -:>
+<:-.else -:>
+  <:-.set next = 0 -:>
+  <:-.set prev = 0 -:>
+<:-.end if:>
+
+<article id="<:= 'article_' _ article.id:>" role="main">
+<:embed start:>
+<:- include include/header.tmpl optional:>
+<:-.if not(article.retailPrice and article.listed) :>
+<p class="alert alert-warning">Sorry! This product is currently not available for sale</p>
+<:-.end if:>
+
+  <div class="row">
+    <div class="col-sm-3 col-sm-push-9">
+  
+    <:-.if article.retailPrice and article.listed :>
+    <form action="<:= cfg.user_url("shop"):>" method="post" role="form" class="product-form form-inline">
+      <input type="hidden" name="id" value="<:= article.id:>" />
+      <input type="hidden" name="r" value="<:= cfg.entry("shop", "add_refresh", bse.url(top)):>" />
+      <fieldset class="group item">
+        <legend>
+          <:-.if dynamic:>
+          <:-.set price = get_price(dynarticle):>
+          <:-.set discountpc = get_discountpc(dynarticle):>
+          <:-.else:>
+          <:-.set price = get_price(article):>
+          <:-.set discountpc = get_discountpc(article) :>
+          <:-.end if:>
+          <b class="price"><:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", price ):></b>
+          <small class="currency"><:= cfg.entry("shop", "currency_code", "AUD"):></small>
+          <:-.if discountpc:>
+          <em class="discount"><:= discountpc:>% Off</em>
+          <strike class="price-retail"><:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", article.retailPrice ):></strike>
+          <:-.end if:>
+        </legend>
+        <div class="input-group">
+          <label for="qty<:= article.id:>" class="input-group-addon"><i class="fa fa-shopping-cart"></i> <span class="sr-only">Quantity:</span></label>
+          <input type="text" name="quantity" id="qty<:= article.id:>" size="2" value="1" required="required" class="form-control" />
+        </div>
+  
+        <:-.set options = [ article.option_descs(cfg) ]:>
+        <:-.for option in options:>
+        <div class="input-group">
+          <label for="<:= option.name:>" class="input-group-addon"><:= option.desc:>:</label>
+          <select name="<:= option.name:>" id="<:= option.name:>" class="form-control">
+            <:-.for item in option['values']:>
+            <option value="<:= item:>"><:= option.labels[item]:></option>
+            <:-.end for:>
+          </select>
+          <!--<:-#.call "make_select", "name":option.name, "list":option.labels, "id":"key", "desc":"value", "default":option.default, "required":1, "errors":{} :>-->
+        </div>
+        <:-.end for:>
+        <p class="buttons">
+          <button type="submit" name="add" id="add<:= article.id:>" value="add<:= article.id:>" accesskey="a" title="AccessKey = a" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Add to <:= cfg.entry("shop", "cart_name", "cart"):>
+          </button>
+          <a href="<:= cfg.user_url("shop", "cart"):>" accesskey="v" title="View <:= cfg.entry("shop", "cart_name", "cart"):>" class="btn btn-default">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="sr-only">View <:= cfg.entry("shop", "cart_name", "cart"):></span>
+          </a>
+          <:-.if !embedded and article.is_dynamic -:>
+          <:- if InWishlist:>
+          <a href="<:target nuser wishlistdel product_id [article id] r [url article] :>" title="Remove from wishlist" class="btn btn-default wishlist-remove">
+            <i class="fa fa-heart text-primary"></i>
+            <span class="sr-only">Remove from wishlist</span>
+          </a>
+          <:- or InWishlist:>
+          <a href="<:target nuser wishlistadd product_id [article id] r [url article] :>" title="Add to wishlist" class="btn btn-default wishlist-add">
+            <i class="fa fa-heart"></i>
+            <span class="sr-only">Add to wishlist</span>
+          </a>
+          <:- eif InWishlist:>
+          <:-.end if:>
+          <a href="<:= cfg.user_url("tellafriend", '', "page", article.id ):>" class="btn btn-default"><i class="fa fa-share"></i> <span class="sr-only">Tell a friend</span></a>
+        </p>
+      </fieldset>
+      <:-.if article.product_code or article.leadTime or [ article.tag_objects ].size :>
+      <ul class="meta">
+        <:-.if article.product_code:>
+        <li><span>Product Code:</span> <:= article.product_code:></li>
+        <:-.end if:>
+        <:-.if article.leadTime:> 
+        <li><span>Usually ships in:</span> <:= article.leadTime:> <:= article.leadTime == "1" ? "day" : "days":></li>
+        <:-.end if:>
+        <:-.if article.is_dynamic and [ article.tag_objects ].size :>
+        <:-.set tags = [ article.tag_objects ] :>
+        <:-.set tagcats = bse.categorize_tags(tags) :>
+        <:-.for tagcat in tagcats:>
+        <li>
+          <:-.if tagcat.name :>
+          <span><:= tagcat.name :>:</span>
+          <:-.end:>
+          <:-.for tag in tagcat.tags:>
+          <a href="<:= bse.url(article.parent, { "tags": tag.name } ):>"><:= tag.val :></a>
+          <:-.if !loop.is_last:>, <:.end:>
+          <:-.end for:>
+        </li>
+        <:-.end for:>
+        <:-.end if:>
+      </ul>
+      <:-.end if:>
+    </form>
+    <:-.end if:>
+  
+    <:-.if !article.retailPrice or article.flags =~ /i/ :>
+    <:- include interest/register.tmpl:>
+    <:-.end if:>
+  
+    <:-.if siblings.size:>
+    <div class="box with-margin-bottom-xs">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown">In this section <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <:-.for sibling in siblings :>
+          <li class="<:= sibling.id == article.id ? 'active' : '':>">
+            <a href="<:= bse.url(sibling):>"><:= sibling.titleAlias or sibling.title :></a>
+          </li>
+          <:-.end for:>
+        </ul>
+      </div>
+    </div>
+    <:-.end if:>
+  
+    <:-.if siblings.size and 0:>
+    <ul class="list-group">
+      <li class="list-group-item disabled text-bold">
+        <span><:= parent.title:></span>
+      </li>
+      <li class="list-group-item">
+        <ul class="list-unstyled">
+          <:-.for sibling in siblings:>
+          <li>
+            <a href="<:= bse.url(sibling):>" class="<:= sibling.id == article.id ? 'selected' : '':>">
+            <:-.if sibling.id == article.id -:>
+            <b><:= sibling.titleAlias or sibling.title:></b> <i class="fa fa-check-circle fa-fw"></i>
+            <:-.else -:>
+            <:= sibling.titleAlias or sibling.title:>
+            <:-.end if -:>
+            </a>
+          </li>
+          <:-.end for:>
+        </ul>
+      </li>
+    </ul>
+    <:-.end if:>
+  
+    <:- include include/sidebars.tmpl optional:>
+    </div>
+  
+    <div class="col-sm-4 col-sm-push-2">
+      <:-.if article.body:>
+      <div class="article-body">
+        <:body:>
+      </div>
+      <:-.end if:>
+      <:- include include/footer.tmpl optional:>
+      <:- include include/files.tmpl optional:>
+    </div>
+  
+    <!--
+    <:-.set img = article.image_by_name("main") or [ article.images ][0] -:>
+    <:-.if img:>
+    <div class="col-sm-5 col-sm-pull-7">
+      <:-.call "edit_image", "image_id":img.id :>
+      <div class="box">
+        <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= img.alt.replace(/^#/, '') :>" class="gallery">
+          <p class="box-image"><:= img.thumb("geo", "col_6", "static", 1, "nolink", 1) |raw:></p>
+          <:-.if img.alt and img.alt !~ /^#/ and cfg.entry("thumb captions", article.id, 1 ):>
+          <p class="box-caption small"><:= img.alt.escape("html").replace(/(?:(.*) *?:)/, " <b>$1</b>") |raw:></p>
+          <:-.end if:>
+        </a>
+      </div>
+    </div>
+    <:-.end if:>
+    -->
+    <div class="col-sm-5 col-sm-pull-7">
+      <:- include include/gallery.tmpl optional:>
+    </div>
+
+    <:-.set stepkids = [ article.visible_stepkids ].grep(@{c: c.flags !~ /s/ and c.is_linked or bse.admin }).sort("displayOrder").reverse:>
+    <:-.set stepparents = [ article.visible_step_parents ].grep(@{c: c.flags !~ /s/ and c.is_linked or bse.admin }).sort("displayOrder").reverse:>
+    <:-.set relatives = stepkids :>
+
+    <:-.for article in stepparents :>
+      <:-% relatives.push(article):>
+    <:-.end for:>
+
+    <:-.if relatives.size :>
+    <h4>Related Products</h4>
+    <ul class="media-list">
+      <:-.for relative in relatives:>
+      <li class="media">
+        <a href="<:= bse.url(relative):>">
+        <div class="media-left">
+          <:-.set img = relative.image_by_name("thumbnail") or [ relative.images ][0] or bse.site.image_by_name("placeholder"):>
+            <:= img.thumb("geo", "media", "static", 1, "nolink", 1) |raw:>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading"><:= relative.titleAlias or relative.title:></h4>
+          <p class="media-text"><:= generator.summary(relative,64):></p>
+        </div>
+        </a>
+      </li>
+      <:-.end for:>
+    </ul>
+    <:-.end if:>
+  </div>
+<:embed end:>
+  <:-.if prev and next :>
+  <ul class="pagination">
+    <li><a href="<:= bse.url(prev):>" title="Previous: <:= prev.titleAlias or prev.title:>"><i class="fa fa-angle-left"></i></a></li>
+    <li><a href="<:= bse.url(parent):>" title="Back: <:= parent.titleAlias or parent.title:>"><i class="fa fa-angle-up"></i></a></li>
+    <li><a href="<:= bse.url(next):>" title="Next: <:= next.titleAlias or next.title:>"><i class="fa fa-angle-right"></i></a></li>
+  </ul>
+  <:-.end if:>
+</article>
+<!-- END ID: <:= article.id:> - TEMP: <:= article.template:> -->

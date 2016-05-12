@@ -1,0 +1,125 @@
+<:-.wrap "base.tmpl", "class": "page-items" :>
+<:embed start:>
+      <article id="<:= 'article_' _ article.id:>" role="main">
+        <:- include include/header.tmpl optional:>
+        <:-.if article.body:>
+        <div>
+          <:body:>
+        </div>
+        <:-.end if:>
+
+        <:-# initialise page params as static or dynamic :>
+        <:-.if dynamic:>
+        [:-.set article = dynarticle :]
+        [:-.set products = [ article.all_visible_products ].grep(@{c: c.flags !~ /s/ }) :]
+        [:-.set catalogs = [ article.all_visible_catalogs ].grep(@{c: c.flags !~ /s/ }) :]
+        [:-.set geo = "media" :]
+        [:-.set is_dynamic = 1 :]
+        [:-.set top = article :]
+        <:-.else:>
+        <:-.set products = [ article.all_visible_products ].grep(@{c: c.flags !~ /s/ }) :>
+        <:-.set catalogs = [ article.all_visible_catalogs ].grep(@{c: c.flags !~ /s/ }) :>
+        <:-.set geo = "media" :>
+        <:-.set request = '' :>
+        <:-.set is_dynamic = 0 :>
+        <:-.end if:>
+
+        <:- include include/sortallkids.tmpl:>
+
+        <:-.if products.size :>
+        <form action="<:= cfg.user_url("shop") :>" method="post">
+          <input type="hidden" name="r" value="<:= bse.url(top):>" />
+          <table class="items">
+            <caption>Catalogue items</caption>
+            <thead>
+              <tr>
+                <th class="item" colspan="3">Item</th>
+                <th class="quantity">Qty</th>
+                <th class="price">Price</th>
+                <th class="action">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+          	<:-.for product in products :>
+              <:-.set img = product.image_by_name("thumbnail") or [ product.images ][0] or bse.site.image_by_name("placeholder") :>
+              <:-.set options = [ product.option_descs(cfg) ]:>
+              <tr>
+                <td class="thumbnail">
+                  <:-.if img:>
+                  <:= img.thumb("geo", geo, "static", 1, "nolink", 1) |raw:>
+                  <:-.end if:>
+                </td>
+                <td class="item">
+                  <a href="<:= bse.url(product) :>" class="title"><:= product.title :></a>
+                  <:-.if product.description and cfg.entry("shop", "product_description", 1 ) :>
+                  <div class="description"><:= product.description :></div>
+                  <:-.end if :>
+                </td>
+                <td class="options">
+                  <:-.for option in options:>
+                  <div class="input-group input-group-sm">
+                    <label for="<:= option.name:>" class="input-group-addon"><:= option.desc:>:</label>
+                    <select name="<:= option.name:>" id="<:= option.name:>" class="form-control">
+                      <:-.for value in option['values']:>
+                      <option value="<:= value:>"><:= option.labels[value]:></option>
+                      <:-.end for:>
+                    </select>
+                    <:-#.call "make_select", "name":option.name, "list":option.labels, "id":"key", "desc":"value", "default":option.default, "required":1, "errors":{} :>
+                  </div>
+                  <:-.end for:>
+                </td>
+                <td class="quantity">
+                  <:-.if product.price:>
+                  <input type="text" name="qty<:= product.id :>" size="2" value="" />
+                  &times;
+                  <:-.end if:>
+                </td>
+                <td class="price">
+                  <:-.if product.price:>
+                  <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", is_dynamic ? 0+ product.price("user", request.siteuser) : product.retailPrice ):><:# force scalar context with 0+ :>
+                  <:-.end if:>
+                </td>
+                <td class="action">
+                  <:-.call "edit_child", "parent":article, "label":loop.count, "referer_id":article.id, "r":article.admin, "req":request :>
+                  <:-.call "move", "parent":article, "referer_id":article.id, "r":article.admin, "req":request :>
+                  <:-.if product.price:>
+                  <button type="submit" name="<:= "a_addsingle" _ product.id :>" value="<:= "a_addsingle" _ product.id :>" title="Add to cart" class="widget widget-add"><i class="fa fa-plus-circle fa-fw"></i> <span class="sr-only">Add to cart</span></button>
+                  <:-.elsif cfg.entry("shop", "item_show_interest") :>
+                  <a href="<:= cfg.user_url("interest", "", "product_id", product.id, "r", bse.url(article) ):>" title="Register interest" class="widget widget-interest"><i class="fa fa-info-circle fa-fw"></i> <span class="sr-only">Register interest</span></a>
+                  <:-.end if:>
+                </td>
+              </tr>
+              <:-.end for :>
+            </tbody>
+          </table>
+          <p class="buttons">
+            <input type="submit" id="addmultiple<:= article.id:>" name="a_addmultiple" value="Add items to <:= cfg.entry("shop", "cart_name", "cart"):>" accesskey="a" title="AccessKey = a" />
+            <input type="submit" name="cart" value="View <:= cfg.entry("shop", "cart_name" , "cart"):>" accesskey="v" title="AccessKey = v" />
+          </p>
+        </form>
+        <:-.end if :>
+
+        <:-.if catalogs.size:>
+        <ul class="list list-children">
+          <:-.for catalog in catalogs :>
+          <li>
+            <:-.call "edit_child", "parent":article, "label":loop.count, "referer_id":article.id, "r":article.admin, "req":request :>
+            <:-.call "move", "parent":article, "referer_id":article.id, "r":article.admin, "req":request :>
+            <a href="<:= bse.url(catalog):>">
+              <:-.if icon_class(catalog):>
+              <i class="icon <:= icon_class(catalog):>"></i>
+              <:-.end if:>
+              <:= catalog.titleAlias or catalog.title:>
+            </a>
+            <:-.if cfg.entry("basic", "hide_child_summary") -:>
+            <:-.elsif catalog.summary:>
+            <div><:= catalog.summary:></div>
+            <:-.elsif catalog.summaryLength:>
+            <div><:= generator.summary(catalog) |raw:></div>
+            <:-.end if:>
+          </li>
+          <:-.end for:>
+        </ul>
+        <:-.end if:>
+      </article>
+<:embed end:>
