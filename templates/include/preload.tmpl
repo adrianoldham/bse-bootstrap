@@ -12,8 +12,15 @@
 <:-.set country_list = [ cfg.orderCS("country selector") ].map(@{k: { id: k, desc: cfg.entry("country selector", k ) }}) :>
 <:-% country_list.unshift({id:"", desc:"Please select a country"}) :>
 
+<:-.set au_state_list = [ cfg.orderCS("au state selector") ].map(@{k: { id: k, desc: cfg.entry("au state selector", k ) }}) :>
+<:-% au_state_list.unshift({id:"", desc:"Please select a state"}) :>
+
 <:-.set creditcard_list = [ cfg.orderCS("payment ccType") ].map(@{k: { id: k, desc: cfg.entry("payment ccType", k ) }}) :>
 <:-% creditcard_list.unshift({id:"", desc:"Select card type"}) :>
+
+<:-.set get_old = @{ hash,name: cgi.param(name).defined ? cgi.param(name) : hash.is_hash ? hash.$name : '' } -:>
+
+<:-.set capitalize = @{s: s.lower.replace(/(?:^|\b)([a-z])/, @{m: m.text.upper }, 1)}:>
 
 <:-.define dmessages -:>
   <:-.if dynamic and not(params.nomessage) -:>
@@ -21,15 +28,17 @@
   <:-.if messages.size :>
     <div id="message">
       <:-.for message in messages :>
-      <div class="alert <:-= message.class eq 'error' ? ' alert-danger' : message.class eq 'warning' ? ' alert-warning' : ' alert-success' :> alert-dismissable">
+      <div class="alert <:-= message.class eq 'error' ? ' alert-danger' : message.class eq 'warning' ? ' alert-warning' : ' alert-success' :> alert-dismissable fade in">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <:-= message.html -:>
+        <:-= message.html |raw -:>
       </div>
       <:-.end for :> 
     </div>
   <:-.end if :>
   <:-.end if :>
-<:-.end define :><:-.define dfield; "name":0, "object":0, "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "width":40, "height":5, "class":"form-control", "required":0, "options":{} :>
+<:-.end define :>
+
+<:-.define dfield; "name":0, "object":0, "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "width":40, "height":5, "class":"form-control", "required":0, "options":{} :>
   <:-.set error_class = errors and errors.$name ? ' has-error' : '' :>
   <:-.if htmltype =~ /^(checkbox|radio)$/ :>
     <div class="form-group <:= name :><:= error_class :>">
