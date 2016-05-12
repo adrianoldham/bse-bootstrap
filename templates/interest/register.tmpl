@@ -1,0 +1,18 @@
+<form action="<:= cfg.user_url("interest"):>" method="post">
+  <input type="hidden" name="product_id" value="<:= article.id:>" />
+  <:-.if dynamic:>
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <:-.end if:>
+  <fieldset class="contact">
+    <legend>Register your interest</legend>
+    <p>Receive email notification when this item becomes available.</p>
+    <:-.if dynamic:>
+    [:-.call "ufield", "name":"email" :]
+    <:-.else:>
+    <:-.call "sfield", "name":"email", "errors":0 :>
+    <:-.end if:>
+  </fieldset>
+  <p class="buttons">
+    <input type="submit" name="submit" value="Register now" accesskey="r" title="AccessKey = r" />
+  </p>
+</form>

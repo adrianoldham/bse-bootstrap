@@ -1,0 +1,14 @@
+<:-.wrap "interest/interestbase.tmpl", "title":"Register your interest" :>
+<form action="<:= cfg.user_url("interest"):>" method="post" class="siteuser">
+  <input type="hidden" name="product_id" value="<:= cgi.param("product_id"):>" />
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <fieldset class="contact">
+    <legend>Contact</legend>
+    <p>Receive email notification when this item becomes available.</p>
+    <:-# set field "default" to cgi.param "email" with fallback to "email" variable to populate the field when form posted empty :>
+    [:-.call "ufield", "name":"email", "default":cgi.param("email", email), "required":1 :]    
+  </fieldset>
+  <p class="buttons">
+    <input type="submit" name="submit" value="Register now" accesskey="r" title="AccessKey = r" />
+  </p>
+</form>
