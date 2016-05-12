@@ -2,6 +2,9 @@
 
 <:-.set filesize = @{ size: ( size < 1024 ? size : size < 1024000 ? bse.number("kilobytes", size ) _ "k" : size < 1024000000 ? bse.number("megabytes", size ) _ "M" : bse.number("gigabytes", size ) _ "G") _ "B" } :>
 
+<:-.set country_list = [ cfg.orderCS("country selector") ].map(@{k: { id: k, desc: cfg.entry("country selector", k ) }}) :>
+<:-% country_list.unshift({id:"", desc:"Please select a country"}) :>
+
 <:-.define dmessages -:>
   <:-.if dynamic and not(params.nomessage) -:>
   <:-.set messages = request.messages -:>

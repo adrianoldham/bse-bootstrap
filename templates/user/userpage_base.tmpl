@@ -1,0 +1,35 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"Account summary", "userpage":"home" :>
+<:-.set userfiles = [ user.files ] :>
+<:-.set paidfiles = [ user.paid_files ] :>
+<:-.set orders = [ user.orders ] :>
+<:-.set wishlist = [ user.wishlist ] :>
+<:-.set subscriptions = [ user.subscriptions ] :>
+<p>
+  This is your account manager. Here you can 
+  <:-.if cfg.entry("subscriptions", "enabled"):> manage your newsletter subscriptions,<:.end if:>
+  <:-.if cfg.entry("shop", "enabled"):> view your entire purchase history, monitor the current status of an on-line order, manage your wishlist items and<:.end if:> maintain personal details, like email and mailing addresses
+  <:-.if !cfg.entry("site users", "nopassword"):> or simply change your password<:.end if:>.
+</p>
+<ul class="meta">
+  <:-.if !cfg.entry("custom", "user_auth") or !cfg.entry("site users", "nopassword"):>
+  <li><span>Last logged in:</span> <:= bse.date("%e-%b-%Y", user.previousLogon):></li>
+  <:-.end if:>
+  <li><span>Registered since:</span> <:= bse.date("%e-%b-%Y", user.whenRegistered):></li>
+  <:-.if userfiles.size:>
+  <li>You have <:= userfiles.size:> user file<:= userfiles.size != 1 ? 's' : '':></li>
+  <:-.end if:>
+  <:-.if paidfiles.size:>
+  <li>You have <:= paidfiles.size:> purchased file<:= paidfiles.size != 1 ? 's' : '':></li>
+  <:-.end if:>
+  <:-.if orders.size:>
+  <li>You have <:= orders.size:> order<:= orders.size != 1 ? 's' : '':></li>
+  <:-.end if:>
+  <:-.if wishlist.size:>
+  <li>You have <:= wishlist.size:> wishlist item<:= wishlist.size != 1 ? 's' : '':></li>
+  <:-.end if:>
+  <:-.if subscriptions.size:>
+  <li>You have <:= subscriptions.size:> email subscription<:= subscriptions.size != 1 ? 's' : '':></li>
+  <:-.end if:>
+</ul>
+<:include include/userpage_custom.tmpl optional:>
+<:include include/custom/userpage_custom.tmpl optional:>

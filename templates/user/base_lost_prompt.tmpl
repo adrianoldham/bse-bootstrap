@@ -1,0 +1,20 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Change Password", "userpage":"lostprompt", "usermessage":1 :>
+<form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <input type="hidden" name="id" value="<:lostid:>" />
+  <fieldset class="password">
+    <legend>Password</legend>
+    [:-.call "ufield", "name":"password" :]
+    [:-.set help = 'Please enter a memorable '_ cfg.entry("site users", "display_new_password", "New Password").lower _ ' and once again to confirm that it’s correct.' :]
+    [:-.call "ufield", "name":"confirm", "description":cfg.entry("site user", "display_confirm_password", "Confirm Password"), "htmltype":"password", "help":help :]
+  </fieldset>
+  <p class="buttons">
+    <input type="submit" name="a_lost_save" value="Save changes" accesskey="s" title="AccessKey = s" />
+  </p>
+</form>
+<p class="group">
+  <span class="left"><a href="<:= cfg.user_url("user", "show_logon"):>">Found your password?</a></span>
+  <:-.if cfg.entry("site users", "user_register"):>
+  <span class="right"><a href="<:= cfg.user_url("user", "show_register", "r", cgi.param("r")):>">Need an account?</a></span>
+  <:-.end if:>
+</p>

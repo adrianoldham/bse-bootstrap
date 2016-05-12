@@ -1,0 +1,39 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"Order history", "userpage":"orders" :>
+<:-.set orders = [ user.orders ] :>
+<table class="items orders">
+  <caption>Orders</caption>
+  <:-.if orders.size:>
+  <thead>
+    <tr>
+      <th class="item number">Order No.</th>
+      <th class="date">Date</th>
+      <th class="status">Status</th>
+      <th class="payment">Payment</th>
+      <th class="total">Total</th>
+      <th class="action">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <:-.for order in orders:>
+    <tr>
+      <td class="item number">
+        <a href="<:= cfg.user_url("user", "orderdetail", "id", order.id ):>"><:= order.id.format("%06d"):></a>
+      </td>
+      <td class="date"><:= bse.date("%e-%b-%Y", order.orderDate):></td>
+      <td class="status"><:#= request.catmsg(order.stage_description_id):><:= order.stage_description:></td>
+      <td class="payment"><span class="<:= order.paidFor ? 'paid' : 'unpaid' :>"><:= order.paidFor ? 'Paid' : 'Unpaid' :></span></td>
+      <td class="total"><:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.total ):></td>
+      <td class="action">
+        <a href="<:= cfg.user_url("user", "orderdetail", "id", order.id ):>" class="btn btn-default btn-xs">Details</a>
+      </td>
+    </tr>
+    <:-.end for:>
+  </tbody>
+  <:-.else:>
+  <tbody>
+    <tr>
+      <td class="warning">You haven’t purchased anything</td>
+    </tr>
+  </tbody>
+  <:-.end if:>
+</table>

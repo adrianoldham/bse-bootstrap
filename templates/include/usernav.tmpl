@@ -1,0 +1,77 @@
+<:-= '[' _ ':-.set userpage = "' _ params.userpage _ '" :' _ ']' |raw:>
+[:-.set nopassword = cfg.entry("site users", "nopassword") :]
+[:-.set tabs =
+    [
+        {
+            "id":1,
+            "name":"home",
+            "label":"Account summary",
+            "url":nopassword ? cfg.user_url("user", "", "userpage", user.password, "u", user.id ) : cfg.user_url("user", "userpage"),
+            "enabled":1
+        },
+        {
+            "id":2,
+            "name":"account",
+            "label":"Account details",
+            "url":nopassword ? cfg.user_url("user", "", "show_opts", user.password, "u", user.id ) : cfg.user_url("user", "show_opts"),
+            "enabled":1
+        },
+        {
+            "id":3,
+            "name":"delivery",
+            "label":"Shipping details",
+            "url":cfg.user_url("user", "show_opts", "_t", "delivery"),
+            "enabled":cfg.entry("shop", "enabled") and cfg.entry("site users", "delivery")
+        },
+        {
+            "id":4,
+            "name":"orders",
+            "label":"Order history",
+            "url":cfg.user_url("user", "userpage", "_t", "orders"),
+            "enabled":cfg.entry("shop", "enabled") and [ user.orders ].size
+        },
+        {
+            "id":5,
+            "name":"wishlist",
+            "label":"Wishlist",
+            "url":cfg.user_url("user", "userpage", "_t", "wishlist"),
+            "enabled":cfg.entry("shop", "enabled") and [ user.wishlist ].size
+        },
+        {
+            "id":6,
+            "name":"affiliate",
+            "label":"Affiliate details",
+            "url":cfg.user_url("user", "show_opts", "_t", "affiliate"),
+            "enabled":cfg.entry("affiliate", "enabled")
+        },
+        {
+            "id":7,
+            "name":"subs",
+            "label":"Subscriptions",
+            "url":cfg.user_url("user", "userpage", "_t", "subs"),
+            "enabled":cfg.entry("subscr", "enabled") and [ user.subscribed_services ].size
+        },
+        {
+            "id":8,
+            "name":"soa",
+            "label":"Seminar bookings",
+            "url":cfg.user_url("user", "userpage", "_t", "soa"),
+            "enabled":cfg.entry("seminars", "enabled")
+        },
+        {
+            "id":9,
+            "name":"files",
+            "label":"File downloads",
+            "url":cfg.user_url("user", "userpage", "_t", "files"),
+            "enabled":[ user.files ].size or [ user.paid_files ].size
+        }
+    ]
+-:]
+
+<ul class="tabs">
+  [:-.for tab in tabs.grep(@{t: t.enabled }) :]
+  <li class="[:= userpage =~ tab.name ? 'active' : '' :]">
+    <a href="[:= tab.url :]">[:= tab.label :]</a>
+  </li>
+  [:-.end for :]
+</ul>

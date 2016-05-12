@@ -1,0 +1,14 @@
+<:-.if user:>
+<:-.if params.usermessage:>
+<div class="alert alert-warning alert-dismissable fade in" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  You are already logged on as <a href="<:= cfg.user_url("user"):>"><:= user.userId:></a>, if this is not your account, please <a href="<:= cfg.user_url("user", "logoff"):>">logout now</a>.
+</div>
+<:-.end if:>
+<p>
+  <span class="btn btn-default btn-sm disabled">Hello <b><:= user.name1:> <:= user.name2:></b></span>
+  <:-.if not( cfg.entry("site users", "nopassword") or cfg.entry("custom", "user_auth") ):>
+  <span class="right"><a href="<:= cfg.user_url("user", "logoff"):>" class="btn btn-primary btn-sm"><i class="fa fa-lock"></i> Logout</a></span>
+  <:-.end if:>
+</p>
+<:-.end if:>

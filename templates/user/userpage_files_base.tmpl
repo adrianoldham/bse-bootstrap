@@ -1,0 +1,45 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"File downloads", "userpage":"files" :>
+  <:-.set userfiles = [ user.files ].sort(-"modwhen"):>
+  <:-.if userfiles.size:>
+  <table class="items files">
+    <caption>Personal files</caption>
+    <thead>
+      <tr>
+        <th class="item file">Filename/Title</th>
+        <th class="date">Date</th>
+        <th class="size">Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <:-.for userfile in userfiles :>
+      <tr>
+        <td class="item file"><a href="<:= cfg.user_url("user", "downufile", "id", userfile.id ):>" title="<:= userfile.title:>"><:= userfile.display_name:></a></td>
+        <td class="date"><:= bse.date("%e-%b-%Y", userfile.modwhen) :></td>
+        <td class="size"><:= filesize(userfile.size_in_bytes):></td>
+      </tr>
+      <:-.end for:>
+    </tbody>
+  </table>
+  <:-.end if:>
+  <:-.set paidfiles = [ user.paid_files ].sort(-"whenUploaded"):>
+  <:-.if paidfiles.size:>
+  <table class="items files">
+    <caption>Purchased files</caption>
+    <thead>
+      <tr>
+        <th class="item file">Filename/Title</th>
+        <th class="date">Date</th>
+        <th class="size">Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <:-.for paidfile in paidfiles :>
+      <tr>
+        <td class="item file"><a href="<:= paidfile.url:>" title="<:= paidfile.description:>"><:= paidfile.displayName:></a></td>
+        <td class="date"><:= bse.date("%e-%b-%Y", paidfile.whenUploaded) :></td>
+        <td class="size"><:= filesize(paidfile.sizeInBytes):></td>
+      </tr>
+      <:-.end for:>
+    </tbody>
+  </table>
+  <:-.end if:>

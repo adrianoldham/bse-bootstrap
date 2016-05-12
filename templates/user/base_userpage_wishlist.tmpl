@@ -1,0 +1,51 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"Wishlist", "userpage":"wishlist" :>
+<:-.set wishlist = user.wishlist :>
+<p>Copy and paste <a href="<:= cfg.user_url("user", "wishlist", "user", user.userId ):>">this link</a> to give others access to your wishlist.</p>
+<table class="items wishlist">
+  <caption>Wishlist items</caption>
+  <:-.if wishlist.size:>
+  <thead>
+    <tr>
+      <th class="item">Item</th>
+      <th class="price">Price</th>
+      <th class="action">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <:-.for wishlistentry in wishlist :>
+    <tr>
+      <td class="item">
+        <a href="<:= bse.url(wishlistentry):>"><:= wishlistentry.title :></a>
+        <:-.if wishlistentry.description and cfg.entry("shop", "product_description", 1 ):>
+        <div class="description"><:= wishlistentry.description :></div>
+        <:-.end if:>
+      </td>
+      <td class="price">
+        <:-.if wishlistentry.price:>
+        <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", 0+ wishlistentry.price ):><:# force scalar context with 0+ :>
+        <:-.else:>
+        NA
+        <:-.end if:>
+      </td>
+      <td class="action">
+        <:-.if loop.is_last:>
+        <i class="fa fa-chevron-down text-lighter"></i>
+        <:-.else:>
+        <a href="<:= cfg.user_url("nuser", "wishlistdown", "product_id", wishlistentry.id ):>" class="widget widget-down"><i class="fa fa-chevron-down"></i><span class="sr-only">Move down</span></a>
+        <:-.end if:>
+        <:-.if loop.is_first:>
+        <i class="fa fa-chevron-up text-lighter"></i>
+        <:-.else:>
+        <a href="<:= cfg.user_url("nuser", "wishlistup", "product_id", wishlistentry.id ):>" class="widget widget-up"><i class="fa fa-chevron-up"></i><span class="sr-only">Move up</span></a>
+        <:-.end if:>
+        <a href="<:= cfg.user_url("nuser", "wishlistdel", "product_id", wishlistentry.id ):>" class="widget widget-remove"><i class="fa fa-times-circle"></i><span class="sr-only">Remove</span></a>
+      </td>
+    </tr>
+    <:-.end for:>
+  </tbody>
+  <:-.else:>
+  <tr>
+    <td class="warning">Your wishlist is empty</td>
+  </tr>
+  <:-.end if:>
+</table>

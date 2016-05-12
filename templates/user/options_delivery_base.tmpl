@@ -1,0 +1,37 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"Shipping details", "userpage":"delivery" :>
+<form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
+<input type="hidden" name="r" value="<:= cgi.param("r") or cfg.user_url("user", "show_opts", "_t", "delivery"):>" />
+<input type="hidden" name="_t" value="delivery" />
+  <fieldset class="name">
+    <legend>Name</legend>
+    [:-.call "ufield", "name":"delivFirstName" :]
+    [:-.call "ufield", "name":"delivLastName" :]
+  </fieldset>
+  <fieldset class="company">
+    <legend>Company</legend>
+    [:-.call "ufield", "name":"delivOrganization" :]
+    [:-.call "ufield", "name":"delivTitle" :]
+  </fieldset>
+  <fieldset class="address">
+    <legend>Address</legend>
+    [:-.call "ufield", "name":"delivStreet" :]
+    [:-.call "ufield", "name":"delivStreet2" :]
+    [:-.call "ufield", "name":"delivSuburb" :]
+    [:-.call "ufield", "name":"delivState" :]
+    [:-.call "ufield", "name":"delivPostCode" :]
+    [:-.call "ufield", "name":"delivCountry", "list":country_list, "htmltype":"select", "default":"AU" :]
+  </fieldset>
+  <fieldset class="contact">
+    <legend>Contact</legend>
+    [:-.call "ufield", "name":"delivTelephone" :]
+    [:-.call "ufield", "name":"delivFacsimile" :]
+    [:-.call "ufield", "name":"delivMobile" :]
+    [:-.call "ufield", "name":"delivEmail" :]
+  </fieldset>
+<:include include/user_options_delivery_custom.tmpl optional:>
+<:include include/custom/user_options_delivery_custom.tmpl optional:>
+  <p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
+  <p class="buttons">
+    <input type="submit" name="saveopts" value="Save changes" accesskey="s" title="AccessKey = s" />
+  </p>
+</form>

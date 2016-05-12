@@ -1,5 +1,9 @@
-<:-.wrap "base.tmpl", "title": params.title ? params.title : cfg.entry("user settings", "title", "Account Services"), "icon": params.icon ? params.icon : cfg.entry("user settings", "icon_class") :>
-<article role="main">
-<:-include include/header.tmpl:>
+<:-.wrap "base.tmpl", "title": params.title ? params.title : cfg.entry("user settings", "pub_title", "Account Services"), "icon": params.icon ? params.icon : cfg.entry("user settings", "icon_class") :>
+<:-.set user = request.siteuser :>
+<article id="<:= 'article_' _ article.id:>" role="main">
+<:-.if params.usermessage:>
+<:include include/usermessage.tmpl:>
+<:-.end if:>
+<:include include/header.tmpl:>
 <:wrap here:>
 </article>

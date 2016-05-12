@@ -1,0 +1,135 @@
+<:-.wrap "user/userbase.tmpl", "subtext":"Account details", "userpage":"account" :>
+<:-.set session = request.session :>
+<form action="<:= cfg.user_url("user"):>" method="post" enctype="multipart/form-data" class="siteuser">
+<:-.if cfg.entry("site users", "nopassword"):>
+<input type="hidden" name="u" value="<:= user.id:>" />
+<input type="hidden" name="p" value="<:= user.password:>" />
+<input type="hidden" name="r" value="<:= cfg.user_url("user", "", "show_opts", user.password, "u", user.id ):>" />
+<:-.end if:>
+<input type="hidden" name="r" value="<:= cgi.param("r") or cfg.user_url("user", "show_opts"):>" />
+<:- if !Partial_logon:>
+  <fieldset class="account">
+    <legend>Account</legend>
+    <:-.if cfg.entry("site users", "nopassword"):>
+    [:-.call "ufield", "name":"email" :]
+    [:-.call "ufield", "name":"confirmemail" :]
+    [:-.call "ufield", "name":"textOnlyMail", "save_name":"saveTextOnlyMail", "description":"Plain text email (only)", "htmltype":"checkbox" :]
+    <:-.else:>
+    [:-.call "ufield", "name":"old_password":]
+    [:-.call "ufield", "name":"password", "description":"New Password" :]
+    [:-.call "ufield", "name":"confirm_password" :]
+    <:-.end if:>
+  </fieldset>
+<:- eif Partial_logon:>
+  <fieldset class="profile">
+    <legend>Profile</legend>
+    [:-.call "ufield", "name":"affiliate_name" :]
+    [:-.set imagetemplates = [ user.images_cfg(request.cfg) ] :]
+    <:-.if imagetemplates.size:>
+    <:-.for imagetemplate in imagetemplates :>
+    <:-.set siteuser_image = [ user.images ].grep(@{i: i.image_id == imagetemplate.id })[0]:>
+    <:-.if siteuser_image:>
+    <div class="form-group image">
+      <label class="control-label">
+        <:= imagetemplate.description:>:
+      </label>
+      <div class="control-container">
+        <img src="<:= cfg.user_url("user", "image", "u", siteuser_image.siteuser_id, "i", siteuser_image.image_id):>" width="<:= siteuser_image.width:>" height="<:= siteuser_image.height:>" alt="<:= siteuser_image.alt:>" />
+         (<a href="[:= cfg.user_url("user", "saveopts", "id", user.id, "image_" _ imagetemplate.id _ "_delete", 1, "r", cfg.user_url("user", "show_opts")):]" onclick="return window.confirm('Are you sure you want to delete this image?')">Delete</a>)
+      </div>
+    </div>
+    <:-.else:>
+    [:-.call "ufield", "name":'image_' _ imagetemplate.id _ '_file', "description":imagetemplate.description, "htmltype":"file" :]
+    [:-.call "input", "name":'image_' _ imagetemplate.id _ '_alt', "field": { "default":imagetemplate.description, "htmltype":"hidden" }, "object":0 :]
+    <:-.end if:>
+    <:-.end for:>
+    <:-.end if:>
+  </fieldset>
+  <fieldset class="name">
+    <legend>Name</legend>
+    [:-.call "ufield", "name":"name1" :]
+    [:-.call "ufield", "name":"name2" :]
+  </fieldset>
+  <fieldset class="company">
+    <legend>Company</legend>
+    [:-.call "ufield", "name":"organization" :]
+    [:-.call "ufield", "name":"title" :]
+  </fieldset>
+  <fieldset class="address">
+    <legend>Address</legend>
+    [:-.call "ufield", "name":"street" :]
+    [:-.call "ufield", "name":"street2" :]
+    [:-.call "ufield", "name":"suburb" :]
+    [:-.call "ufield", "name":"state" :]
+    [:-.call "ufield", "name":"postcode" :]
+    [:-.call "ufield", "name":"country", "list":country_list, "htmltype":"select", "default":"AU" :]
+  </fieldset>
+  <fieldset class="contact">
+    <legend>Contact</legend>
+    [:-.call "ufield", "name":"telephone" :]
+    [:-.call "ufield", "name":"facsimile" :]
+    [:-.call "ufield", "name":"mobile" :]
+    <:-.if !cfg.entry("site users", "nopassword"):>
+    [:-.call "ufield", "name":"email" :]
+    [:-.call "ufield", "name":"textOnlyMail", "save_name":"saveTextOnlyMail", "description":"Plain text email (only)", "htmltype":"checkbox" :]
+    <:-.end if:>
+  </fieldset>
+
+<:-.if subscriptions.size:>
+  [:-.set subscribed_to = @{ sub: [ user.subscriptions ].grep(@{subscribed: subscribed.id == sub.id })[0] } :]
+  <fieldset class="subscribe">
+    <legend>Subscribe</legend>
+    <input type="hidden" name="saveSubscriptions" value="1" />
+    <:-.for subscription in subscriptions:>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="subscription" value="<:= subscription.id:>" <:-= subscribed_to(subscription) ? 'checked="checked"' : '' :> />
+        <:= subscription.name:>
+        (<a href="<:= '#sub_' _ subscription.id :>" data-toggle="collapse" aria-expanded="false" aria-controls="<:= 'sub_' _ subscription.id :>">info</a>)
+      </label>
+      <div id="<:= 'sub_' _ subscription.id :>" class="collapse">
+        <div class="subinfo">
+          <p><b>Description</b><br />
+            <:= subscription.description.replace(/\A\s+|\s+\z/, "", 1).replace(/\s*\n\s*/, "</p><p>", 1) |raw:></p>
+          <p><b>Frequency</b><br />
+            <:= subscription.frequency:></p>
+          <:-.if subscription.lastSent  !~ "^0000":>
+          <p><b>Last Published</b><br />
+            <:= bse.date("%e-%b-%Y", subscription.lastSent ):></p>
+          <:-.end if:>
+        </div>
+      </div>
+    </div>
+    <:-.end for:>
+    <small>
+      <:-.if user.confirmed:>
+      Confirmation has been completed.
+      <:-.elsif user.confirmSecret:>
+      Confirmation has been requested, but not completed.
+      <:-.else:>
+      Confirmation will be sent to your email address.
+      <:-.end if:>
+    </small>
+  </fieldset>
+<:-.end if:>
+
+<:-.if cfg.entry("notify files", "active"):>
+  <fieldset class="notification">
+    <legend>Upload Notification</legend>
+    <input type="hidden" name="save_file_subs" value="1" />
+    <:-.for filecat in file_cats:>
+    <div class="checkbox">
+      <label><input type="checkbox" name="file_subscriptions" value="<:= filecat.id:>"<:.if filecat.subscribed:> checked="checked"<:.end if:> /> <:= filecat.name:></label>
+    </div>
+    <:-.end for:>
+    <small>Receive email notification when file downloads are added to your account in the selected categories.</small>
+  </fieldset>
+<:-.end if:>
+
+<:include include/user_options_custom.tmpl optional:>
+<:include include/custom/user_options_custom.tmpl optional:>
+  <p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
+  <p class="buttons">
+    <input type="submit" name="saveopts" value="Save changes" accesskey="s" title="AccessKey = s" />
+  </p>
+</form>

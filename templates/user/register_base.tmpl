@@ -1,0 +1,87 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Account Signup", "userpage":"register", "usermessage":1 :>
+<form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <fieldset class="account">
+    <legend>Account</legend>
+    <:-.if cfg.entry("site users", "nopassword"):>
+    [:-.call "ufield", "name":"email", "required":1 :]
+    [:-.call "ufield", "name":"confirmemail", "required":1 :]
+    <:-.else:>
+    [:-.call "ufield", "name":"userid", "required":1 :]
+    [:-.call "ufield", "name":"password", "required":1  :]
+    [:-.call "ufield", "name":"confirm_password", "required":1 :]
+    [:-.call "ufield", "name":"email", "required":1 :]
+    <:-.end if:>
+    [:-.call "ufield", "name":"textOnlyMail", "save_name":"saveTextOnlyMail", "description":"Plain text email (only)", "htmltype":"checkbox" :]
+  </fieldset>
+<:-.if cfg.entry("site users", "info_on_register", 1):>
+  <fieldset class="name">
+    <legend>Name</legend>
+    [:-.call "ufield", "name":"name1" :]
+    [:-.call "ufield", "name":"name2" :]
+  </fieldset>
+  <fieldset class="company">
+    <legend>Company</legend>
+    [:-.call "ufield", "name":"organization" :]
+    [:-.call "ufield", "name":"title" :]
+  </fieldset>
+  <fieldset class="address">
+    <legend>Address</legend>
+    [:-.call "ufield", "name":"street" :]
+    [:-.call "ufield", "name":"street2" :]
+    [:-.call "ufield", "name":"suburb" :]
+    [:-.call "ufield", "name":"state" :]
+    [:-.call "ufield", "name":"postcode" :]
+    [:-.call "ufield", "name":"country", "list":country_list, "htmltype":"select", "default":"AU" :]
+  </fieldset>
+  <fieldset class="contact">
+    <legend>Contact</legend>
+    [:-.call "ufield", "name":"telephone" :]
+    [:-.call "ufield", "name":"facsimile" :]
+    [:-.call "ufield", "name":"mobile" :]
+  </fieldset>
+  <:-.if subscriptions.size:>
+  [:-.set subscribed_to = @{ sub: [ user.subscriptions ].grep(@{subscribed: subscribed.id == sub.id })[0] } :]
+  <fieldset class="subscribe">
+    <legend>Subscribe</legend>
+    <input type="hidden" name="checkedsubs" value="1" />
+    [:-.for subscription in subscriptions:]
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="subscription" value="<:= subscription.id:>" <:-= subscribed_to(subscription) ? 'checked="checked"' : '' :> />
+        <:= subscription.name:>
+        (<a href="<:= '#sub_' _ subscription.id :>" data-toggle="collapse" aria-expanded="false" aria-controls="<:= 'sub_' _ subscription.id :>">info</a>)
+      </label>
+      <div id="<:= 'sub_' _ subscription.id :>" class="collapse">
+        <div class="subinfo">
+          <p><b>Description</b><br />
+            <:= subscription.description.replace(/\A\s+|\s+\z/, "", 1).replace(/\s*\n\s*/, "</p><p>", 1) |raw:></p>
+          <p><b>Frequency</b><br />
+            <:= subscription.frequency:></p>
+          <:-.if subscription.lastSent  !~ "^0000":>
+          <p><b>Last Published</b><br />
+            <:= bse.date("%e-%b-%Y", subscription.lastSent ):></p>
+          <:-.end if:>
+        </div>
+      </div>
+    </div>
+    [:-.end for:]
+    <small>
+      Confirmation will be sent to your email address.
+    </small>
+  </fieldset>
+  <:-.end if:>
+<:-.end if:>
+<:include include/user_register_custom.tmpl optional:>
+<:include include/custom/user_register_custom.tmpl optional:>
+<p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
+<p class="buttons">
+  <input type="submit" name="register" value="Signup now" accesskey="s" title="AccessKey = s" />
+</p>
+</form>
+<p class="group">
+  <span class="left"><a href="<:= cfg.user_url("user", "show_lost_password"):>">Lost your password?</a></span>
+  <:-.if !cfg.entry("site users", "nopassword"):>
+  <span class="right"><a href="<:= cfg.user_url("user", "show_logon", "r", cgi.param("r")):>">Already have an account?</a></span>
+  <:-.end if:>
+</p>

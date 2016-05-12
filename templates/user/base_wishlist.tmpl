@@ -1,0 +1,38 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Public Wishlist", "nomessage":1 :>
+<:-.set user = request.siteuser :>
+<:-.set wishlist = user.wishlist :>
+<p><:= user.name1 or user.userId:>’s wishlist contains <:= wishlist.size:> items</p>
+<table class="items wishlist">
+  <caption>Wishlist items</caption>
+  <:-.if wishlist.size:>
+  <thead>
+    <tr>
+      <th class="item">Item</th>
+      <th class="price">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <:-.for wishlistentry in wishlist :>
+    <tr>
+      <td class="item">
+        <a href="<:= bse.url(wishlistentry):>"><:= wishlistentry.title :></a>
+        <:-.if wishlistentry.description and cfg.entry("shop", "product_description", 1 ):>
+        <div class="description"><:= wishlistentry.description :></div>
+        <:-.end if:>
+      </td>
+      <td class="price">
+        <:-.if wishlistentry.price:>
+        <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", wishlistentry.price ):>
+        <:-.else:>
+        NA
+        <:-.end if:>
+      </td>
+    </tr>
+    <:-.end for:>
+  </tbody>
+  <:-.else:>
+  <tr>
+    <td class="warning"><:= user.name1 or user>userId:>’s wishlist is empty wishlist is empty</td>
+  </tr>
+  <:-.end if:>
+</table>

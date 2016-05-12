@@ -1,0 +1,18 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Account Login", "userpage":"login", "usermessage":1 :>
+<form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
+  <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
+  <fieldset class="logon">
+    <legend>Account</legend>
+    [:-.call "ufield", "name":"userid", "required":1 :]
+    [:-.call "ufield", "name":"password", "required":1 :]
+  </fieldset>
+  <p class="buttons">
+    <input type="submit" name="logon" value="Login now" accesskey="l" title="AccessKey = l" />
+  </p>
+</form>
+<p class="group">
+  <span class="left"><a href="<:= cfg.user_url("user", "show_lost_password"):>">Lost your password?</a></span>
+  <:-.if cfg.entry("site users", "user_register"):>
+  <span class="right"><a href="<:= cfg.user_url("user", "show_register", "r", cgi.param("r")):>">Need an account?</a></span>
+  <:-.end if:>
+</p>
