@@ -68,15 +68,14 @@
 <:-.if cart.total :>
 <div class="totals">
   <:-.if cart.coupon_active :>
-  <p class="discount"><span>(<:= cart.coupon_code :> / <:= cart.coupon_code_discount_pc :>% Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.product_cost_discount ) :></p>
+  <p class="discount"><span>(<:= cart.coupon_code :> / <:.if cart.coupon_code_discount_pc:><:= cart.coupon_code_discount_pc:>%<:.end if:> Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.product_cost_discount ) :></p>
   <:-.end if :>
   <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD") :></abbr> <label>Sub total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.total ) :></p>
 </div>
 <:-.end if :>
 
-<:-.set coupon_help = cart.coupon_active ? "Coupon active" : cart.coupon_valid ? ( user ? "This coupon code cannot be used with some items in your cart"
-: "You may need to logon, or this coupon code cannot be used with some items in your cart" ) : cart.coupon_code ? "Unknown coupon code" : '' :>
-<:-.set coupon_error = !cart.coupon_valid and cart.coupon_code :>
+<:-.set coupon_help = cart.coupon_inactive_message:>
+<:-.set coupon_error = item_coupon_invalid or cart_coupon_invalid :>
 [:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "errors": { "coupon":coupon_error } -:]
 
 <p class="buttons">
