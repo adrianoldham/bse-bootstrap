@@ -70,7 +70,7 @@
     [:-.call "ufield", "name":"facsimile" :]
     [:-.call "ufield", "name":"mobile" :]
     <:-.if !cfg.entry("site users", "nopassword"):>
-    [:-.call "ufield", "name":"email" :]
+    [:-.call "ufield", "name":"email", "required":1 :]
     [:-.call "ufield", "name":"textOnlyMail", "save_name":"saveTextOnlyMail", "description":"Plain text email (only)", "htmltype":"checkbox" :]
     <:-.end if:>
   </fieldset>
