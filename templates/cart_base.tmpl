@@ -74,9 +74,9 @@
 </div>
 <:-.end if :>
 
-<:-.set coupon_error = item_coupon_invalid or cart_coupon_invalid :>
 [:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "errors": { "coupon":coupon_error } -:]
 <:-.set coupon_help = cart.coupon_active ? 'Coupon is valid and active' : cart.coupon_valid ? cart.coupon_inactive_message : cart.coupon_code ne '' ? 'Unknown coupon code' : '':>
+<:-.set coupon_error = item_coupon_invalid or cart_coupon_invalid or (!cart.coupon_valid and cart.coupon_code ne ''):>
 
 <p class="buttons">
   <:-.if cart.total :>
