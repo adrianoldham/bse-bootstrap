@@ -9,9 +9,8 @@
   <thead>
     <tr>
       <th class="item">Item</th>
-      <:-.set cart_coupon_invalid = cart.coupon_valid and !cart.coupon_active :>
-      <:-.if cart_coupon_invalid :>
-      <th class="coupon">Coupon</th>
+      <:-.if cart.coupon_active and !cart.coupon_cart_wide :>
+      <th class="discount">Discount</th>
       <:-.end if :>
       <th class="quantity">Qty</th>
       <th class="price">Price</th>
@@ -24,8 +23,7 @@
     <:-.if items.size :>
 	<:-.for item in items :>
 	<:-.set options = item.option_list :>
-	<:-.set item_coupon_invalid = cart_coupon_invalid and !item.coupon_applies :>
-    <tr <:-= item_coupon_invalid ? ' class="warning"' : '' | raw -:> >
+    <tr <:-= item.product_discount_units ? ' class="success"' : '' | raw -:> >
       <td class="item">
         <a href="<:= item.link :>" class="title"><:= item.title :></a>
         <:-.if options.size :>
@@ -35,9 +33,11 @@
         <div class="description"><:= item.description :></div>
         <:-.end if :>
       </td>
-      <:-.if cart_coupon_invalid :>
-      <td class="coupon">
-        <:-= item_coupon_invalid ? 'Invalid' : '' -:>
+      <:-.if cart.coupon_active and !cart.coupon_cart_wide :>
+      <td class="discount">
+        <:-.if item.product_discount:>
+        <:= item.product_discount_units:> &times; <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.product_discount ):>
+        <:-.end if:>
       </td>
       <:-.end if :>
       <td class="quantity">
@@ -68,15 +68,20 @@
 <:-.if cart.total :>
 <div class="totals">
   <:-.if cart.coupon_active :>
-  <p class="discount"><span>(<:= cart.coupon_code :> / <:.if cart.coupon_code_discount_pc:><:= cart.coupon_code_discount_pc:>%<:.end if:> Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.product_cost_discount ) :></p>
+  <p class="discount">
+    <:-.if cart.coupon_code_discount_pc:>
+    <span>(<:= cart.coupon_code_discount_pc:>% Coupon)</span>
+    <:-.end if:>
+    <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.product_cost_discount ) :>
+  </p>
   <:-.end if :>
   <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD") :></abbr> <label>Sub total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", cart.total ) :></p>
 </div>
 <:-.end if :>
 
 <:-.set coupon_help = cart.coupon_active ? 'Coupon is valid and active' : cart.coupon_valid ? cart.coupon_inactive_message : cart.coupon_code ne '' ? 'Unknown coupon code' : '':>
-<:-.set coupon_error = item_coupon_invalid or cart_coupon_invalid or (!cart.coupon_valid and cart.coupon_code ne ''):>
-[:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "status": (cart.coupon_active ? 'has-success' : ''), "errors": { "coupon":coupon_error } -:]
+<:-.set coupon_error = ( cart.coupon_valid and !cart.coupon_active ) or ( !cart.coupon_valid and cart.coupon_code ne '' ):>
+[:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "status": ( cart.coupon_active ? 'has-success' : '' ), "errors": { "coupon":coupon_error } -:]
 
 <p class="buttons">
   <:-.if cart.total :>

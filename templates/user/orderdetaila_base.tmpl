@@ -56,7 +56,7 @@
     <:-.if order.coupon :>
     <tr>
       <th><:= cfg.entry("shop", "display_coupon_code", "Coupon Code"):>:</th>
-      <td><:= order.coupon_code:> (<:= order.coupon_code_discount_pc :>%)</td>
+      <td><:= order.coupon_code:> <:.if order.coupon_code_discount_pc :>(<:= order.coupon_code_discount_pc :>%)<:.end if:></td>
     </tr>
     <:-.end if :>
   </tbody>
@@ -196,7 +196,12 @@
 </table>
 <div class="totals">
   <:-.if order.coupon :>
-  <p class="discount"><span>(<:= order.coupon_code :> / <:.if order.coupon_code_discount_pc:><:= order.coupon_code_discount_pc:>%<:.end if:> Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.product_cost_discount ) :></p>
+  <p class="discount">
+    <:-.if order.coupon_code_discount_pc:>
+    <span>(<:= order.coupon_code_discount_pc:>% Coupon)</span>
+    <:-.end if:>
+    <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.product_cost_discount ) :>
+  </p>
   <:-.end if :>
   <:-.if order.shipping_cost:>
   <p class="freight"><span>(<:= order.shipping_method:>)</span> <label>Freight:</label> <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>

@@ -7,6 +7,9 @@
   <thead>
     <tr>
       <th class="item">Item</th>
+      <:-.if ordercart.coupon_active and !ordercart.coupon_cart_wide :>
+      <th class="discount">Discount</th>
+      <:-.end if :>
       <th class="quantity">Qty</th>
       <th class="price">Price</th>
       <th class="extended">Extended</th>
@@ -15,7 +18,7 @@
   <tbody>
 	<:-.for item in items :>
 	<:-.set options = [ item.option_list ] :>
-    <tr>
+    <tr <:-= item.product_discount_units ? ' class="success"' : '' | raw -:> >
       <td class="item">
         <a href="<:= item.link :>" class="title"><:= item.title :></a>
         <:-.if options.size :>
@@ -25,6 +28,13 @@
         <div class="description"><:= item.description :></div>
         <:-.end if :>
       </td>
+      <:-.if ordercart.coupon_active and !ordercart.coupon_cart_wide :>
+      <td class="discount">
+        <:-.if item.product_discount:>
+        <:= item.product_discount_units:> &times; <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.product_discount ):>
+        <:-.end if:>
+      </td>
+      <:-.end if :>
       <td class="quantity">
         <:= item.units :> &times;
       </td>
@@ -40,7 +50,12 @@
 </table>
 <div class="totals">
   <:-.if ordercart.coupon_active :>
-  <p class="discount"><span>(<:= ordercart.coupon_code :> / <:.if ordercart.coupon_code_discount_pc:><:= ordercart.coupon_code_discount_pc:>%<:.end if:> Coupon)</span> <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", ordercart.product_cost_discount ) :></p>
+  <p class="discount">
+    <:-.if ordercart.coupon_code_discount_pc:>
+    <span>(<:= ordercart.coupon_code_discount_pc:>%  Coupon)</span>
+    <:-.end if:>
+    <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", ordercart.product_cost_discount ) :>
+  </p>
   <:-.end if :>
   <:-.if order.shipping_cost:>
   <p class="freight"><span>(<:= order.shipping_method:><:.if order.delivery_in.defined:>, delivery in <:= order.delivery_in:> days<:.end if:>)</span> <label>Freight:</label> <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>
@@ -49,6 +64,10 @@
   <:-.end if:>
   <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr> <label>Total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.total):></p>
 </div>
+<form action="<:= cfg.user_url("shop"):>" method="post" name="checkoutpay">
+<:-.set coupon_help = ordercart.coupon_active ? 'Coupon is valid and active' : ordercart.coupon_valid ? ordercart.coupon_inactive_message : ordercart.coupon_code ne '' ? 'Unknown coupon code' : '':>
+<:-#.set coupon_error = ( ordercart.coupon_valid and !ordercart.coupon_active ) or ( !ordercart.coupon_valid and ordercart.coupon_code ne '' ):>
+[:-#.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":ordercart.coupon_code, "help":coupon_help, "status": ( ordercart.coupon_active ? 'has-success' : '' ), "errors": { "coupon":coupon_error }, options:{ "readonly":1 } -:]
 <:-.if !cfg.entry("site users", "nopassword"):>
 <:-.if user:>
 <p class="alert alert-info">
@@ -59,7 +78,6 @@
 </p>
 <:-.end if:>
 <:-.end if:>
-<form action="<:= cfg.user_url("shop"):>" method="post" name="checkoutpay">
 <:-.if order.id:>
 <input type="hidden" name="order_id" value="<:= order.id:>" />
 <:-.end if:>
