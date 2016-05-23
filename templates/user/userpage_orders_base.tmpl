@@ -1,5 +1,5 @@
 <:-.wrap "user/userbase.tmpl", "subtext":"Order history", "userpage":"orders" :>
-<:-.set orders = [ user.orders ] :>
+<:-.set orders = [ user.orders ].reverse :>
 <table class="items orders">
   <caption>Orders</caption>
   <:-.if orders.size:>
