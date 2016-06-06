@@ -1,4 +1,4 @@
-<:-.wrap "base.tmpl", "title": params.title ? params.title : cfg.entry("user settings", "pub_title", "Account Services"), "icon": params.icon ? params.icon : cfg.entry("user settings", "icon_class") :>
+<:-.wrap "base.tmpl", "title": params.title ? params.title : cfg.entry("user settings", "pub_title", "Account Services"), "icon": params.icon ? params.icon : cfg.entry("user settings", "icon_class"), "class": "pubpage " _ params.userpage :>
 <:-.set user = request.siteuser :>
 <article id="<:= 'article_' _ article.id:>" role="main">
 <:-.if params.usermessage:>
