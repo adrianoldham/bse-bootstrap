@@ -1,6 +1,9 @@
+@container-fluid-max-width: @container-large-desktop;
+@container-fluid-gutter: @grid-gutter-width;
+
 .container-fluid(
-    @max-width: 1170px;
-    @gutter: @grid-gutter-width;
+    @max-width: @container-fluid-max-width;
+    @gutter: @container-fluid-gutter;
     ) {
     width: auto;
     max-width: @max-width;
