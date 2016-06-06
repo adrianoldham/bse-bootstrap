@@ -2,7 +2,7 @@
 <:-.if params.usermessage:>
 <div class="alert alert-warning alert-dismissable fade in" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-  You are already logged on as <a href="<:= cfg.user_url("user"):>"><:= user.userId:></a>, if this is not your account, please <a href="<:= cfg.user_url("user", "logoff"):>">logout now</a>.
+  You are already logged in as <a href="<:= cfg.user_url("user"):>"><:= user.userId:></a>, if this is not your account, please <a href="<:= cfg.user_url("user", "logoff"):>">logout now</a>.
 </div>
 <:-.end if:>
 <p>

@@ -1,5 +1,5 @@
-<:-.wrap "user/pubbase.tmpl", "title":"Account Signup", "userpage":"register", "usermessage":1 :>
-<:include include/register_intro_custom.tmpl optional:>
+<:-.wrap "user/pubbase.tmpl", "title":"Account Sign-up", "userpage":"register", "usermessage":1 :>
+<:include include/user_register_intro_custom.tmpl optional:>
 <:include include/custom/user_register_intro_custom.tmpl optional:>
 <form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
   <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
@@ -78,7 +78,7 @@
 <:include include/custom/user_register_custom.tmpl optional:>
 <p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
 <p class="buttons">
-  <input type="submit" name="register" value="Signup now" accesskey="s" title="AccessKey = s" />
+  <input type="submit" name="register" value="Sign-up now" accesskey="s" title="AccessKey = s" />
 </p>
 </form>
 <p class="group">

@@ -78,7 +78,7 @@
   This purchase will be added to your order history. You can track the status of your purchases and maintain your account details in your <a href="<:= cfg.user_url("user", "userpage"):>">account manager</a>.
 </p>
 <:-.else:>
-<p class="alert alert-info">To track the status of your purchase you must <:.if cfg.entry("site users", "user_register"):>either <a href="<:= cfg.user_url("user", "show_register", "r", cfg.user_url("shop", "checkout", "need_delivery", need_delivery )):>">Signup</a> or <:.end if:><a href="<:= cfg.user_url("user", "show_logon", "r", cfg.user_url("shop", "checkout", "need_delivery", need_delivery )):>">Logon</a> before you continue with this purchase.
+<p class="alert alert-info">To track the status of your purchase you must <:.if cfg.entry("site users", "user_register"):>either <a href="<:= cfg.user_url("user", "show_register", "r", cfg.user_url("shop", "checkout", "need_delivery", need_delivery )):>">Sign-up</a> or <:.end if:><a href="<:= cfg.user_url("user", "show_logon", "r", cfg.user_url("shop", "checkout", "need_delivery", need_delivery )):>">Login</a> before you continue with this purchase.
 </p>
 <:-.end if:>
 <:-.end if:>
