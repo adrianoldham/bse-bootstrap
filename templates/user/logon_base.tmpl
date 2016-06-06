@@ -1,4 +1,6 @@
 <:-.wrap "user/pubbase.tmpl", "title":"Account Login", "userpage":"login", "usermessage":1 :>
+<:include include/user_logon_intro_custom.tmpl optional:>
+<:include include/custom/user_logon_intro_custom.tmpl optional:>
 <form action="<:= cfg.user_url("user"):>" method="post" class="siteuser">
   <input type="hidden" name="r" value="<:= cgi.param("r"):>" />
   <fieldset class="logon">
