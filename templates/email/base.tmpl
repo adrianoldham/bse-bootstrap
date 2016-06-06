@@ -53,10 +53,14 @@ div.bse-main {
 
 /* @group header */
 
-div.bse-header img.logo {
+div.bse-header img.bse-logo {
     width: 165px;
     height: 75px;
     vertical-align: top;    
+}
+
+div.bse-header a {
+    text-decoration: none !important;    
 }
 
 /* @end */
@@ -81,8 +85,8 @@ h1, h2, h3, h4, .bse-brand {
 .bse-brand {
     display: block;
 	margin-top: 0;
-	margin-bottom: 0.75em;
-	font-size: 1.75em;
+	margin-bottom: 0.5em;
+	font-size: 2em;
 }
 
 h1 {
@@ -483,6 +487,10 @@ p.bse-social-icons img.icon {
         text-align: center !important;
         padding-bottom: 1em !important;
     }
+    div.bse-header .bse-brand {
+    	font-size: 1.75em !important;
+        text-align: left !important;
+    }
     div.bse-main {
 		padding: 0.75em 0 0.5em !important;
     }
@@ -537,7 +545,13 @@ p.bse-social-icons img.icon {
 <div class="bse-wrapper <:= params.classes:>">
   <div class="bse-content">
     <div class="bse-header">
-      <a href="<:= cfg.entry("site", "url"):>"><img src="<:resource logo:>" alt="<:= cfg.entry("site", "name"):>" width="165" height="75" class="logo" /></a>
+      <a href="<:= cfg.entry("site", "url"):>">
+        <:-.if cfg.entry("mail resources", "logo"):>
+        <img src="<:resource logo:>" alt="<:= cfg.entry("site", "name"):>" width="165" height="75" class="bse-logo" />
+        <:-.else:>
+        <p class="bse-brand"><:= cfg.entry("site", "name"):></p>
+        <:-.end if:>
+      </a>
     </div>
     <div class="bse-main">
       <:-.if params.title:>
