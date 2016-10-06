@@ -6,6 +6,17 @@ table {
     }
 }
 
+.formmail {
+    table {
+        tr {
+            & > th {
+                min-width: 12em;
+                width: 15%;
+            }
+        }
+    }
+}
+
 .left {
     &:extend(.pull-left);
 }
@@ -152,11 +163,24 @@ table {
     & > fieldset {
         .make-sm-column(6);
         
+        &.full {
+            .make-sm-column(12);
+        }
+        
         &.name,
         &.address,
         &.message {
             .clear-left();
         }  
+    }
+}
+
+.fieldset {
+    &:extend(fieldset all);
+    
+    & > .legend {
+        &:extend(legend all);
+        &:extend(fieldset > legend all);
     }
 }
 
@@ -317,6 +341,7 @@ table {
 table {
     .paid,
     .unpaid,
+    .processing,
     .pre-order,
     .back-order,
     .partial,
@@ -331,7 +356,11 @@ table {
     .unpaid {
         .label-variant(@label-danger-bg);
     }
-    
+
+    .processing {
+        .label-variant(@label-warning-bg);
+    }
+ 
     .pre-order {
         .label-variant(@label-info-bg);
     }

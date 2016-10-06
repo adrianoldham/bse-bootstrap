@@ -1,6 +1,6 @@
 <:-.set id = article.id :>
 <:-.set article = id > 0 ? bse.articles.getByPkey(id) : article :>
-<:-.wrap "base.tmpl", "title": article.title or "FORMTITLE", "titleAlias": article.titleAlias, "icon": params.icon ? params.icon : cfg.entry("formmail settings", "icon_class") :>
+<:-.wrap "base.tmpl", "title": article.title or "FORMTITLE", "titleAlias": article.titleAlias, "icon": params.icon ? params.icon : cfg.entry("formmail settings", "icon_class"), "class": "formmail" :>
 <article class="<:formcfg article_class:>" role="main">
 <:- include include/header.tmpl optional:>
 <div class="<:formcfg body_class:>">
