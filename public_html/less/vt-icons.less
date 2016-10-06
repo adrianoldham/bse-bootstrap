@@ -20,10 +20,14 @@
 @icon-style-open-border-style: solid;
 @icon-style-open-border-width: @icon-border-width-base;
 
+@icon-glyph-font-family: FontAwesome;
+@icon-glyph-link: "\f105";
+@icon-glyph-popup: "+";
+@icon-glyph-info: "i";
+
 .icon {
     .icon-size-xs(); // base * 2 // can’t use extend due to specificity problems with overrides
-    width: 1em;
-    height: 1em;
+    .square(1em);
     text-align: center;
     vertical-align: middle;
     position: relative;
@@ -312,17 +316,20 @@
     margin-right: auto;
 }
 
-.link-icon {
-    font-family:FontAwesome;
-    content:"\f105";
+*[class^=icon-glyph] {
+    font-family: @icon-glyph-font-family;   
 }
 
-.popup-icon {
-    content:"+";
+.icon-glyph-link {
+    content: @icon-glyph-link;
 }
 
-.info-icon {
-    content:"i";
+.icon-glyph-popup {
+    content: @icon-glyph-popup;
+}
+
+.icon-glyph-info {
+    content: @icon-glyph-info;
 }
 
 @media (max-width: @screen-md-max) {
