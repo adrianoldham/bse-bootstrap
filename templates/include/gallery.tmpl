@@ -1,4 +1,4 @@
-          <:-.set carousel = [ article.images ] -:>
+          <:-.set carousel = [ article.images ].grep(@{i: i.name !~ /(thumbnail|logo)/ }) -:>
 
           <:-.if carousel.size:>
           <!-- Carousel container -->
