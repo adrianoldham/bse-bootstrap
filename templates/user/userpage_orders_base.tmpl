@@ -21,7 +21,8 @@
       </td>
       <td class="date"><:= bse.date("%e-%b-%Y", order.orderDate):></td>
       <td class="status"><:#= request.catmsg(order.stage_description_id):><:= order.stage_description:></td>
-      <td class="payment"><span class="<:= order.paidFor ? 'paid' : 'unpaid' :>"><:= order.paidFor ? 'Paid' : 'Unpaid' :></span></td>
+      <:-.set payment = order.paidFor ? "Paid" : order.paymentType ? "Unpaid" : "Processing":>
+      <td class="payment"><span class="<:= payment.lower:>"><:= payment:></span></td>
       <td class="total"><:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.total ):></td>
       <td class="action">
         <a href="<:= cfg.user_url("user", "orderdetail", "id", order.id ):>" class="btn btn-default btn-xs">Details</a>

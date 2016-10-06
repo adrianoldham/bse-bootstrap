@@ -62,7 +62,8 @@
   </tbody>
 </table>
 <table class="vertical right">
-  <caption>Payment details <span class="<:= order.paidFor ? "paid" : "unpaid":>"><:= order.paidFor ? "Paid" : "Unpaid":></span></caption>
+  <:-.set payment = order.paidFor ? "Paid" : order.paymentType ? "Unpaid" : "Processing":>
+  <caption>Payment details <span class="<:= payment.lower:>"><:= payment:></span></caption>
   <tbody>
    <tr>
       <th>Payment Method:</th>
@@ -159,6 +160,9 @@
   <thead>
     <tr>
       <th class="item">Item</th>
+      <:-.if order.coupon_active and !order.coupon_cart_wide :>
+      <th class="discount">Discount</th>
+      <:-.end if :>
       <th class="quantity">Qty</th>
       <th class="price">Price</th>
       <th class="extended">Extended</th>
@@ -181,6 +185,13 @@
         <div class="description"><:= item.description :></div>
         <:-.end if :>
       </td>
+      <:-.if order.coupon_active and !order.coupon_cart_wide :>
+      <td class="discount">
+        <:-.if item.product_discount:>
+        <:= item.product_discount_units:> &times; <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.product_discount ):>
+        <:-.end if:>
+      </td>
+      <:-.end if :>
       <td class="quantity">
         <:= item.units :> &times;
       </td>
