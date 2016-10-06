@@ -30,6 +30,8 @@
 @box-caption-font-size-lg: @font-size-h2;
 @box-caption-font-size-xl: @font-size-h1;
 
+@box-caption-summary-size: @font-size-base;
+
 .box {
     position: relative;
 
@@ -42,6 +44,10 @@
 
         b {
             display: block;
+            
+            & + span {
+                font-size: @box-caption-summary-size;
+            }
         }
 
         &.size-xs {
@@ -59,6 +65,10 @@
         &.size-lg {
             .box-caption-size-lg();
         }            
+
+        &.size-xl {
+            .box-caption-size-xl();
+        }            
     }
 
     .box-image {
@@ -72,62 +82,8 @@
     }
     
     &.with-overlay {
-        text-align: center;
-
-        & > a {
-            display: block;
-        }
-
-        &:after {
-            // overlay
-            content: " ";
-            display: block;
-            position: absolute;
-            z-index: 2;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: @box-overlay-caption-fallback-bg;
-            background-color: @box-overlay-caption-bg;
-        }
-
-        &:hover {
-            a:before {
-                content: " ";
-                display: block;
-                position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
-                z-index: 4;
-            }
-        }
+        &:extend(.box-overlay all);
         
-        .box-caption {
-            .absolute-center();
-            overflow: auto;
-            color: @box-overlay-caption-color;
-            padding: @box-overlay-caption-padding;
-            text-align: center;
-            z-index: 3;
-            
-            &:before {
-                .btn-widget(@background-color: none; @border-width: 3px; @position: relative;);
-                .center-block();
-                .round();
-                margin-bottom: @line-height-computed;
-                z-index: 4;
-            }
-
-            &.with-link-icon:before {
-                &:extend(.link-icon);
-            }
-
-            &.with-popup-icon:before {
-                &:extend(.popup-icon);
-            }
-
-            &.with-info-icon:before {
-                &:extend(.info-icon);
-            }
-        }
-
         &:after,
         .box-caption {
             .opacity(0);
@@ -137,6 +93,25 @@
         &:hover {
             &:after,
             .box-caption {
+                .opacity(1);
+            }
+        }
+    }
+
+    &.with-overlay-on {
+        &:extend(.box-overlay all);
+    }
+
+    &.with-overlay-text-on {
+        &:extend(.box-overlay all);
+
+        &:after {
+            .opacity(0);
+            .fade-transition();
+        }
+
+        &:hover {
+            &:after {
                 .opacity(1);
             }
         }
@@ -204,17 +179,17 @@
     
     &.fade-caption {
         .box-caption {
-            opacity: 0;
+            .opacity(0);
             .fade-transition();
         }
 
         &:hover {
             .box-caption {
-                opacity: 1;
+                .opacity(1);
             }
         }
     }
-
+    
     &.with-caption-size-xs {
         .box-caption {
             .box-caption-size-xs();
@@ -237,6 +212,89 @@
         .box-caption {
             .box-caption-size-lg();
         }
+    }
+
+    &.with-caption-size-xl {
+        .box-caption {
+            .box-caption-size-xl();
+        }
+    }
+}
+
+.box-overlay {
+    & > a {
+        display: block;
+        // secondary overlay element required to make links clickable
+        &:extend(.box-overlay-element all);
+        
+        // stack order overlay seconardary element
+        &:after {
+            z-index: 4;
+        }
+    }
+
+    .box-caption {
+        z-index: 3;
+        color: @box-overlay-caption-color;
+        padding: @box-overlay-caption-padding;
+        width: 100%;
+        overflow: auto;
+        text-align: center;
+        .absolute-center();
+        
+        //&:extend(.box-caption-icon all);
+        .box-caption-icon();
+    }
+
+    // primary overlay element works even without links
+    &:extend(.box-overlay-element all);
+
+    // stack order and colourise overlay primary element
+    &:after {
+        z-index: 2;
+        background-color: @box-overlay-caption-fallback-bg;
+        background-color: @box-overlay-caption-bg;
+    }
+
+}
+
+.box-overlay-element {
+    &:after {
+        cursor: pointer;
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+    }
+}
+
+        
+.box-caption-icon {
+    &:before {
+        .btn-widget(@background-color: none; @border-width: 3px; @position: relative;);
+        .center-block();
+        .round();
+        margin-bottom: @line-height-computed;
+        z-index: 4;
+    }
+
+    /*&:before {
+        .icon-size-xs();
+        .icon-style-open();
+        .icon-align-center();
+        .icon-shape-circle();
+    }*/
+
+    &.with-icon-link:before {
+        &:extend(.icon-glyph-link);
+    }
+
+    &.with-icon-popup:before {
+        &:extend(.icon-glyph-popup);
+    }
+
+    &.with-icon-info:before {
+        &:extend(.icon-glyph-info);
     }
 }
 
