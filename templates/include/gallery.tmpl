@@ -9,7 +9,7 @@
                 <:-.for img in carousel:>
                 <div class="item <:-= loop.is_first ? ' active' : '':>">
                   <:-.call "edit_image", "image_id":img.id :>
-                  <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= img.alt.replace(/^#/, '') :>" class="gallery">
+                  <a href="<:= img.thumb("geo","gallery", "static", 1, "field", "object").src:>" title="<:= img.alt.replace(/^#/, '') :>" rel="gallery_<:= article.id:>" class="gallery">
                     <p class="box-image"><:= img.thumb("geo", "col_6s", "static", 1, "nolink", 1) |raw:></p>
                     <:-.if img.alt and img.alt !~ /^#/ and cfg.entry("thumb captions", article.id, 1 ):>
                     <p class="box-caption small"><:= img.alt.escape("html").replace(/(?:(.*) *?:)/, " <b>$1</b>") |raw:></p>
