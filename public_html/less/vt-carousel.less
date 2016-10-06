@@ -7,6 +7,10 @@
 @carousel-caption-text-shadow: none;
 @carousel-caption-text-align: center;
 @carousel-caption-border-radius: none;
+@carousel-caption-primary-font-family: @headings-font-family;
+@carousel-caption-primary-font-size: @font-size-h1;
+@carousel-caption-secondary-font-family: @font-family-base;
+@carousel-caption-secondary-font-size: @font-size-base;
 
 .carousel-caption {
     text-align: @carousel-caption-text-align;
@@ -17,9 +21,16 @@
     .border-radius(@carousel-caption-border-radius);
     
     * {
+        font-family: @carousel-caption-secondary-font-family;
+        font-size: @carousel-caption-secondary-font-size;
         color: @carousel-caption-color;
         text-shadow: @carousel-caption-text-shadow;
         margin-bottom: 0;
+    }
+
+    h1 {
+        font-family: @carousel-caption-primary-font-family;
+        font-size: @carousel-caption-primary-font-size;
     }
 }
 
