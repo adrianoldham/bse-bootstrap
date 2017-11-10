@@ -74,7 +74,11 @@
 <:- if !Results:>
 <div class="body">
   <p>By default results are returned if any one of your keywords is found in the document.</p>
+  <:-.if cfg.entry("search", "case_sensitive") eq 'none' :>
+  <p>All keywords will search case insensitively.</p>
+  <:-.else:>
   <p>All lower case keywords will search case insensitively. If an upper case character is included in a word then that word will be searched case sensitively.</p>
+  <:-.end if:>
   <p>Use quotation marks around phrases, put + (plus) in front of any word or phrase that is required, and &minus; (minus) in front of a word or phrase to exclude it.</p>
   <p><strong>Examples:</strong></p>
   <ul>
