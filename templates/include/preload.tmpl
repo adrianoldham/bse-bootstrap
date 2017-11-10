@@ -38,14 +38,14 @@
   <:-.end if :>
 <:-.end define :>
 
-<:-.define dfield; "name":0, "object":0, "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "width":40, "height":5, "class":"form-control", "status":0, "required":0, "options":{} :>
+<:-.define dfield; "name":0, "object":0, "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "width":40, "height":5, "class":"form-control", "status":0, "maxlength":0, "required":0, "options":{} :>
   <:-.set has_changed = cgi.param(name) and cgi.param(name) ne default -:>
   <:-.set status_class = errors and errors.$name ? 'has-error' : errors.size and has_changed ? 'has-success': status ? status : '' :>
   <:-.if htmltype =~ /^(checkbox|radio)$/ :>
     <div class="form-group <:= name :> <:= status_class :>">
       <div class="<:= htmltype :>">
         <label>
-          <:.call "input", "name":name, "field": { "save_name":save_name, "default":default, "htmltype":htmltype, "required":required }, "options":options :>
+          <:.call "input", "name":name, "field": { "save_name":save_name, "default":default, "htmltype":htmltype, "maxlength":maxlength, "required":required }, "options":options :>
           <:= description :>
           <:.call "required_indicator", "required":required :>
         </label>
@@ -64,7 +64,7 @@
         <:-.if htmltype =~ /^select$/ :>
         <:-.call "make_select", "name":name, "field": { "default":default, "required":required }, "list":list, "options":options :>
         <:-.else:>
-        <:-.call "input", "name":name, "field": { "default":default, "width":width, "height":height, "htmltype":htmltype, "required":required }, "options":options :>
+        <:-.call "input", "name":name, "field": { "default":default, "width":width, "height":height, "htmltype":htmltype, "maxlength":maxlength, "required":required }, "options":options :>
         <:-.end if:>
         <:-.if help:>
         <p class="help-block small"><:= help :></p>
@@ -74,24 +74,24 @@
   <:-.end if:>
 <:-.end define:>
 
-<:-.define cfield; "htmltype":"text", "default":old(name), "description":0, "save_name":0, "help":0, "required":0, "status": 0, "options":{} :>
+<:-.define cfield; "htmltype":"text", "default":old(name), "description":0, "save_name":0, "help":0, "maxlength":0, "required":0, "status": 0, "options":{} :>
   <:-.set description = description ? cfg.entry("shop", "display_" _ description, description ) : cfg.entry("shop", "display_" _ name, name ) :>
-  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "required":required, "options":options :>
+  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "maxlength":maxlength, "required":required, "options":options :>
 <:-.end define:>
 
-<:-.define ufield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "required":0, "status": 0, "options":{} :>
+<:-.define ufield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "maxlength":0, "required":0, "status": 0, "options":{} :>
   <:-.set user = request.siteuser :>
   <:-.set description = description ? cfg.entry("site users", "display_" _ description, description ) : cfg.entry("site users", "display_" _ name, name ) :>
   <:-.set default = user and user.can(name) and name.lower !~ "password" ? user.$name : default :>
   <:-.set htmltype = name.lower =~ "password" ? "password" : htmltype :>
   <:-.set required = cfg.entry("site users", "require_" _ name, required ) :>
-  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "required":required, "options":options :>
+  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "maxlength":maxlength, "required":required, "options":options :>
 <:-.end define:>
 
-<:-.define sfield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "required":0, "status": 0, "options":{} :>
+<:-.define sfield; "htmltype":"text", "default":'', "description":0, "save_name":0, "help":0, "maxlength":0, "required":0, "status": 0, "options":{} :>
   <:-.set description = description ? cfg.entry("site users", "display_" _ description, description ) : cfg.entry("site users", "display_" _ name, name ) :>
   <:-.set htmltype = name.lower =~ "password" ? "password" : htmltype :>
-  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "required":required, "options":options :>
+  <:-.call "dfield", "name":name, "save_name":save_name, "default":default, "description":description, "htmltype":htmltype, "help":help, "status": status, "maxlength":maxlength, "required":required, "options":options :>
 <:-.end define:>
 
 <:# paramaters:
