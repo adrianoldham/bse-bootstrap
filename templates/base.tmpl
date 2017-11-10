@@ -65,12 +65,13 @@
     <meta property="og:url" content="<:= bse.url(article, 1):>" />
     <meta property="og:type" content="<:= article.generator.replace('(BSE::)?Generate::','').lower():>" />
     <meta property="og:title" content="<:= article.pageTitle or article.title :>" />
-    <:-.set ogimage = article.image_by_name("thumbnail") or [ article.images ][0] :>
+    <:-.set ogimage = article.image_by_name("opengraph") or article.image_by_name("thumbnail") or [ article.images ][0] or bse.site.image_by_name("opengraph") :>
     <:-.if ogimage:>
     <:-.set ogimage_fields = ogimage.thumb("geo","opengraph", "abs_urls", 1, "field", "object") :>
     <meta property="og:image" content="<:= ogimage_fields.src:>" />
     <meta property="og:image:width" content="<:= ogimage_fields.width:>" />
     <meta property="og:image:height" content="<:= ogimage_fields.height:>" />
+    <meta property="og:image:alt" content="<:= ogimage_fields.alt:>" />
     <:-.end if:>
     <:-.if article.generator =~ "Product" :>
     <:-.set description = article.description or article.summary or generator.summary(article, 300) :>
