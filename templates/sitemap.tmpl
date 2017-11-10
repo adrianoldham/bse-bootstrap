@@ -8,10 +8,10 @@
           <:- include include/footer.tmpl optional:>
           <:- include include/files.tmpl optional:>
           <:-.define article :>
-            <:-.set kidsx = [ article.visible_kids ] :>
+            <:-.set articlekids = [ article.visible_kids ] :>
             <:-.set kids = [] -:>
     
-            <:-.for kid in kidsx -:>
+            <:-.for kid in articlekids -:>
               <:-.if [ kid.all_menu_kids ].size or kid.flags !~ /(s|g|P)/ and kid.should_index -:>
                 <:-% kids.push(kid) -:>
               <:-.end if -:>
@@ -39,10 +39,10 @@
             </li>
           <:-.end define :>
           <ul class="sitemap">
-            <:-.set kidsx = [ bse.site.visible_kids ] :>
+            <:-.set sitekids = [ bse.site.visible_kids ] :>
             <:-.set kids = [] -:>
 
-            <:-.for kid in kidsx -:>
+            <:-.for kid in sitekids -:>
               <:-.if [ kid.all_menu_kids ].size or kid.flags !~ /(s|g|P)/ and kid.should_index -:>
                 <:-% kids.push(kid) -:>
               <:-.end if -:>
