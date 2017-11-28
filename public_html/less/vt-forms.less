@@ -1,3 +1,5 @@
+@input-height-xs: (floor(@font-size-small * @line-height-small) + (@padding-xs-vertical * 2) + 2);
+
 // reset input appearance
 input:not([type*="checkbox"]):not([type*="radio"]),
 textarea,
@@ -49,5 +51,59 @@ fieldset {
                 .with-padding-top-none();
             }
         }
+    }
+}
+
+.form-control-static {
+    &.input-xs {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.input-xs {
+  .input-size(@input-height-xs; @padding-xs-vertical; @padding-xs-horizontal; @font-size-small; @line-height-small; @input-border-radius-small);
+}
+
+.form-group-xs {
+    .form-control {
+        height: @input-height-xs;
+        padding: @padding-xs-vertical @padding-xs-horizontal;
+        font-size: @font-size-small;
+        line-height: @line-height-small;
+        border-radius: @input-border-radius-small;
+    }
+
+    select.form-control {
+        height: @input-height-xs;
+        line-height: @input-height-xs;
+    }
+
+    textarea.form-control,
+    select[multiple].form-control {
+        height: auto;
+    }
+
+    .form-control-static {
+        height: @input-height-xs;
+        min-height: (@line-height-computed + @font-size-small);
+        padding: (@padding-xs-vertical + 1) @padding-xs-horizontal;
+        font-size: @font-size-small;
+        line-height: @line-height-small;
+    }
+}
+
+.input-group-xs > .form-control,
+.input-group-xs > .input-group-addon,
+.input-group-xs > .input-group-btn > .btn {
+  .input-xs();
+}
+
+.input-group-addon {
+    // Sizing
+    &.input-xs {
+        padding: @padding-xs-vertical @padding-xs-horizontal;
+        font-size: @font-size-small;
+        border-radius: @input-border-radius-small;
     }
 }
