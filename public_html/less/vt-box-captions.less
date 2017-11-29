@@ -234,16 +234,7 @@
     }
 
     .box-caption {
-        z-index: 3;
-        color: @box-overlay-caption-color;
-        padding: @box-overlay-caption-padding;
-        width: 100%;
-        overflow: auto;
-        text-align: center;
-        .absolute-center();
-        
-        //&:extend(.box-caption-icon all);
-        .box-caption-icon();
+        &:extend(.box-overlay-caption all);
     }
 
     // primary overlay element works even without links
@@ -252,8 +243,7 @@
     // stack order and colourise overlay primary element
     &:after {
         z-index: 2;
-        background-color: @box-overlay-caption-fallback-bg;
-        background-color: @box-overlay-caption-bg;
+        &:extend(.box-overlay-element-fill all);
     }
 
 }
@@ -268,7 +258,39 @@
     }
 }
 
-        
+.box-overlay-element-fill {
+    background-color: @box-overlay-caption-fallback-bg;
+    background-color: @box-overlay-caption-bg;
+}
+
+.box-overlay-element-fade {
+    &:after {
+        &:extend(.box-overlay-element-fill all);
+        .opacity(0);
+        .fade-transition();
+    }
+    
+    &:hover {
+        &:after {
+            .opacity(1);
+        }
+    }
+}
+
+.box-overlay-caption {
+    z-index: 3;
+    color: @box-overlay-caption-color;
+    padding: @box-overlay-caption-padding;
+    width: 100%;
+    overflow: auto;
+    text-align: center;
+    white-space: normal;
+    .absolute-center();
+    
+    //&:extend(.box-caption-icon all);
+    .box-caption-icon();
+}
+
 .box-caption-icon {
     &:before {
         .btn-widget(@background-color: none; @border-width: 3px; @position: relative;);
