@@ -75,6 +75,14 @@
 }
 
 @media (min-width: @screen-sm-min) {
+
+    [class*="text-columns"] {
+        p {
+            widows: 3;
+            orphans: 3;
+        }
+    }
+
     .text-columns-2 {
         .content-columns(2);
     }
