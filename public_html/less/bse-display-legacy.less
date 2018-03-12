@@ -125,9 +125,9 @@ table {
 .buttons {
     .clear();
 
-    a,
-    input,
-    button {
+    a:not(.btn),
+    input:not(.btn),
+    button:not(.btn) {
         &:extend(.btn);
         &:extend(.btn-default);
 
