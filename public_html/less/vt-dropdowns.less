@@ -1,5 +1,6 @@
 // Dropdown toggle with hover
-.dropdown-hover {
+.dropdown-hover,
+.dropdown-menu-hover {
     &:hover {
         @media only screen and (min-width: @screen-sm-min) {
             & > .dropdown-menu {
@@ -9,8 +10,92 @@
     }
 }
 
-.with-dropdown-hover {
+.with-dropdown-hover,
+.with-dropdown-menu-hover {
     .dropdown {
         .dropdown-hover();
+    }
+}
+
+.dropdown-center,
+.dropdown-menu-center {
+    @media only screen and (min-width: @screen-sm-min) {
+        right: auto;
+        left: 50%;
+        .transform(translate(-50%, 0));
+    }
+}
+
+.with-dropdown-center,
+.with-dropdown-menu-center {
+    .dropdown {
+        .dropdown-menu {
+            .dropdown-center();
+        }
+    }
+}
+
+.with-dropdown-fade,
+.with-dropdown-transition-fade {
+    @media only screen and (min-width: @screen-sm-min) {
+        .dropdown {
+            .dropdown-menu {
+                display: block;
+                visibility: hidden;
+                .opacity(0);
+                .fade-transition();
+            }
+            
+            &:hover {
+                .dropdown-menu {
+                    visibility: visible;
+                    .opacity(1);
+                }
+            }
+        }
+    }
+}
+
+.with-dropdown-expand,
+.with-dropdown-transition-expand {
+    @media only screen and (min-width: @screen-sm-min) {
+        .dropdown {
+            .dropdown-menu {
+                display: block;
+                visibility: hidden;
+                max-height: 0;
+                overflow: hidden;
+                .transition(max-height 500ms cubic-bezier(0.17, 0.04, 0.03, 0.94));
+            }
+            
+            &:hover {
+                .dropdown-menu {
+                    visibility: visible;
+                    max-height: 500px;
+                }
+            }
+        }
+    }
+}
+
+.with-dropdown-fold,
+.with-dropdown-transition-fold {
+    @media only screen and (min-width: @screen-sm-min) {
+        .dropdown {
+            .dropdown-menu {
+                display: block;
+                visibility: hidden;
+                .transform(perspective(400) rotate3d(1,0,0,-90deg));
+                .transition(350ms);
+                transform-origin: 50% 0;
+            }
+            
+            &:hover {
+                .dropdown-menu {
+                    visibility: visible;
+                    .transform(perspective(400) rotate3d(0,0,0,0));
+                }
+            }
+        }
     }
 }
