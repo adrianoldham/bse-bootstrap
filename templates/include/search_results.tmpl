@@ -42,7 +42,7 @@
         <:matchfile displayName:>
           <:- eif -:>
         <:- case default:>
-        <a href="<:target user download_file file [matchfile id] r [articleurl] |h:>" title="Size: <:arithmetic d1:( [matchfile sizeInBytes] / 1024):>KB">
+        <a href="<:target user download_file file [matchfile id] r [articleurl] |h:>" title="Filename: <:matchfile displayName:> Size: <:number megabytes [matchfile sizeInBytes]:>MB">
           <:- ifMatchfile description -:>
             <:matchfile description:>
           <:- or -:>

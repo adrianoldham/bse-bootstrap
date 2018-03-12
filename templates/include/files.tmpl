@@ -8,7 +8,7 @@
     <:-.if file.forSale:>
     <:= file.description or file.displayName:>
     <:-.else:>
-    <a href="<:= cfg.user_url("user", "download_file", "file", file.id, "r", bse.url(top)):>" title="Size: <:= filesize(file.sizeInBytes):>">
+    <a href="<:= cfg.user_url("user", "download_file", "file", file.id, "r", bse.url(top)):>" title="Filename: <:= file.displayName:> Size: <:= filesize(file.sizeInBytes):>">
       <:= file.description or file.displayName:>
     </a>
     <:-.end if:>
