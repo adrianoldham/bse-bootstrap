@@ -81,6 +81,12 @@
             widows: 3;
             orphans: 3;
         }
+        
+        &.with-no-p-break {
+            p {
+                .text-break-inside-avoid();
+            }
+        }
     }
 
     .text-columns-2 {
