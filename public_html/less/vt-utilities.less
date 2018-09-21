@@ -14,6 +14,12 @@
     .text-hidden();
 }
 
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .absolute-center {
     position: absolute;
     top: 50%; left: 50%;
@@ -22,6 +28,10 @@
 
 .img-responsive {
     width: inherit\9; /* IE8 messes up img height: auto; without this */
+}
+
+.img-center {
+    .center();
 }
 
 .text-center .img-responsive,
