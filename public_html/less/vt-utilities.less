@@ -26,6 +26,40 @@
     .translate(-50%; -50%);
 }
 
+.make-vertically-center {
+    display: flex;
+    align-items: center;
+    //justify-content: center;
+}
+
+.vertically-center {
+    .make-vertically-center();
+
+    &-sm {
+         @media (min-width: @screen-sm-min) {
+             .make-vertically-center();
+         }
+    }
+    
+    &-md {
+         @media (min-width: @screen-md-min) {
+             .make-vertically-center();
+         }
+    }
+    
+    &-lg {
+         @media (min-width: @screen-lg-min) {
+             .make-vertically-center();
+         }
+    }
+
+    &-xl {
+         @media (min-width: @screen-xl-min) {
+             .make-vertically-center();
+         }
+    }
+}
+
 .img-responsive {
     width: inherit\9; /* IE8 messes up img height: auto; without this */
 }
