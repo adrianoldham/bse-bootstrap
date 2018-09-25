@@ -35,7 +35,7 @@
                   <:-.end if -:>
                 </h1>
                 <:-.if params.subtitle:>
-                <h2><:= params.subtitle:></h2>
+                <h2><:= params.subtitle.escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:></h2>
                 <:-.end if:>
                 <:- include include/crumbs.tmpl optional:>
               </header>
