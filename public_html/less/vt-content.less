@@ -25,7 +25,7 @@
 // define box parameter lists
 @sizes: base, xs, sm, md, lg, xl, none;
 @types: padding, margin;
-@edges: top, bottom;
+@edges: top, bottom, left, right;
 
 // define variable name
 .define-spacing(@type, @size) {
@@ -79,7 +79,7 @@
             // iterate double sided margin/padding properties
             .make-edges-double(length(@edges));
 
-            .make-edges-double(@nE, @iE: 1) when (@iE =< @nE) {
+            .make-edges-double(@nE, @iE: 1) when (@iE =< @nE) and (@iE =< 2) {
                 @edge: extract(@edges, @iE);
 
                 @{type}-@{edge}: @@spacing;
