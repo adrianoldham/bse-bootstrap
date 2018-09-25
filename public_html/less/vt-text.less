@@ -109,3 +109,63 @@
         .content-columns(4);
     }
 }
+
+@align-sizes: xs, sm, md, lg;
+@align-types: left, right, center;
+@align-ranges: max, min;
+
+// define variable name
+.define-screen-size(@size, @range) {
+    @screen-size: ~'screen-@{size}-@{range}';
+}
+
+// define class names
+.define-class(@align, @range, @size) when (@range = max) {
+    @class-name: ~'.text-@{align}-@{range}-@{size}';
+}
+
+.define-class(@align, @range, @size) when (@range = min) {
+    @class-name: ~'.text-@{align}-@{size}, .text-@{align}-@{range}-@{size}';
+}
+
+.define-media-query(@range) {
+	@media-query: ~'@{range}-width:' @@screen-size; 
+}
+
+.make-ranges(length(@align-ranges));
+
+.make-ranges(@nR, @iR: 1) when (@iR =< @nR) {
+    @range: extract(@align-ranges, @iR);
+
+    // start size iteration mixin
+    .make-sizes(length(@align-sizes));
+
+    .make-sizes(@nS, @iS: 1) when (@iS =< @nS) {
+        @size: extract(@align-sizes, @iS);
+
+        .define-screen-size(@size, @range);
+        .define-media-query(@range);
+
+        @media (@media-query) {
+
+            // then iterate types
+            .make-types(length(@align-types));
+
+            .make-types(@nT, @iT: 1) when (@iT =< @nT) {
+                @type: extract(@align-types, @iT);
+
+                .define-class(@type, @range, @size);
+
+                @{class-name} {
+                    text-align: @type;
+                }
+
+                .make-types(@nT, (@iT + 1));
+            }
+        }
+
+        .make-sizes(@nS, (@iS + 1));
+    }
+
+    .make-ranges(@nR, (@iR + 1));
+}
