@@ -1,0 +1,9 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Please check your email", "nomessage":1, "userpage":"lostemailsent" :>
+<:-.set nopassword = cfg.entry("site users", "nopassword"):>
+<p class="alert alert-info">
+  <:.if nopassword:>Your account access link<:.else:>Your password reset link<:.end if:> has been emailed to your emaail address (<b><:= user.email:>)</b>.
+</p>
+<:-.if not(nopassword):>
+<:-.set userpage_url = cfg.user_url("user", "userpage"):>
+<p><a href="<:= userpage_url:>">Ready to login?</a></p>
+<:-.end if:>

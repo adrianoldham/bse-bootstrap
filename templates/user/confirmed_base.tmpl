@@ -1,0 +1,5 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Success! Email address confirmed", "nomessage":1 :>
+<p>Thank you for subscribing to our mailing list. Your email address <b><:= user.email:></b> has now been confirmed. If in future you change your email address, confirmation will again be requested.</p>
+<:-.set nopassword = cfg.entry("site users", "nopassword"):>
+<:-.set userpage_url = nopassword ? cfg.user_url("user", "", "userpage", user.password, "u", user.id) : cfg.user_url("user", "userpage"):>
+<p><a href="<:= userpage_url:>">User account manager</a></p>

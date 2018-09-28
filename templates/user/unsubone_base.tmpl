@@ -1,0 +1,5 @@
+<:-.wrap "user/pubbase.tmpl", "title":"Goodbye! You have unsubscribed", "nomessage":1 :>
+<p>You have been unsubscribed from our “<:subscription name:>” mailing list. We’re sorry to see you go, if in future you change your mind, you can always resubscribe through your user account.</p>
+<:-.set nopassword = cfg.entry("site users", "nopassword"):>
+<:-.set userpage_url = nopassword ? cfg.user_url("user", "", "userpage", user.password, "u", user.id) : cfg.user_url("user", "userpage"):>
+<p><a href="<:= userpage_url:>">User account manager</a></p>
