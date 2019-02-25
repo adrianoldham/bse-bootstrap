@@ -65,9 +65,11 @@
   <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr> <label>Total:</label> <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.total):></p>
 </div>
 <form action="<:= cfg.user_url("shop"):>" method="post" name="checkoutpay">
+<:-.if cfg.entry("shop", "cart_coupons", 1):>
 <:-.set coupon_help = ordercart.coupon_active ? 'Coupon is valid and active' : ordercart.coupon_valid ? ordercart.coupon_inactive_message : ordercart.coupon_code ne '' ? 'Unknown coupon code' : '':>
 <:-#.set coupon_error = ( ordercart.coupon_valid and !ordercart.coupon_active ) or ( !ordercart.coupon_valid and ordercart.coupon_code ne '' ):>
 [:-#.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":ordercart.coupon_code, "help":coupon_help, "status": ( ordercart.coupon_active ? 'has-success' : '' ), "errors": { "coupon":coupon_error }, options:{ "readonly":1 } -:]
+<:-.end if:>
 <:-.if !cfg.entry("site users", "nopassword"):>
 <:-.if user:>
 <p class="alert alert-info">

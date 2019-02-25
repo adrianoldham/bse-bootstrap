@@ -79,9 +79,11 @@
 </div>
 <:-.end if :>
 
+<:-.if cfg.entry("shop", "cart_coupons", 1):>
 <:-.set coupon_help = cart.coupon_active ? 'Coupon is valid and active' : cart.coupon_valid ? cart.coupon_inactive_message : cart.coupon_code ne '' ? 'Unknown coupon code' : '':>
 <:-.set coupon_error = ( cart.coupon_valid and !cart.coupon_active ) or ( !cart.coupon_valid and cart.coupon_code ne '' ):>
 [:-.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":cart.coupon_code, "help":coupon_help, "status": ( cart.coupon_active ? 'has-success' : '' ), "errors": { "coupon":coupon_error } -:]
+<:-.end if:>
 
 <p class="buttons">
   <:-.if cart.total :>
