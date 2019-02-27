@@ -41,8 +41,8 @@
       </td>
       <:-.end if :>
       <td class="quantity">
-        <:-.if item.session_id :>
-        <input type="hidden" name="quantity_<:= loop.index :>" value="<:= item.units :>" />
+        <:-.if item.session_id or cfg.entry("shop", "cart_entry_limit") :>
+        <input type="hidden" name="quantity_<:= loop.index :>" value="<:= cfg.entry("shop", "cart_entry_limit", 1) :>" />
         <:= item.units :>
         <:-.else :>
         <input type="text" name="quantity_<:= loop.index :>" size="2" value="<:= item.units :>" />
