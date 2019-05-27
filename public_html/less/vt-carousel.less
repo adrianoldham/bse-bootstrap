@@ -21,16 +21,14 @@
     .border-radius(@carousel-caption-border-radius);
     
     * {
-        font-family: @carousel-caption-secondary-font-family;
-        font-size: @carousel-caption-secondary-font-size;
         color: @carousel-caption-color;
         text-shadow: @carousel-caption-text-shadow;
         margin-bottom: 0;
     }
-
-    h1 {
-        font-family: @carousel-caption-primary-font-family;
-        font-size: @carousel-caption-primary-font-size;
+    
+    @media only screen and (max-width: @screen-xs) {
+        left: 15px;
+        right: 15px;
     }
 }
 
