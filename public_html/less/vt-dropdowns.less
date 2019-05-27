@@ -1,8 +1,10 @@
+@dropdown-menu-breakpoint: @screen-sm-min;
+
 // Dropdown toggle with hover
 .dropdown-hover,
 .dropdown-menu-hover {
-    &:hover {
-        @media only screen and (min-width: @screen-sm-min) {
+    @media only screen and (min-width: @dropdown-menu-breakpoint) {
+        &:hover {
             & > .dropdown-menu {
                 display: block;
             }
@@ -19,7 +21,7 @@
 
 .dropdown-center,
 .dropdown-menu-center {
-    @media only screen and (min-width: @screen-sm-min) {
+    @media only screen and (min-width: @dropdown-menu-breakpoint) {
         right: auto;
         left: 50%;
         .transform(translate(-50%, 0));
@@ -37,7 +39,7 @@
 
 .with-dropdown-fade,
 .with-dropdown-transition-fade {
-    @media only screen and (min-width: @screen-sm-min) {
+    @media only screen and (min-width: @dropdown-menu-breakpoint) {
         .dropdown {
             .dropdown-menu {
                 display: block;
@@ -58,7 +60,7 @@
 
 .with-dropdown-expand,
 .with-dropdown-transition-expand {
-    @media only screen and (min-width: @screen-sm-min) {
+    @media only screen and (min-width: @dropdown-menu-breakpoint) {
         .dropdown {
             .dropdown-menu {
                 display: block;
@@ -80,7 +82,7 @@
 
 .with-dropdown-fold,
 .with-dropdown-transition-fold {
-    @media only screen and (min-width: @screen-sm-min) {
+    @media only screen and (min-width: @dropdown-menu-breakpoint) {
         .dropdown {
             .dropdown-menu {
                 display: block;
