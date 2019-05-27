@@ -1,7 +1,5 @@
 <:-.wrap "base.tmpl", "class":"page-index" :>
-
         <:-.set children = [ article.all_visible_kids ].grep(@{c: c.flags !~ /s/ }) -:>
-
         <article id="<:= 'article_' _ article.id:>" role="main">
 <:embed start:>
           <:admin:>
