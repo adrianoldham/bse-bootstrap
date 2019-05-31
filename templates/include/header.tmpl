@@ -8,7 +8,7 @@
               <:-.if embedded:>
               <:admin article_mini:>
               <:-.if article.flags !~ /t/ -:>
-              <h2>
+              <h2 class="section-title">
                 <:-.call "dtitle", "title":article.title, "icon":icon_class(article) :>
               </h2>
               <:-.end if:>
@@ -16,7 +16,7 @@
               <:admin:>
               <:-.if article.flags !~ /t/ -:>
               <header class="page-header">
-                <h1>
+                <h1 class="page-title">
                   <:-.if params.title eq "FORMTITLE" -:>
                   <:- ifFormcfg icon:>
                   <i class="<:formcfg icon:>"></i>
@@ -35,7 +35,7 @@
                   <:-.end if -:>
                 </h1>
                 <:-.if params.subtitle:>
-                <h2><:= params.subtitle.escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:></h2>
+                <h2 class="page-subtitle"><:= params.subtitle.escape("html").replace(/(?:  (.*))/, " <small>$1</small>") |raw:></h2>
                 <:-.end if:>
                 <:- include include/crumbs.tmpl optional:>
               </header>
