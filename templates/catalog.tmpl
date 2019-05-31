@@ -28,7 +28,7 @@
 
         <:-.if products.size :>
         <form action="<:= cfg.user_url("shop") :>" method="post">
-          <input type="hidden" name="r" value="<:= bse.url(top):>" />
+          <input type="hidden" name="r" value="<:= cfg.entry("shop", "add_refresh", bse.url(top)):>" />
           <table class="items">
             <caption>Catalogue items</caption>
             <thead>
