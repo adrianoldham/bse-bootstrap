@@ -309,7 +309,7 @@
   <:- eif MultPaymentTypes:>
   <p class="buttons">
     <input type="submit" value="Purchase now" name="payment" accesskey="p" title="AccessKey = p" />
-    <input type="submit" value="Go back" name="checkout" accesskey="b" title="AccessKey = b" />
+    <a href="<:= cfg.user_url("shop", "checkout") :>" accesskey="b" title="AccessKey = b">Go back</a>
   </p>
 </form>
 <:- if MultPaymentTypes:>
