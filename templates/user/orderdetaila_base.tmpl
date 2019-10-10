@@ -250,15 +250,18 @@
     <:-.if order.billTelephone:>    <tr>
       <th><:= cfg.entry("site users", "display_telephone", "Telephone"):>:</th>
       <td><:= order.billTelephone:></td>
-    </tr><:.end if:>
+    </tr>
+    <:-.end if:>
     <:-.if order.billFacsimile:>    <tr>
       <th><:= cfg.entry("site users", "display_facsimile", "Facsimile"):>:</th>
       <td><:= order.billFacsimile:></td>
-    </tr><:.end if:>
+    </tr>
+    <:-.end if:>
     <:-.if order.billMobile:>    <tr>
       <th><:= cfg.entry("site users", "display_mobile", "Mobile"):>:</th>
       <td><:= order.billMobile:></td>
-    </tr><:.end if:>
+    </tr>
+    <:-.end if:>
     <tr>
       <th><:= cfg.entry("site users", "display_email", "Email Address"):>:</th>
       <td><:= order.billEmail:></td>
@@ -302,11 +305,13 @@
     <:-.if order.facsimile:>    <tr>
       <th><:= cfg.entry("site users", "display_facsimile", "Facsimile"):>:</th>
       <td><:= order.facsimile:></td>
-    </tr><:.end if:>
+    </tr>
+    <:-.end if:>
     <:-.if order.delivMobile:>    <tr>
       <th><:= cfg.entry("site users", "display_mobile", "Mobile"):>:</th>
       <td><:= order.delivMobile:></td>
-    </tr><:.end if:>
+    </tr>
+    <:-.end if:>
     <:-.if order.emailAddress:>    <tr>
       <th><:= cfg.entry("site users", "display_email", "Email Address"):>:</th>
       <td><:= order.emailAddress:></td>
