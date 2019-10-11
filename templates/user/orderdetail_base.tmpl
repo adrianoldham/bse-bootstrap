@@ -345,3 +345,9 @@
   </tbody>
 </table>
 <:-.end if:>
+<:-.if !order.paidFor and !order.ccPAN:>
+<p class="buttons">
+  <a href="<:= cfg.user_url("shop", "show_payment", "orderid", order.id ) :>" accesskey="p" title="AccessKey = p">Pay order</a>
+  <a href="<:= cfg.user_url("user", "userpage", "_t", "orders") :>" accesskey="b" title="AccessKey = b">Go back</a>
+</p>
+<:-.end if:>
