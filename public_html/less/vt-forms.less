@@ -26,6 +26,8 @@ fieldset {
     .with-margin-bottom();
 
     fieldset {
+        .with-margin-bottom-none();
+
         legend {
             &:extend(label);
             color: inherit;
@@ -106,4 +108,9 @@ fieldset {
         font-size: @font-size-small;
         border-radius: @input-border-radius-small;
     }
+}
+
+.radio-inline,
+.checkbox-inline {
+    padding-top: 9px;
 }
