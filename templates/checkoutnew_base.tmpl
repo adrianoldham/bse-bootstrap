@@ -20,6 +20,7 @@
   <tbody>
 	<:-.for item in items :>
 	<:-.set options = item.option_list :>
+	<:-.set options = options.grep(@{option: option.display}) :>
     <tr <:-= item.product_discount_units ? ' class="success"' : '' | raw -:> >
       <td class="item">
         <a href="<:= item.link :>" class="title"><:= item.title :></a>

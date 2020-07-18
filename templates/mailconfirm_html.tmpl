@@ -1,5 +1,6 @@
-<:-.wrap "user/userbase.tmpl", "subtext":"Order receipt", "userpage":"orders" :>
-<p><a href="<:= cfg.user_url("user", "userpage", "_t", "orders"):>" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back to order history</a></p>
+<:-.wrap "email/base.tmpl", "title":"Order receipt" :>
+<p>Hi <:= order.billFirstName:>,</p>
+<p>Thank you for your order, it is now awaiting processing.</p>
 <div class="group">
 <table class="vertical left">
   <caption>Order details</caption>
@@ -10,7 +11,7 @@
     </tr>
     <tr>
       <th>Order Date:</th>
-      <td><:= bse.date("%e-%b-%Y", order.orderDate):></td>
+      <td><:= bse.date("%d-%b-%Y", order.orderDate):></td>
     </tr>
     <:-.if order.stage_description_id:>
     <tr>
@@ -54,17 +55,17 @@
       <td><:= order.affiliate_code:></td>
     </tr>
     <:-.end if:>
-    <:-.if order.coupon :>
+    <:-.if order.coupon:>
     <tr>
       <th><:= cfg.entry("shop", "display_coupon_code", "Coupon Code"):>:</th>
-      <td><:= order.coupon_code:> <:.if order.coupon_code_discount_pc :>(<:= order.coupon_code_discount_pc :>%)<:.end if:></td>
+      <td><:= order.coupon_code:> (<:= order.coupon_code_discount_pc :>%)</td>
     </tr>
     <:-.end if:>
     <:- include include/order_details_info_custom.tmpl optional:>
   </tbody>
 </table>
 <table class="vertical right">
-  <:-.set payment = order.paidFor ? "Paid" : order.ccPAN ? "Processing" : "Unpaid":>
+  <:-.set payment = order.paidFor ? "Paid" : order.paymentType ? "Unpaid" : "Processing":>
   <caption>Payment details <span class="<:= payment.lower:>"><:= payment:></span></caption>
   <tbody>
    <tr>
@@ -162,9 +163,6 @@
   <thead>
     <tr>
       <th class="item">Item</th>
-      <:-.if order.coupon_active and !order.coupon_cart_wide :>
-      <th class="discount">Discount</th>
-      <:-.end if :>
       <th class="quantity">Qty</th>
       <th class="price">Price</th>
       <th class="extended">Extended</th>
@@ -176,11 +174,7 @@
 	<:-.set options = options.grep(@{option: option.display}) :>
     <tr>
       <td class="item">
-        <:-.if item.product.listed:>
-        <a href="<:= item.product.link :>" class="title"><:= item.title :></a>
-        <:-.else:>
-        <:= item.title :>
-        <:-.end if:>
+        <a href="<:= bse.abs_url( item.product.link ) :>" class="title"><:= item.title :></a>
         <:-.if options.size :>
         <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= option.name :>: <:= option.display :><:.end for :>)</span>
         <:-.end if :>
@@ -188,13 +182,6 @@
         <div class="description"><:= item.description :></div>
         <:-.end if :>
       </td>
-      <:-.if order.coupon_active and !order.coupon_cart_wide :>
-      <td class="discount">
-        <:-.if item.product_discount:>
-        <:= item.product_discount_units:> &times; <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.product_discount ):>
-        <:-.end if:>
-      </td>
-      <:-.end if :>
       <td class="quantity">
         <:= item.units :> &times;
       </td>
@@ -211,18 +198,17 @@
 <div class="totals">
   <:-.if order.coupon :>
   <p class="discount">
-    <:-.if order.coupon_code_discount_pc:>
-    <span>(<:= order.coupon_code_discount_pc:>% Coupon)</span>
+    <:-.if order.coupon_code_discount_pc:><span>(<:= order.coupon_code_discount_pc:>% Coupon)</span>&nbsp;
     <:-.end if:>
-    <label>Discount:</label> &minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.product_cost_discount ) :>
+    <label>Discount:</label>&nbsp;&minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.product_cost_discount ) :>
   </p>
   <:-.end if :>
   <:-.if order.shipping_cost:>
-  <p class="freight"><span>(<:= order.shipping_method:>)</span> <label>Freight:</label> <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>
+  <p class="freight"><span>(<:= order.shipping_method:>)</span>&nbsp;<label>Freight:</label>&nbsp;<:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>
   <:-.elsif order.shipping_name eq "contact" :>
-  <p class="freight"><span>(<:= order.shipping_method:>)</span> <label>Freight:</label> TBA</p>
+  <p class="freight"><span>(<:= order.shipping_method:>)</span>&nbsp;<label>Freight:</label>&nbsp;TBA</p>
   <:-.end if:>
-  <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr> <label>Total:</label> <:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.total ):></p>
+  <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr>&nbsp;<label>Total:</label>&nbsp;<:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.total ):></p>
 </div>
 <div class="group">
 <table class="vertical left">
@@ -324,10 +310,10 @@
 </div>
 <:-.set files = [ order.files ].sort(-"whenUploaded") -:>
 <:-.if files.size :>
-<h2>File downloads</h2>
+<h3>Download files</h3>
 <p>Your purchase includes file downloads, for your convenience they are available below. You can download your files later from the <a href="<:= cfg.user_url("user", "userpage", "_t", "files"):>">file downloads</a> section of your account.</p>
 <table class="items files">
-  <caption>Purchased files</caption>
+  <caption>Files available</caption>
   <thead>
     <tr>
       <th class="item file">Filename/Title</th>
@@ -338,17 +324,18 @@
   <tbody>
     <:-.for file in files :>
     <tr>
-      <td class="item file"><:.if order.file_available(file):><a href="<:= file.url:>" title="<:= file.description:>"><:= file.displayName:></a><:.else:><:= file.displayName:><:.end if:></td>
-      <td class="date"><:= bse.date("%e-%b-%Y", file.whenUploaded) :></td>
-      <td class="size"><:= filesize(file.sizeInBytes):></td>
+      <td class="item file"><:.if order.file_available(file):><a href="<:= bse.abs_url( file.url ):>" title="<:= file.description:>"><:= file.displayName:></a><:.else:><:= file.displayName:><:.end if:></td>
+      <td class="date"><:= bse.date("%d-%b-%Y", file.whenUploaded) :></td>
+      <td class="size"><:= file.sizeInBytes < 0x8000 ? file.sizeInBytes : (file.sizeInBytes / 1024).format("%.1fk") :>B</td>
     </tr>
     <:-.end for:>
   </tbody>
 </table>
 <:-.end if:>
-<:-.if !order.paidFor and !order.ccPAN:>
-<p class="buttons">
-  <a href="<:= cfg.user_url("shop", "show_payment", "orderid", order.id ) :>" accesskey="p" title="AccessKey = p">Pay order</a>
-  <a href="<:= cfg.user_url("user", "userpage", "_t", "orders") :>" accesskey="b" title="AccessKey = b">Go back</a>
-</p>
+<:-.if order.userId:>
+<p>This order is available in your <a href="<:= cfg.user_url("user", "userpage"):>">account manager</a>, you can review more details in your <a href="<:= cfg.user_url("user", "userpage", "_t", "orders"):>">order history</a>.</p>
+<p class="bse-buttons"><a href="<:= cfg.user_url("user", "orderdetail", "id", order.id ):>" class="bse-button">Order status</a></p>
+<:-.else:>
+<p>You can review details of this order and track its status online.</p>
+<p class="bse-buttons"><a href="<:= cfg.user_url("user", "oda", "id", order.randomId ):>" class="bse-button">Order status</a></p>
 <:-.end if:>

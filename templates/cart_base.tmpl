@@ -23,6 +23,7 @@
     <:-.if items.size :>
 	<:-.for item in items :>
 	<:-.set options = item.option_list :>
+	<:-.set options = options.grep(@{option: option.display}) :>
     <tr <:-= item.product_discount_units ? ' class="success"' : '' | raw -:> >
       <td class="item">
         <a href="<:= item.link :>" class="title"><:= item.title :></a>
@@ -88,9 +89,9 @@
 <p class="buttons">
   <:-.if cart.total :>
   <input type="submit" name="checkout" value="Checkout now" accesskey="c" title="AccessKey = c" />
-  <input type="submit" name="recalc" value="Update" accesskey="u" title="AccessKey = u" />
+  <input type="submit" name="recalc" value="Update <:= cfg.entry("shop", "cart_name", "cart").lower :>" accesskey="u" title="AccessKey = u" />
   <:-.if cfg.entry("shop", "emptycart") :>
-  <input type="submit" name="a_emptycart" value="Empty cart" accesskey="e" title="AccessKey = e" />
+  <input type="submit" name="a_emptycart" value="Empty <:= cfg.entry("shop", "cart_name", "cart").lower :>" accesskey="e" title="AccessKey = e" />
   <:-.end if :>
   <:-.else :>
   <input type="submit" name="a_order" value="Checkout now" accesskey="c" title="AccessKey = c" />
@@ -100,7 +101,7 @@
   <a href="<:= request.referer:>">Go back</a> 
   <:-.end if:>
 </p>
-<:-.if !cart.total :>
+<:-.if !cart.total and user :>
 <input type="hidden" name="delivFirstName" id="delivFirstName" value="<:= user.name1 :>" />
 <input type="hidden" name="delivLastName" id="delivLastName" value="<:= user.name2 :>" />
 <input type="hidden" name="delivStreet" id="delivStreet" value="<:= user.street :>" />

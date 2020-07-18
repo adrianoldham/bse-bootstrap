@@ -1,0 +1,127 @@
+<:= cfg.entry("entity", "name", cfg.entry("site", "name") ).upper |raw:><:.if cfg.entry("entity", "abn"):>
+ABN: <:= cfg.entry("entity", "abn") |raw:><:.end if:>
+
+Hi <:= order.billFirstName |raw:>,
+
+Thank you for your order, it is now awaiting processing.
+
+--------------------------------------------------------------------------------
+                                 ORDER RECEIPT
+--------------------------------------------------------------------------------
+
+Order No.    : <:= order.id.format("%06d") |raw:>
+Order Date   : <:= bse.date("%d-%b-%Y", order.orderDate) |raw:><:.if order.userId:>
+Username     : <:= order.userId |raw:><:.end if:><:.if order.affiliate_code:>
+Referrer     : <:= order.affiliate_code |raw:><:.end if:><:.if order.purchase_order:>
+Purchase No. : <:= order.purchase_order |raw:><:.end if:><:.if order.coupon_code:>
+Coupon Code  : <:= order.coupon_code |raw:> (<:= order.coupon_code_discount_pc |raw:>%)<:.end if:>
+
+--------------------------------------------------------------------------------
+
+BILLING DETAILS:
+
+Address      : <:= order.billFirstName |raw:> <:= order.billLastName |raw:><:.if order.billOrganization:>
+               <:= order.billOrganization |raw:><:.end if:>
+               <:= order.billStreet |raw:><:.if order.billStreet2:>
+               <:= order.billStreet2 |raw:><:.end if:>
+               <:= order.billSuburb |raw:> <:= order.billPostCode |raw:> <:= order.billState |raw:><:.if cfg.entries("country selector"):>
+               <:= cfg.entry("country selector", order.billCountry) |raw:><:.else:>
+               <:= order.billCountry |raw:><:.end if:><:.if order.billTelephone:>
+Telephone    : <:= order.billTelephone |raw:><:.end if:><:.if order.billFacsimile:>
+Facsimile    : <:= order.billFacsimile |raw:><:.end if:><:.if order.billMobile:>
+Mobile       : <:= order.billMobile |raw:><:.end if:><:.if order.billEmail:>
+Email        : <:= order.billEmail |raw:><:.end if:>
+<:.if order.delivStreet:>
+
+SHIPPING DETAILS:
+
+Address      : <:= order.delivFirstName |raw:> <:= order.delivLastName |raw:><:.if order.delivOrganization:>
+               <:= order.delivOrganization |raw:><:.end if:>
+               <:= order.delivStreet |raw:><:.if order.delivStreet2:>
+               <:= order.delivStreet2 |raw:><:.end if:>
+               <:= order.delivSuburb |raw:> <:= order.delivPostCode |raw:> <:= order.delivState |raw:><:.if cfg.entries("country selector"):>
+               <:= cfg.entry("country selector", order.delivCountry) |raw:><:.else:>
+               <:= order.delivCountry |raw:><:.end if:><:.if order.telephone:>
+Telephone    : <:= order.telephone |raw:><:.end if:><:.if order.facsimile:>
+Facsimile    : <:= order.facsimile |raw:><:.end if:><:.if order.delivMobile:>
+Mobile       : <:= order.delivMobile |raw:><:.end if:><:.if order.emailAddress:>
+Email        : <:= order.emailAddress |raw:><:.end if:>
+<:.end if:>
+
+Item                                       Code         Qty     Price   Extended
+--------------------------------------------------------------------------------
+<:.for item in [ order.items ] :>
+<:= item.title.format("%-.40s") |raw:>   <:= item.product_code.format("%-12s") |raw:> <:= item.units.format("%3d") |raw:> <:= bse.number("money", item.price).format("%9s") |raw:> <:= bse.number("money", item.extended("price")).format("%10s") |raw:>
+<:-.if item.nice_options :>
+   <:= item.nice_options:>
+<:-.end if:>
+<:.end for:>
+--------------------------------------------------------------------------------
+<:.if order.coupon_code
+:>                                                            Discount: -<:= bse.number("money", order.product_cost_discount).format("%9s") |raw:><:.end if:>
+<:.if cfg.entry("shop", "shipping")
+:>                                                             Freight: <:.if order.shipping_cost:><:= bse.number("money", order.shipping_cost).format("%10s") |raw:><:.elsif order.shipping_name eq "contact"
+:>       TBA<:.else
+:>      None<:.end if:>
+<:.end if
+:>                                                               Total: <:= bse.number("money", order.total).format("%10s") |raw:>
+<:.if order.gst
+:>                                                                 GST: <:= bse.number("money", order.gst).format("%10s") |raw:><:.else
+:>                                                                 GST: <:= bse.number("money", order.total - (order.total / (1 + cfg.entry("shop", "gst_rate", 10) / 100)) ).format("%10s") |raw:><:.end if
+:>
+
+<:.if order.paymentType == 0:><:.if order.ccOnline
+:>Your credit card payment was processed online:
+
+             Receipt No.  : <:= order.ccReceipt |raw:>
+<:.else
+:>Your credit card will be debited at time of shipping:
+
+<:.end if
+:>             <:= cfg.entry("shop", "display_ccName", "Name on Card").format("%-12s") |raw:> : <:= order.ccName |raw:><:.if order.ccPAN:>
+             <:= cfg.entry("shop", "display_ccPAN", "Card Number").format("%-12s") |raw:> : **** **** **** <:= order.ccPAN |raw:><:.end if:><:.if order.ccType:>
+             <:= cfg.entry("shop", "display_ccType", "Card Type").format("%-12s") |raw:> : <:= order.ccType |raw:><:.end if:><:.end if
+:><:.if order.paymentType == 1
+:>Please send a cheque to:
+
+             <:= cfg.entry("shop", "address1").upper |raw:>
+             <:= cfg.entry("shop", "address2") |raw:>
+             <:= cfg.entry("shop", "address3") |raw:>
+             <:= cfg.entry("shop", "address4") |raw:><:.end if
+:><:.if order.paymentType == 2
+:>We will contact you to make arrangements for payment.<:.end if
+:><:.if order.paymentType == 4
+:>Your payment was processed through PayPal:
+
+             Transaction No.: <:= order.paypal_tran_id |raw:><:.end if
+:><:.if order.paymentType == 10
+:>Please transfer the funds to:
+
+             Name      : <:= cfg.entry("shop", "accountname") |raw:>
+             BSB       : <:= cfg.entry("shop", "bsb") |raw:><:.if cfg.entry("shop", "swiftcode"):>
+             SWIFT     : <:= cfg.entry("shop", "swiftcode") |raw:><:.end if:>
+             Account   : <:= cfg.entry("shop", "accountno") |raw:>
+             Reference : <:= order.id.format("%06d") |raw:><:.end if
+:><:.if order.paymentType == 11
+:>We will send you an invoice for payment.<:.end if
+:><:.if order.paymentType == 12
+:>We will add this order to your account.<:.end if
+:><:.if order.instructions:>
+
+<:with begin wrap 80:>Instructions: <:= order.instructions |raw:><:with end wrap:><:.end if:><:.if order.userId:>
+
+This order is available in your account manager, you can track the status of
+purchases in your order history.
+
+ORDER STATUS LINK:
+  <:= cfg.user_url("user", "orderdetail", "id", order.id) |raw:>
+<:.else:>
+
+You can review details of this order and track its status online.
+
+ORDER STATUS LINK:
+  <:= cfg.user_url("user", "oda", "id", order.randomId) |raw:>
+<:.end if:>
+--------------------------------------------------------------------------------
+
+<:set_subject [concatenate "Your order receipt (No.: " [order id |%06d] ")"]:>

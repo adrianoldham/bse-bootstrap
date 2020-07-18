@@ -1,0 +1,151 @@
+<:.wrap "email/base.tmpl", "title":"Order shipped" :>
+<p>Hi <:= order.delivFirstName:>,</p>
+<p>Your order has been shipped<:.if order.shipping_name ne "contact":> via <:= order.shipping_method:><:.end if:>.</p>
+<div class="group">
+<table class="vertical left">
+  <caption>Order details</caption>
+  <tbody>
+    <tr>
+      <th>Order No.:</th>
+      <td><b><:= order.id.format("%06d"):></b></td>
+    </tr>
+    <tr>
+      <th>Order Date:</th>
+      <td><:= bse.date("%d-%b-%Y", order.orderDate):></td>
+    </tr>
+    <:-.if order.purchase_order:>
+    <tr>
+      <th>Purchase Order:</th>
+      <td><:= order.purchase_order:></td>
+    </tr>
+    <:-.end if:>
+    <:-.if order.freight_tracking:>
+    <tr>
+      <th>Tracking Code:</th>
+      <td>
+        <:-.if cfg.entry("shipping tracking urls", order.shipping_name ):>
+        <a href="<:= cfg.entry("shipping tracking urls", order.shipping_name ) _ order.freight_tracking :>"><:= order.freight_tracking:></a>
+        <:-.else:>
+        <:= order.freight_tracking:>
+        <:-.end if:>
+      </td>
+    </tr>
+    <:-.end if:>
+    <:-.if order.shipping_method:>
+    <tr>
+      <th>Shipping Method:</th>
+      <td><:= order.shipping_method:></td>
+    </tr>
+    <:-.end if:>
+  </tbody>
+</table>
+</div>
+<:-.set items = [ order.items ] :>
+<table class="items">
+  <caption>Order items</caption>
+  <thead>
+    <tr>
+      <th class="item">Item</th>
+      <th class="code">Code</th>
+      <th class="quantity">Qty</th>
+      <th class="price">Price</th>
+      <th class="extended">Extended</th>
+    </tr>
+  </thead>
+  <tbody>
+	<:-.for item in items :>
+	<:-.set options = [ item.option_list ] :>
+	<:-.set options = options.grep(@{option: option.display}) :>
+    <tr>
+      <td class="item">
+        <a href="<:= bse.abs_url( item.product.link ) :>" class="title"><:= item.title :></a>
+        <:-.if options.size :>
+        <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= option.name :>: <:= option.display :><:.end for :>)</span>
+        <:-.end if :>
+        <:-.if item.description and cfg.entry("shop", "product_description", 1 ) :>
+        <div class="description"><:= item.description :></div>
+        <:-.end if :>
+      </td>
+      <td class="code"><:= item.product_code :></td>
+      <td class="quantity">
+        <:= item.units :> &times;
+      </td>
+      <td class="price">
+        <:-.if item.price -:>
+        <:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.price ) :>
+        <:-.end if -:>
+      </td>
+      <td class="extended"><:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", item.extended("price") ):></td>
+    </tr>
+    <:-.end for :>
+  </tbody>
+</table>
+<div class="totals">
+  <:-.if order.coupon :>
+  <p class="discount"><span>(<:= order.coupon_code_discount_pc:>% Coupon)</span>&nbsp;<label>Discount:</label>&nbsp;&minus;<:= cfg.entry("shop", "currency", "$") :><:= bse.number("money", order.product_cost_discount ) :></p>
+  <:-.end if :>
+  <:-.if order.shipping_cost:>
+  <p class="freight"><span>(<:= order.shipping_method:>)</span>&nbsp;<label>Freight:</label>&nbsp;<:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.shipping_cost ):></p>
+  <:-.end if:>
+  <p class="total"><abbr><:= cfg.entry("shop", "currency_code", "AUD"):></abbr>&nbsp;<label>Total:</label>&nbsp;<:= cfg.entry("shop", "currency", "$"):><:= bse.number("money", order.total ):></p>
+</div>
+<div class="group">
+<table class="vertical left">
+  <caption>Shipping details</caption>
+  <tbody>
+    <tr>
+      <th>Name:</th>
+      <td><b><:= order.delivFirstName:> <:= order.delivLastName:></b></td>
+    </tr>
+    <tr>
+      <th>Address:</th>
+      <td>
+        <:-.if order.delivOrganization:>
+        <:= order.delivOrganization:><br />
+        <:-.end if:>
+        <:= order.delivStreet:><br />
+        <:-.if order.delivStreet2:>
+        <:= order.delivStreet2:><br />
+        <:-.end if:>
+        <:= order.delivSuburb:> <:= order.delivState:> <:= order.delivPostCode:><br />
+        <:-.if [cfg.entries("country selector")].size :>
+        <:= cfg.entry("country selector", order.delivCountry ):>
+        <:-.else:>
+        <:= order.delivCountry:>
+        <:-.end if:>
+      </td>
+    </tr>
+    <:-.if order.telephone:>
+    <tr>
+      <th><:= cfg.entry("site users", "display_telephone", "Telephone"):>:</th>
+      <td><:= order.telephone:></td>
+    </tr>
+    <:-.end if:>
+    <:-.if order.facsimile:>
+    <tr>
+      <th><:= cfg.entry("site users", "display_facsimile", "Facsimile"):>:</th>
+      <td><:= order.facsimile:></td>
+    </tr>
+    <:-.end if:>
+    <:-.if order.delivMobile:>
+    <tr>
+      <th><:= cfg.entry("site users", "display_mobile", "Mobile"):>:</th>
+      <td><:= order.delivMobile:></td>
+    </tr>
+    <:-.end if:>
+    <:-.if order.emailAddress:>
+    <tr>
+      <th><:= cfg.entry("site users", "display_email", "Email Address"):>:</th>
+      <td><:= order.emailAddress:></td>
+    </tr>
+    <:-.end if:>
+  </tbody>
+</table>
+</div>
+<:-.if order.userId:>
+<p>This order is available in your <a href="<:= cfg.user_url("user", "userpage"):>">account manager</a>, you can review more details in your <a href="<:= cfg.user_url("user", "userpage", "_t", "orders"):>">order history</a>.</p>
+<p class="bse-buttons"><a href="<:= cfg.user_url("user", "orderdetail", "id", order.id ):>" class="bse-button">Order details</a></p>
+<:-.else:>
+<p>You can review details of this order and track its status online.</p>
+<p class="bse-buttons"><a href="<:= cfg.user_url("user", "oda", "id", order.randomId ):>" class="bse-button">Order details</a></p>
+<:-.end if:>

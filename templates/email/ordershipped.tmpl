@@ -1,0 +1,68 @@
+<:= cfg.entry("site", "name").upper |raw:> ACCOUNT SERVICES.
+
+Hi <:= order.delivFirstName:>,
+
+Your order has been shipped<:.if order.shipping_name ne "contact":> via <:= order.shipping_method |raw:><:.end if:>.
+
+ORDER DETAILS:
+
+Order No.       : <:= order.id.format("%06d") |raw:>
+Order Date      : <:= bse.date("%d-%b-%Y", order.orderDate) |raw:><:.if order.purchase_order:>
+Purchase No.    : <:= order.purchase_order |raw:><:.end if:><:.if order.freight_tracking:>
+Tracking Code   : <:= order.freight_tracking |raw:><:.end if:>
+Shipping Method : <:= order.shipping_method |raw:>
+
+
+Item                                       Code         Qty     Price   Extended
+--------------------------------------------------------------------------------
+<:.for item in [ order.items ] :>
+<:= item.title.format("%-40s") |raw:>   <:= item.product_code.format("%-12s") |raw:> <:= item.units.format("%3d") |raw:> <:= bse.number("money", item.price).format("%9s") |raw:> <:= bse.number("money", item.extended("price")).format("%10s") |raw:>
+<:-.if item.nice_options :>
+   <:= item.nice_options:>
+<:-.end if:>
+<:.end for:>
+--------------------------------------------------------------------------------
+<:.if order.coupon_code
+:>                                                            Discount: -<:= bse.number("money", order.product_cost_discount).format("%9s") |raw:><:.end if:>
+<:.if cfg.entry("shop", "shipping")
+:>                                                             Freight: <:.if order.shipping_cost:><:= bse.number("money", order.shipping_cost).format("%10s") |raw:><:.elsif order.shipping_name eq "contact"
+:>       TBA<:.else
+:>      None<:.end if:>
+<:.end if
+:>                                                               Total: <:= bse.number("money", order.total).format("%10s") |raw:>
+
+SHIPPING DETAILS:
+
+Address      : <:= order.delivFirstName |raw:> <:= order.delivLastName |raw:><:.if order.delivOrganization:>
+               <:= order.delivOrganization |raw:><:.end if:>
+               <:= order.delivStreet |raw:><:.if order.delivStreet2:>
+               <:= order.delivStreet2 |raw:><:.end if:>
+               <:= order.delivSuburb |raw:> <:= order.delivPostCode |raw:> <:= order.delivState |raw:><:.if cfg.entries("country selector"):>
+               <:= cfg.entry("country selector", order.delivCountry) |raw:><:.else:>
+               <:= order.delivCountry |raw:><:.end if:><:.if order.telephone:>
+Telephone    : <:= order.telephone |raw:><:.end if:><:.if order.facsimile:>
+Facsimile    : <:= order.facsimile |raw:><:.end if:><:.if order.delivMobile:>
+Mobile       : <:= order.delivMobile |raw:><:.end if:><:.if order.emailAddress:>
+Email        : <:= order.emailAddress |raw:><:.end if:><:.if order.instructions:>
+
+<:with begin wrap 80:>Instructions: <:= order.instructions |raw:><:with end wrap:><:.end if:><:.if order.userId:>
+
+This order is available in your account manager, you can review more details
+in your order history.
+
+ORDER DETAIL LINK:
+  <:= cfg.user_url("user", "orderdetail", "id", order.id) |raw:>
+<:.else:>
+
+You can review details of this order and track its status online.
+
+ORDER DETAIL LINK:
+  <:= cfg.user_url("user", "oda", "id", order.randomId) |raw:>
+<:.end if:>
+
+
+Regards
+The team at <:= cfg.entry("site", "name") |raw:>
+(<:= cfg.entry("site", "url") |raw:>)
+
+<:set_subject [concatenate "Your order has shipped (No.: " [order id |%06d] ")"]:>

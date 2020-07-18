@@ -179,6 +179,7 @@
   <tbody>
 	<:-.for item in items :>
 	<:-.set options = [ item.option_list ] :>
+	<:-.set options = options.grep(@{option: option.display}) :>
     <tr>
       <td class="item">
         <a href="<:= item.product.link :>" class="title"><:= item.title :></a>
