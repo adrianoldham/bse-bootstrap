@@ -1,9 +1,10 @@
-<:-.wrap "shopbase.tmpl", "title": "Order Payment", "class":"shop-checkout-pay" :>
+<:-.set title = cfg.entry("shop", "checkoutpay_title", "Order Payment") :>
+<:-.wrap "shopbase.tmpl", "title":title, "class":"shop-checkout-pay" :>
 <:-.set cart = request.cart :>
 <:-.set items = [ ordercart.items ] :>
 <:-.set user = request.siteuser :>
 <table class="items">
-  <caption>Order items</caption>
+  <caption><:-= cfg.entry("shop", "order_items_caption", "Order items") :></caption>
   <thead>
     <tr>
       <th class="item">Item</th>
@@ -96,13 +97,13 @@
   <h2>Payment Details</h2>
   <fieldset class="panel-group" id="paymentTypes">
     <:- if Payments CC:>
-    <dl class="panel panel-default paymentType0">
+    <dl class="panel panel-default paymentType<:paymentTypeId CC:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType0" value="0" <:checkedPayment CC:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId CC:>" value="<:paymentTypeId CC:>" <:checkedPayment CC:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="0" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId CC:>" />
           <:- eif MultPaymentTypes:>
           Credit Card
         </label>
@@ -162,13 +163,13 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments PayPal:>
-    <dl class="panel panel-default paymentType4">
+    <dl class="panel panel-default paymentType<:paymentTypeId PayPal:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType4" value="4" <:checkedPayment PayPal:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId PayPal:>" value="<:paymentTypeId PayPal:>" <:checkedPayment PayPal:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="4" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId PayPal:>" />
           <:- eif MultPaymentTypes:>
           PayPal
         </label>
@@ -182,13 +183,13 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments DirectDeposit:>
-    <dl class="panel panel-default paymentType10">
+    <dl class="panel panel-default paymentType<:paymentTypeId DirectDeposit:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType10" value="10" <:checkedPayment DirectDeposit:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId DirectDeposit:>" value="<:paymentTypeId DirectDeposit:>" <:checkedPayment DirectDeposit:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="10" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId DirectDeposit:>" />
           <:- eif MultPaymentTypes:>
           EFT
         </label>
@@ -227,13 +228,13 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments Cheque:>
-    <dl class="panel panel-default paymentType1">
+    <dl class="panel panel-default paymentType<:paymentTypeId Cheque:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType1" value="1" <:checkedPayment Cheque:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId Cheque:>" value="<:paymentTypeId Cheque:>" <:checkedPayment Cheque:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="1" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId Cheque:>" />
           <:- eif MultPaymentTypes:>
           Cheque
         </label>
@@ -253,11 +254,11 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments CallMe:>
-    <dl class="panel panel-default paymentType2">
+    <dl class="panel panel-default paymentType<:paymentTypeId CallMe:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType2" value="<:paymentTypeId CallMe:>" <:checkedPayment CallMe:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId CallMe:>" value="<:paymentTypeId CallMe:>" <:checkedPayment CallMe:> />
           <:- or MultPaymentTypes:>
           <input type="hidden" name="paymentType" value="<:paymentTypeId CallMe:>" />
           <:- eif MultPaymentTypes:>
@@ -273,13 +274,13 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments Invoice:>
-    <dl class="panel panel-default paymentType11">
+    <dl class="panel panel-default paymentType<:paymentTypeId Invoice:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type=radio name="paymentType" id="paymentType11" value="11" <:checkedPayment Invoice:> />
+          <input type=radio name="paymentType" id="paymentType<:paymentTypeId Invoice:>" value="<:paymentTypeId Invoice:>" <:checkedPayment Invoice:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="11" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId Invoice:>" />
           <:- eif MultPaymentTypes:>
           Invoice
         </label>
@@ -293,13 +294,13 @@
     </dl>
     <:- eif Payments:>
     <:- if Payments Account:>
-    <dl class="panel panel-default paymentType12">
+    <dl class="panel panel-default paymentType<:paymentTypeId Account:>">
       <dt class="panel-heading">
         <label class="panel-title">
           <:- if MultPaymentTypes:>
-          <input type="radio" name="paymentType" id="paymentType12" value="12" <:checkedPayment Account:> />
+          <input type="radio" name="paymentType" id="paymentType<:paymentTypeId Account:>" value="<:paymentTypeId Account:>" <:checkedPayment Account:> />
           <:- or MultPaymentTypes:>
-          <input type="hidden" name="paymentType" value="12" />
+          <input type="hidden" name="paymentType" value="<:paymentTypeId Account:>" />
           <:- eif MultPaymentTypes:>
           Account
         </label>
@@ -319,7 +320,7 @@
   <:- eif MultPaymentTypes:>
   <p class="buttons">
     <:-.set go_back_url = order.id ? cfg.user_url("user", "orderdetail", "id", order.id) : cfg.user_url("shop", "checkout"):>
-    <:-.set submit_text = order.id ? "Pay now" : "Purchase now" :>
+    <:-.set submit_text = order.id ? "Pay now" : cfg.entry("shop", "checkoutpay_btn", "Purchase now") :>
     <input type="submit" value="<:= submit_text:>" name="payment" accesskey="p" title="AccessKey = p" />
     <a href="<:= go_back_url:>" accesskey="b" title="AccessKey = b">Go back</a>
   </p>

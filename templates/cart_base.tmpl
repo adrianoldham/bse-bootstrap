@@ -1,10 +1,11 @@
-<:-.wrap "shopbase.tmpl", "title":"Shopping " _ cfg.entry("shop", "cart_name", "Cart"), "class":"shop-checkout-cart" :>
+<:-.set title = cfg.entry("shop", "cart_title", "Shopping " _ cfg.entry("shop", "cart_name", "Cart")) :>
+<:-.wrap "shopbase.tmpl", "title":title, "class":"shop-checkout-cart" :>
 <:-.set cart = request.cart :>
 <:-.set items = cart.items :>
 <:-.set user = request.siteuser :>
 <form action="<:= cfg.user_url("shop") :>" method="post">
 <table class="items">
-  <caption>Order items</caption>
+  <caption><:-= cfg.entry("shop", "order_items_caption", "Order items") :></caption>
   <:-.if cart.total :>
   <thead>
     <tr>
@@ -87,14 +88,15 @@
 <:-.end if:>
 
 <p class="buttons">
+  <:-.set submit_text = cfg.entry("shop", "cart_btn", "Checkout now") :>
   <:-.if cart.total :>
-  <input type="submit" name="checkout" value="Checkout now" accesskey="c" title="AccessKey = c" />
+  <input type="submit" name="checkout" value="<:= submit_text:>" accesskey="c" title="AccessKey = c" />
   <input type="submit" name="recalc" value="Update <:= cfg.entry("shop", "cart_name", "cart").lower :>" accesskey="u" title="AccessKey = u" />
   <:-.if cfg.entry("shop", "emptycart") :>
   <input type="submit" name="a_emptycart" value="Empty <:= cfg.entry("shop", "cart_name", "cart").lower :>" accesskey="e" title="AccessKey = e" />
   <:-.end if :>
   <:-.else :>
-  <input type="submit" name="a_order" value="Checkout now" accesskey="c" title="AccessKey = c" />
+  <input type="submit" name="a_order" value="<:= cart_btn:>" accesskey="c" title="AccessKey = c" />
   <:-.end if :>
   <:-.set referer = request.referer:>
   <:-.if referer and referer =~ cfg.entry("site", "url") and referer !~ cfg.user_url("shop") :>

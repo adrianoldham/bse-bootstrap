@@ -1,4 +1,5 @@
-<:-.wrap "email/base.tmpl", "title":"Order details" :>
+<:-.set title = cfg.entry("shop", "mailorder_title", "Order details") :>
+<:-.wrap "email/base.tmpl", "title":title :>
 <p>This order is now awaiting processing.</p>
 <div class="group">
 <table class="vertical left">
@@ -158,7 +159,7 @@
 </div>
 <:-.set items = [ order.items ] :>
 <table class="items">
-  <caption>Order items</caption>
+  <caption><:-= cfg.entry("shop", "order_items_caption", "Order items") :></caption>
   <thead>
     <tr>
       <th class="item">Item</th>
@@ -212,7 +213,7 @@
 <div class="group">
 <:-.if order.billStreet:>
 <table class="vertical left">
-  <caption>Billing details</caption>
+  <caption><:-= cfg.entry("shop", "order_billing_caption", "Billing Details") :></caption>
   <tbody>
     <tr>
       <th>Name:</th>

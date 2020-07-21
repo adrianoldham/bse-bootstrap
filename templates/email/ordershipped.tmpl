@@ -31,7 +31,7 @@ Item                                       Code         Qty     Price   Extended
 <:.end if
 :>                                                               Total: <:= bse.number("money", order.total).format("%10s") |raw:>
 
-SHIPPING DETAILS:
+<:-= cfg.entry("shop", "order_shipping_title", "Shipping Details").upper :>:
 
 Address      : <:= order.delivFirstName |raw:> <:= order.delivLastName |raw:><:.if order.delivOrganization:>
                <:= order.delivOrganization |raw:><:.end if:>

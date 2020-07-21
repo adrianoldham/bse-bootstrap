@@ -1,4 +1,5 @@
-<:.wrap "email/base.tmpl", "title":"Order shipped" :>
+<:-.set title = cfg.entry("shop", "ordershipped_title", "Order shipped") :>
+<:.wrap "email/base.tmpl", "title":title :>
 <p>Hi <:= order.delivFirstName:>,</p>
 <p>Your order has been shipped<:.if order.shipping_name ne "contact":> via <:= order.shipping_method:><:.end if:>.</p>
 <div class="group">
@@ -91,7 +92,7 @@
 </div>
 <div class="group">
 <table class="vertical left">
-  <caption>Shipping details</caption>
+  <caption><:-= cfg.entry("shop", "order_shipping_caption", "Shipping details") :></caption>
   <tbody>
     <tr>
       <th>Name:</th>

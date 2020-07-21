@@ -15,7 +15,7 @@ Coupon Code  : <:= order.coupon_code |raw:> (<:= order.coupon_code_discount_pc |
 
 --------------------------------------------------------------------------------
 
-BILLING DETAILS:
+<:-= cfg.entry("shop", "order_billing_title", "Billing Details").upper :>:
 
 Address      : <:= order.billFirstName |raw:> <:= order.billLastName |raw:><:.if order.billOrganization:>
                <:= order.billOrganization |raw:><:.end if:>
@@ -30,7 +30,7 @@ Mobile       : <:= order.billMobile |raw:><:.end if:><:.if order.billEmail:>
 Email        : <:= order.billEmail |raw:><:.end if:>
 <:.if order.delivStreet:>
 
-SHIPPING DETAILS:
+<:-= cfg.entry("shop", "order_shipping_title", "Shipping Details").upper :>:
 
 Address      : <:= order.delivFirstName |raw:> <:= order.delivLastName |raw:><:.if order.delivOrganization:>
                <:= order.delivOrganization |raw:><:.end if:>

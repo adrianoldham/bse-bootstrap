@@ -1,11 +1,12 @@
-<:-.wrap "shopbase.tmpl", "title":"Shop Checkout", "class":"shop-checkout-details" :>
+<:-.set title = cfg.entry("shop", "checkoutnew_title", "Shop Checkout") :>
+<:-.wrap "shopbase.tmpl", "title":title, "class":"shop-checkout-details" :>
 <:-.set cart = request.cart :>
 <:-.set items = cart.items :>
 <:-.set user = request.siteuser :>
 <:-.set session = request.session :>
 <:-.set order_info = session.order_info :>
 <table class="items">
-  <caption>Order items</caption>
+  <caption><:-= cfg.entry("shop", "order_items_caption", "Order items") :></caption>
   <thead>
     <tr>
       <th class="item">Item</th>
@@ -86,7 +87,7 @@
 <:-.end if:>
 <:-.end if:>
 <div class="siteuser">
-  <h2>Billing Details</h2>
+  <h2><:-= cfg.entry("shop", "order_billing_title", "Billing Details") :></h2>
   <fieldset class="name">
     <legend>Name</legend>
     [:-.call "cfield", "name":"billFirstName", "required":1 :]
@@ -130,7 +131,7 @@
   </fieldset>
   <:- eif And:>
   <:-.if need_delivery:>
-  <h2>Shipping Details</h2>
+  <h2><:-= cfg.entry("shop", "order_shipping_title", "Shipping Details") :></h2>
   <fieldset class="name">
     <legend>Name</legend>
     [:-.call "cfield", "name":"delivFirstName", "required":1 :]
@@ -180,7 +181,8 @@
   <:- include include/checkout_custom.tmpl optional:>
   <p><span class="required">* Required.</span> <:= cfg.entry("site users", "required_text", "Please provide information for all marked fields."):></p>
   <p class="buttons">
-    <input type="submit" value="Purchase now" name="a_order" accesskey="p" title="AccessKey = p" />
+    <:-.set submit_text = cfg.entry("shop", "checkoutnew_btn", "Purchase now") :>
+    <input type="submit" value="<:= submit_text:>" name="a_order" accesskey="p" title="AccessKey = p" />
     <input type="submit" value="Update" name="checkupdate" accesskey="u" title="AccessKey = u" />
     <a href="<:= cfg.user_url("shop", "cart") :>" accesskey="b" title="AccessKey = b">Go back</a>
   </p>

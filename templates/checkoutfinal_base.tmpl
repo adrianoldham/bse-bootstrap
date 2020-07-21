@@ -1,4 +1,6 @@
-<:-.wrap "shopbase.tmpl", "title":"Order Receipt", "subtext":"Thank you for shopping", "class":"shop-checkout-final" :>
+<:-.set title = cfg.entry("shop", "checkoutfinal_title", "Order Receipt") :>
+<:-.set subtext = cfg.entry("shop", "checkoutfinal_subtext", "Thank you for shopping") :>
+<:-.wrap "shopbase.tmpl", "title":title, "subtext":subtext, "class":"shop-checkout-final" :>
 <:-.if !cfg.entry("site users", "nopassword"):>
 <:-.if request.siteuser:>
 <p class="alert alert-info">
@@ -164,7 +166,7 @@
 </div>
 <:-.set items = [ order.items ] :>
 <table class="items">
-  <caption>Order items</caption>
+  <caption><:-= cfg.entry("shop", "order_items_caption", "Order items") :></caption>
   <thead>
     <tr>
       <th class="item">Item</th>
@@ -228,7 +230,7 @@
 </div>
 <div class="group">
 <table class="vertical left">
-  <caption>Billing details</caption>
+  <caption><:-= cfg.entry("shop", "order_billing_caption", "Billing details") :></caption>
   <tbody>
     <tr>
       <th>Name:</th>
@@ -278,7 +280,7 @@
   </tbody>
 </table>
 <table class="vertical right">
-  <caption>Shipping details</caption>
+  <caption><:-= cfg.entry("shop", "order_shipping_caption", "Shipping details") :></caption>
   <tbody>
     <tr>
       <th>Name:</th>
