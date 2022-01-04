@@ -63,29 +63,26 @@
     }
 }
 
-.carousel-inner {
-    //text-align: center;
-    
-    .item {
-        a {
-            display: block;
-            
-            &:hover {
-                text-decoration: none;
-            }
-        }
-
-        .with-background-image,
-        img {
-            // used when images are set as backgrounds
-            background-position: 50% 50%;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
+.carousel .item,
+.carousel-item {
+    a {
+        display: block;
         
-        img {
-            margin: 0 auto;
+        &:hover {
+            text-decoration: none;
         }
+    }
+
+    .with-background-image,
+    img {
+        // used when images are set as backgrounds
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    img {
+        margin: 0 auto;
     }
 }
 
