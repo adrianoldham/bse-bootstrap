@@ -68,3 +68,14 @@
         }
     }
 }
+
+@padding-extra-large-vertical:     (@padding-base-vertical * 2);
+@padding-extra-large-horizontal:   (@padding-base-horizontal * 2);
+@line-height-extra-large:          1.25;
+@font-size-extra-large:            ceil((@font-size-base * 1.75));
+@btn-border-radius-extra-large:    (@btn-border-radius-base * 2);
+
+.btn-xl {
+  // line-height: ensure even-numbered height of button next to large input
+  .button-size(@padding-extra-large-vertical; @padding-extra-large-horizontal; @font-size-extra-large; @line-height-extra-large; @btn-border-radius-extra-large);
+}
