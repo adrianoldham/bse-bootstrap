@@ -23,7 +23,9 @@
     <tr <:-#= item.product_discount_units ? ' class="success"' : '' | raw -:> >
       <td class="item">
         <:-# If order.id then we loaded an unpaid order for payment :>
-        <:-.if order.id:>
+        <:-.set is_unpaid = order.id ? 1 : 0 :>
+        <:-.set is_new = order.id ? 0 : 1 :>
+        <:-.if is_unpaid:>
         <:-.if item.product.listed:>
         <a href="<:= item.product.link:>" class="title"><:= item.title :></a>
         <:-.else:>
@@ -33,7 +35,7 @@
         <a href="<:= item.link:>" class="title"><:= item.title :></a>
         <:-.end if:>
         <:-.if options.size :>
-        <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= option.desc :>: <:= option.display :><:.end for :>)</span>
+        <span>(<:.for option in options :><:= loop.index ? ", " : "" :><:= is_unpaid ? option.name : option.desc :>: <:= option.display :><:.end for :>)</span>
         <:-.end if :>
         <:-.if item.description and cfg.entry("shop", "product_description", 1 ) :>
         <div class="description"><:= item.description :></div>
@@ -81,7 +83,7 @@
 <:-#.set coupon_error = ( ordercart.coupon_valid and !ordercart.coupon_active ) or ( !ordercart.coupon_valid and ordercart.coupon_code ne '' ):>
 [:-#.call "sfield", "name":"coupon", "description":cfg.entry("shop", "coupon_code", "Coupon Code"), "default":ordercart.coupon_code, "help":coupon_help, "status": ( ordercart.coupon_active ? 'has-success' : '' ), "errors": { "coupon":coupon_error }, options:{ "readonly":1 } -:]
 <:-.end if:>
-<:-.if not(cfg.entry("site users", "nopassword")) and not(order.id):>
+<:-.if not(cfg.entry("site users", "nopassword")) and is_new:>
 <:-.if user:>
 <p class="alert alert-info">
   This purchase will be added to your order history. You can track the status of your purchases and maintain your account details in your <a href="<:= cfg.user_url("user", "userpage"):>">account manager</a>.
@@ -91,7 +93,7 @@
 </p>
 <:-.end if:>
 <:-.end if:>
-<:-.if order.id:>
+<:-.if is_unpaid:>
 <input type="hidden" name="order_id" value="<:= order.id:>" />
 <:-.end if:>
   <h2>Payment Details</h2>
@@ -319,8 +321,8 @@
   <p>Please select your preferred payment method</p>
   <:- eif MultPaymentTypes:>
   <p class="buttons">
-    <:-.set go_back_url = order.id ? cfg.user_url("user", "orderdetail", "id", order.id) : cfg.user_url("shop", "checkout"):>
-    <:-.set submit_text = order.id ? "Pay now" : cfg.entry("shop", "checkoutpay_btn", "Purchase now") :>
+    <:-.set go_back_url = is_unpaid ? cfg.user_url("user", "orderdetail", "id", order.id) : cfg.user_url("shop", "checkout"):>
+    <:-.set submit_text = is_unpaid ? "Pay now" : cfg.entry("shop", "checkoutpay_btn", "Purchase now") :>
     <input type="submit" value="<:= submit_text:>" name="payment" accesskey="p" title="AccessKey = p" />
     <a href="<:= go_back_url:>" accesskey="b" title="AccessKey = b">Go back</a>
   </p>
